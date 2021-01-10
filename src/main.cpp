@@ -6,7 +6,7 @@
 /*   By: rlucas <ryanl585codam@gmail.com>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/06 12:49:55 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/01/08 16:33:55 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/01/10 12:05:30 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ void	iterator_tests(Vector<T> &vec) {
 	print_vector(vec);
 	print_info(WHITE, "Rotate vector");
 	rotate(vec.begin(), vec.begin() + 2, vec.end());
-	// print_vector(vec);
+	print_vector(vec);
 }
 
 void	int_vector_tests(void)

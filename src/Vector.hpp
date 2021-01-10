@@ -6,7 +6,7 @@
 /*   By: rlucas <ryanl585codam@gmail.com>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/06 12:52:10 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/01/08 16:35:39 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/01/10 12:04:56 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,8 @@ class Vector {
 						 std::random_access_iterator_tag,
 						 T,
 						 difference_type,
-						 pointer,
-						 reference> {
+						 T*,
+						 T&> {
 							 private:
 								 pointer	_p;
 							 public:
@@ -49,12 +49,11 @@ class Vector {
 									 _p = rhs._p;
 									 return *this;
 								 }
-
 								 iterator	&operator++() {
 									 ++_p;
 									 return *this;
 								 }
-								 iterator	operator++(long) {
+								 iterator	operator++(int) {
 									 iterator	tmp(*this);
 									 operator++();
 									 return tmp;
@@ -63,31 +62,34 @@ class Vector {
 									 --_p;
 									 return *this;
 								 }
-								 iterator	operator--(long) {
+								 iterator	operator--(int) {
 									 iterator	tmp(*this);
 									 operator--();
 									 return *this;
 								 }
-								 iterator	operator+(long n) const {
+								 iterator	operator+(difference_type n) const {
 									 return _p + n;
 								 }
 								 iterator	operator+(const iterator &rhs) const {
 									 return _p + rhs._p;
 								 }
-								 iterator	operator-(long n) const {
+								 iterator	operator-(difference_type n) const {
 									 return _p - n;
 								 }
-								 iterator	operator-(const iterator &rhs) const {
+								 difference_type	operator-(const iterator &rhs) const {
 									 return _p - rhs._p;
 								 }
-								 iterator	&operator+=(long n) {
+								 iterator	&operator+=(difference_type n) {
 									 _p += n;
 									 return (*this);
 								 }
-								 iterator	&operator-=(long n) {
+								 iterator	&operator-=(difference_type n) {
 									 _p -= n;
 									 return (*this);
 								 }
+								 // operator	long() const {
+									//  return reinterpret_cast<u_int64_t>(_p);
+								 // }
 								 T			&operator[](size_t i) {
 									 return *(_p + i);
 								 }
@@ -109,10 +111,10 @@ class Vector {
 								 bool		operator<=(const iterator &rhs) const {
 									 return _p <= rhs._p;
 								 }
-								 T			&operator*() {
+								 reference	operator*() {
 									 return *_p;
 								 }
-								 T			*operator->() {
+								 pointer	operator->() {
 									 return _p;
 								 }
 						 };
@@ -151,11 +153,13 @@ class Vector {
 
 		// Iterator functions.
 		iterator	begin(void) {
-			return (_data);
+			iterator	i(_data);
+			return (i);
 		}
 
 		iterator	end(void) {
-			return (_data + _size);
+			iterator	i(_data + _size);
+			return (i);
 		}
 
 		// Capacity functions.
