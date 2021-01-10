@@ -6,12 +6,13 @@
 /*   By: rlucas <ryanl585codam@gmail.com>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/06 12:49:55 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/01/10 12:05:30 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/01/10 15:59:52 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdexcept>
 #include <iostream>
+#include <iomanip>
 #include <algorithm>
 
 #include "colors.hpp"
@@ -72,6 +73,62 @@ void	iterator_tests(Vector<T> &vec) {
 	print_vector(vec);
 }
 
+template <typename T>
+void	const_iterator_tests(Vector<T> &vec) {
+	print_info(WHITE, "Const Iterator tests");
+
+	print_info(WHITE, "Basic tests");
+	std::cout << "Vector: ";
+	print_vector(vec);
+	print_info(WHITE, "Incrementing towards end");
+	for	(typename Vector<T>::const_iterator i = vec.begin(); i != vec.end(); i++)
+		std::cout << *i << std::endl;
+	print_info(WHITE, "Incrementing with += 1 (DOES NOT COMPILE)");
+	// for	(typename Vector<T>::const_iterator i = vec.begin(); i != vec.end(); i++)
+	// 	*i += 1;
+	print_vector(vec);
+	print_info(WHITE, "Decrementing towards end");
+	for	(typename Vector<T>::const_iterator i = vec.end() - 1; i >= vec.begin(); --i)
+		std::cout << *i << std::endl;
+	print_info(WHITE, "Offsetting with addition");
+	typename Vector<T>::const_iterator i = vec.begin();
+	std::cout << *(i + 2) << std::endl;
+	print_info(WHITE, "Offsetting with []");
+	std::cout << i[2] << std::endl;
+	print_info(WHITE, "Testing with algorithms");
+	print_vector(vec);
+	print_info(WHITE, "Reverse vector");
+	reverse(vec.begin(), vec.end());
+	print_vector(vec);
+	print_info(WHITE, "Rotate vector");
+	rotate(vec.begin(), vec.begin() + 2, vec.end());
+	print_vector(vec);
+
+	typename Vector<T>::iterator				it1 = vec.begin();
+	typename Vector<T>::const_iterator			it2 = vec.begin();
+
+	std::cout << std::boolalpha <<
+		(it1 == it2)
+		<< std::endl;
+	std::cout << std::boolalpha <<
+		(it2 == it1)
+		<< std::endl;
+	it2 += 1;
+	std::cout << std::boolalpha <<
+		(it1 == it2)
+		<< std::endl;
+	std::cout << std::boolalpha <<
+		(it1 >= it2)
+		<< std::endl;
+	std::cout << std::boolalpha <<
+		(it2 >= it1)
+		<< std::endl;
+	std::cout << std::boolalpha <<
+		(it2 != it1)
+		<< std::endl;
+	return ;
+}
+
 void	int_vector_tests(void)
 {
 	print_divider(CYAN, "Vector<int> tests");
@@ -88,7 +145,8 @@ void	int_vector_tests(void)
 	for	(Vector<int>::iterator i = vec.begin(); i != vec.end(); i++)
 		std::cout << *i << std::endl;
 
-	iterator_tests(vec);
+	// iterator_tests(vec);
+	const_iterator_tests(vec);
 
 	print_line(CYAN);
 }

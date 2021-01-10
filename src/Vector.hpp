@@ -6,7 +6,7 @@
 /*   By: rlucas <ryanl585codam@gmail.com>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/06 12:52:10 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/01/10 12:04:56 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/01/10 14:40:22 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@
 # include <memory>
 # include <stdexcept>
 # include <algorithm>
+
+# include "random_access_iterator.hpp"
 
 template <typename T, typename A = std::allocator<T> >
 class Vector {
@@ -30,99 +32,188 @@ class Vector {
 		typedef typename allocator_type::const_pointer		const_pointer;
 		typedef typename allocator_type::size_type			size_type;
 		typedef typename allocator_type::difference_type	difference_type;
+		typedef RandAccessIterator<T, difference_type,
+				pointer, reference>							iterator;
+		typedef RandAccessIterator<T, difference_type,
+				const_pointer, const_reference>				const_iterator;
 
 		// Nested iterator class.
-		class iterator : public std::iterator<
-						 std::random_access_iterator_tag,
-						 T,
-						 difference_type,
-						 T*,
-						 T&> {
-							 private:
-								 pointer	_p;
-							 public:
-								 iterator(void) : _p(0) {}
-								 iterator(T* x) : _p(x) {}
-								 iterator(const iterator& it) : _p(it._p) {}
-								 iterator	&operator=(iterator const &rhs) {
-									 if (this == &rhs) { return *this; }
-									 _p = rhs._p;
-									 return *this;
-								 }
-								 iterator	&operator++() {
-									 ++_p;
-									 return *this;
-								 }
-								 iterator	operator++(int) {
-									 iterator	tmp(*this);
-									 operator++();
-									 return tmp;
-								 }
-								 iterator	&operator--() {
-									 --_p;
-									 return *this;
-								 }
-								 iterator	operator--(int) {
-									 iterator	tmp(*this);
-									 operator--();
-									 return *this;
-								 }
-								 iterator	operator+(difference_type n) const {
-									 return _p + n;
-								 }
-								 iterator	operator+(const iterator &rhs) const {
-									 return _p + rhs._p;
-								 }
-								 iterator	operator-(difference_type n) const {
-									 return _p - n;
-								 }
-								 difference_type	operator-(const iterator &rhs) const {
-									 return _p - rhs._p;
-								 }
-								 iterator	&operator+=(difference_type n) {
-									 _p += n;
-									 return (*this);
-								 }
-								 iterator	&operator-=(difference_type n) {
-									 _p -= n;
-									 return (*this);
-								 }
-								 // operator	long() const {
-									//  return reinterpret_cast<u_int64_t>(_p);
-								 // }
-								 T			&operator[](size_t i) {
-									 return *(_p + i);
-								 }
-								 bool		operator==(const iterator &rhs) const {
-									 return _p == rhs._p;
-								 }
-								 bool		operator!=(const iterator &rhs) const {
-									 return _p != rhs._p;
-								 }
-								 bool		operator>(const iterator &rhs) const {
-									 return _p > rhs._p;
-								 }
-								 bool		operator>=(const iterator &rhs) const {
-									 return _p >= rhs._p;
-								 }
-								 bool		operator<(const iterator &rhs) const {
-									 return _p < rhs._p;
-								 }
-								 bool		operator<=(const iterator &rhs) const {
-									 return _p <= rhs._p;
-								 }
-								 reference	operator*() {
-									 return *_p;
-								 }
-								 pointer	operator->() {
-									 return _p;
-								 }
-						 };
+		// class iterator : public std::iterator<
+		// 				 std::random_access_iterator_tag,
+		// 				 T,
+		// 				 difference_type,
+		// 				 pointer,
+		// 				 reference> {
+		// 					 private:
+		// 						 pointer	_p;
+		// 					 public:
+		// 						 iterator(void) : _p(0) {}
+		// 						 iterator(T* x) : _p(x) {}
+		// 						 iterator(const iterator& it) : _p(it._p) {}
+		// 						 iterator	&operator=(iterator const &rhs) {
+		// 							 if (this == &rhs) { return *this; }
+		// 							 _p = rhs._p;
+		// 							 return *this;
+		// 						 }
+		// 						 iterator	&operator++() {
+		// 							 ++_p;
+		// 							 return *this;
+		// 						 }
+		// 						 iterator	operator++(int) {
+		// 							 iterator	tmp(*this);
+		// 							 operator++();
+		// 							 return tmp;
+		// 						 }
+		// 						 iterator	&operator--() {
+		// 							 --_p;
+		// 							 return *this;
+		// 						 }
+		// 						 iterator	operator--(int) {
+		// 							 iterator	tmp(*this);
+		// 							 operator--();
+		// 							 return *this;
+		// 						 }
+		// 						 iterator	operator+(difference_type n) const {
+		// 							 return _p + n;
+		// 						 }
+		// 						 iterator	operator+(const iterator &rhs) const {
+		// 							 return _p + rhs._p;
+		// 						 }
+		// 						 iterator	operator-(difference_type n) const {
+		// 							 return _p - n;
+		// 						 }
+		// 						 difference_type	operator-(const iterator &rhs) const {
+		// 							 return _p - rhs._p;
+		// 						 }
+		// 						 iterator	&operator+=(difference_type n) {
+		// 							 _p += n;
+		// 							 return (*this);
+		// 						 }
+		// 						 iterator	&operator-=(difference_type n) {
+		// 							 _p -= n;
+		// 							 return (*this);
+		// 						 }
+		// 						 reference	operator[](size_t i) {
+		// 							 return *(_p + i);
+		// 						 }
+		// 						 bool		operator==(const iterator &rhs) const {
+		// 							 return _p == rhs._p;
+		// 						 }
+		// 						 bool		operator!=(const iterator &rhs) const {
+		// 							 return _p != rhs._p;
+		// 						 }
+		// 						 bool		operator>(const iterator &rhs) const {
+		// 							 return _p > rhs._p;
+		// 						 }
+		// 						 bool		operator>=(const iterator &rhs) const {
+		// 							 return _p >= rhs._p;
+		// 						 }
+		// 						 bool		operator<(const iterator &rhs) const {
+		// 							 return _p < rhs._p;
+		// 						 }
+		// 						 bool		operator<=(const iterator &rhs) const {
+		// 							 return _p <= rhs._p;
+		// 						 }
+		// 						 reference	operator*() {
+		// 							 return *_p;
+		// 						 }
+		// 						 pointer	operator->() {
+		// 							 return _p;
+		// 						 }
+		// 						 operator	typename Vector::const_iterator() const {
+		// 							 return const_iterator(_p);
+		// 						 }
+		// 				 };
+
+		// Nested const_iterator class
+		// class const_iterator : public std::iterator<
+		// 				 std::random_access_iterator_tag,
+		// 				 T,
+		// 				 difference_type,
+		// 				 const_pointer,
+		// 				 const_reference> {
+		// 					 private:
+		// 						 pointer	_p;
+		// 					 public:
+		// 						 const_iterator(void) : _p(0) {}
+		// 						 const_iterator(T* x) : _p(x) {}
+		// 						 const_iterator(const const_iterator& it) : _p(it._p) {}
+		// 						 const_iterator	&operator=(iterator const &rhs) {
+		// 							 if (this == &rhs) { return *this; }
+		// 							 _p = rhs._p;
+		// 							 return *this;
+		// 						 }
+		// 						 const_iterator	&operator++() {
+		// 							 ++_p;
+		// 							 return *this;
+		// 						 }
+		// 						 const_iterator	operator++(int) {
+		// 							 const_iterator	tmp(*this);
+		// 							 operator++();
+		// 							 return tmp;
+		// 						 }
+		// 						 const_iterator	&operator--() {
+		// 							 --_p;
+		// 							 return *this;
+		// 						 }
+		// 						 const_iterator	operator--(int) {
+		// 							 const_iterator	tmp(*this);
+		// 							 operator--();
+		// 							 return *this;
+		// 						 }
+		// 						 const_iterator	operator+(difference_type n) const {
+		// 							 return _p + n;
+		// 						 }
+		// 						 const_iterator	operator+(const iterator &rhs) const {
+		// 							 return _p + rhs._p;
+		// 						 }
+		// 						 const_iterator	operator-(difference_type n) const {
+		// 							 return _p - n;
+		// 						 }
+		// 						 difference_type	operator-(const iterator &rhs) const {
+		// 							 return _p - rhs._p;
+		// 						 }
+		// 						 const_iterator	&operator+=(difference_type n) {
+		// 							 _p += n;
+		// 							 return (*this);
+		// 						 }
+		// 						 const_iterator	&operator-=(difference_type n) {
+		// 							 _p -= n;
+		// 							 return (*this);
+		// 						 }
+		// 						 const_reference	operator[](size_t i) {
+		// 							 return *(_p + i);
+		// 						 }
+		// 						 bool		operator==(const const_iterator &rhs) const {
+		// 							 return _p == rhs._p;
+		// 						 }
+		// 						 bool		operator!=(const const_iterator &rhs) const {
+		// 							 return _p != rhs._p;
+		// 						 }
+		// 						 bool		operator>(const const_iterator &rhs) const {
+		// 							 return _p > rhs._p;
+		// 						 }
+		// 						 bool		operator>=(const const_iterator &rhs) const {
+		// 							 return _p >= rhs._p;
+		// 						 }
+		// 						 bool		operator<(const const_iterator &rhs) const {
+		// 							 return _p < rhs._p;
+		// 						 }
+		// 						 bool		operator<=(const const_iterator &rhs) const {
+		// 							 return _p <= rhs._p;
+		// 						 }
+		// 						 const_reference	operator*() {
+		// 							 return *_p;
+		// 						 }
+		// 						 const_pointer	operator->() {
+		// 							 return _p;
+		// 						 }
+		// 				 };
 
 		Vector(const allocator_type &a = allocator_type())
 			: _data(0), _size(0), _capacity(0), _a(a) {
 				this->reserve(4);
-		};
+			};
 		Vector(Vector const &src) {
 			*this = src;
 		}
