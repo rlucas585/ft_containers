@@ -6,7 +6,7 @@
 /*   By: rlucas <ryanl585codam@gmail.com>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/06 12:52:10 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/01/13 13:32:59 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/01/13 17:11:24 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,19 @@
 # include <memory>
 # include <stdexcept>
 # include <algorithm>
+# include <cmath>
 
 # include "random_access_iterator.hpp"
 # include "reverse_iterator.hpp"
+# ifdef __x86_64
+# define SYSTEM_BITS 64
+# else
+# ifdef _M_AMD64
+# define SYSTEM_BITS 64
+# else
+# define SYSTEM_BITS 32
+# endif
+# endif
 
 namespace ft {
 
@@ -29,6 +39,7 @@ namespace ft {
 			public:
 
 				typedef A											allocator_type;
+				typedef T											value_type;
 				typedef typename allocator_type::reference			reference;
 				typedef typename allocator_type::const_reference	const_reference;
 				typedef typename allocator_type::pointer			pointer;
@@ -100,14 +111,43 @@ namespace ft {
 					return (_size);
 				}
 
+				size_type	max_size(void) const {
+					size_type	ans = std::floor(std::pow(2, SYSTEM_BITS) / sizeof(T));
+
+					return (ans - 1);
+				}
+
+				void		resize(size_type n, value_type val = value_type()) {
+					if (n < _size) {
+						for (size_type i = n; i < _size; i++) {
+							_a.destroy(_data + i);
+						}
+					}
+					if (n > _capacity) {
+						this->reserve(n);
+					}
+					for (; _size < n; _size++) {
+						_a.construct(_data + _size, val);
+					}
+				}
+
+				size_type	capacity(void) const {
+					return _capacity;
+				}
+
+				bool		empty(void) const {
+					return _size == 0;
+				}
+
 				void		reserve(size_type n) {
-					size_type	new_cap;
+					size_type	new_cap;	
 					pointer		new_data;
 					T			initialized_obj;
 
 					if (n <= _capacity)
 						return ;
-					new_cap = std::max(n, _capacity * 2);
+					// new_cap = std::max(n, _capacity * 2);	// Customization
+					new_cap = n;
 					new_data = _a.allocate(sizeof(T) * new_cap);
 					for (size_type i = 0; i < new_cap; i++) {
 						if (i < _size)

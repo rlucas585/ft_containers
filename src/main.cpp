@@ -6,7 +6,7 @@
 /*   By: rlucas <ryanl585codam@gmail.com>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/06 12:49:55 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/01/13 15:44:05 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/01/13 17:11:59 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,17 +64,36 @@ template <typename T>
 void	basic_method_tests(ft::vector<T> &vec, std::vector<T> &realvec) {
 	print_info(RED, "Basic tests");
 
+	print_info(WHITE, "empty() tests");
+	print_fake_and_real(vec.empty(), "ft::vector", realvec.empty(), "std::vector");
+
+	print_info(WHITE, "push_back() tests");
 	print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
 	std::cout << std::endl;
-	print_info(WHITE, "push_back() tests");
 	for (unsigned int i = 5; i <= 30; i += 5) {
 		vec.push_back(i);
 		realvec.push_back(i);
 	}
 	print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
 	std::cout << std::endl;
+
 	print_info(WHITE, "size() tests");
 	print_fake_and_real(vec.size(), "ft::vector", realvec.size(), "std::vector");
+
+	print_info(WHITE, "max_size() tests");
+	print_fake_and_real(vec.max_size(), "ft::vector", realvec.max_size(), "std::vector");
+
+	print_info(WHITE, "resize() tests");
+	print_fake_and_real(vec.size(), "ft::vector", realvec.size(), "std::vector");
+	vec.resize(vec.size() * 2);
+	realvec.resize(realvec.size() * 2);
+	print_fake_and_real(vec.size(), "ft::vector", realvec.size(), "std::vector");
+
+	print_info(WHITE, "capacity() tests");
+	print_fake_and_real(vec.capacity(), "ft::vector", realvec.capacity(), "std::vector");
+	vec.push_back(8);
+	realvec.push_back(8);
+	print_fake_and_real(vec.capacity(), "ft::vector", realvec.capacity(), "std::vector");
 }
 
 template <typename T>
@@ -436,8 +455,9 @@ void	int_vector_tests(void (*f1)(int &n), void (*f2)(int &n), void (*f3)(int &n)
 	ft::vector<int>			vec;
 	std::vector<int>	realvec;
 
+	(void)f1;(void)f2;(void)f3;
 	basic_method_tests(vec, realvec);
-	iterator_tests(vec, realvec, f1, f2, f3);
+	// iterator_tests(vec, realvec, f1, f2, f3);
 
 	print_line(CYAN);
 }
