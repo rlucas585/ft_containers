@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/10 14:27:55 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/01/10 15:59:35 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/01/11 06:58:04 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,6 @@ class RandAccessIterator :
 	typedef Point											pointer;
 	typedef Ref												reference;
 	typedef Diff											difference_type;
-	typedef const pointer									const_pointer;
-	typedef const reference									const_reference;
 
 	private:
 	pointer		_p;
