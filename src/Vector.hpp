@@ -6,7 +6,7 @@
 /*   By: rlucas <ryanl585codam@gmail.com>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/06 12:52:10 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/01/13 12:55:34 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/01/13 13:32:59 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ namespace ft {
 				}
 
 				reverse_iterator	rend(void) {
-					reverse_iterator	ri(_data);
+					reverse_iterator	ri(_data - 1);
 					return (ri);
 				}
 

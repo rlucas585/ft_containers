@@ -6,7 +6,7 @@
 /*   By: rlucas <ryanl585codam@gmail.com>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/06 12:49:55 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/01/13 12:55:58 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/01/13 13:48:19 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -200,7 +200,7 @@ void	iterator_tests(ft::vector<T> &vec, std::vector<T> &realvec) {
 	typename ft::vector<int>::const_reverse_iterator	rit = vec.rbegin();
 	typename std::vector<int>::const_reverse_iterator	real_rit = realvec.rbegin();
 
-	print_info(BLUE, "Reverse Incrementing towards end");
+	print_info(BLUE, "Reverse Incrementing towards reverse end (beginning)");
 	std::cout << "ft::vector: ";
 	for	(rit = vec.rbegin(); rit != vec.rend(); rit++)
 		std::cout << *rit << ", ";
@@ -209,7 +209,7 @@ void	iterator_tests(ft::vector<T> &vec, std::vector<T> &realvec) {
 		std::cout << *real_rit << ", ";
 	std::cout << std::endl;
 
-	print_info(BLUE, "Reverse Decrementing towards beginning");
+	print_info(BLUE, "Reverse Decrementing towards reverse beginning (end)");
 	std::cout << "ft::vector: ";
 	for	(rit = vec.rend() - 1; rit >= vec.rbegin(); rit--)
 		std::cout << *rit << ", ";
@@ -217,6 +217,15 @@ void	iterator_tests(ft::vector<T> &vec, std::vector<T> &realvec) {
 	for	(real_rit = realvec.rend() - 1; real_rit >= realvec.rbegin(); real_rit--)
 		std::cout << *real_rit << ", ";
 	std::cout << std::endl;
+
+	print_info(BLUE, "Reverse iterator constructions and conversions");
+	// it = ft::vector<int>::const_iterator(rit);
+	// real_it = realvec.end();
+	typename ft::vector<int>::const_reverse_iterator	rit2(it);
+	typename std::vector<int>::const_reverse_iterator	real_rit2(real_it);
+
+	print_fake_and_real(*it, "ft::vector", *real_it, "std::vector");
+	print_fake_and_real(*rit2, "ft::vector", *real_rit2, "std::vector");
 
 	// ADD REVERSE CONST ITERATOR TESTS WHEN PREPARED
 

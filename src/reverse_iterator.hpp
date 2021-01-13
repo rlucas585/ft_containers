@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/13 09:55:05 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/01/13 12:53:58 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/01/13 13:48:05 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,9 @@ namespace ft {
 			public:
 			ReverseIterator(void) : _it(0) {}
 			ReverseIterator(pointer p) : _it(iterator_type(p)) {}
-			// ReverseIterator(iterator_type const &src) : _it(src) {
-			// 	_it -= 1;
-			// }
+			ReverseIterator(iterator_type const &src) : _it(src) {
+				_it -= 1;
+			}
 			ReverseIterator(const ReverseIterator &src) : _it(src._it) {}
 			iterator_type	base(void) const {
 				return _it;
@@ -68,17 +68,17 @@ namespace ft {
 			this_type		operator--(int) {
 				this_type	tmp(*this);
 				operator--();
-				return tmp;
+				return &*tmp;
 			}
 			this_type		operator+(difference_type n) const {
-				this_type	tmp(*this);
-				tmp._it - n;
-				return tmp;
+				iterator_type	tmp(_it);
+				tmp -= n;
+				return &*tmp;
 			}
 			this_type		operator-(difference_type n) const {
-				this_type	tmp(*this);
-				tmp._it + n;
-				return tmp;
+				iterator_type	tmp(_it);
+				tmp += n;
+				return &*tmp;
 			}
 			// Maybe should be non-member?
 			this_type		operator-(this_type const &rhs) const {
@@ -122,10 +122,10 @@ namespace ft {
 				return _it >= rhs._it;
 			}
 			operator	const_type() const {
-				typename iterator_type::const_type  c_it = _it;
+				typename iterator_type::const_type  c_it(_it);
 
-				const_type		c_rit(&*(c_it));
-				return (c_rit);
+				// const_type		c_rit(&*(c_it));
+				return (&(*c_it));
 			}
 		};
 }
