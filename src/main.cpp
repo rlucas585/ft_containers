@@ -6,7 +6,7 @@
 /*   By: rlucas <ryanl585codam@gmail.com>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/06 12:49:55 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/01/13 13:48:19 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/01/13 15:00:29 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,9 +51,9 @@ void	print_fake_and_real_collection(T &fake, const char *fake_name,
 	print_vector(real);
 }
 
-template <typename T>
+template <typename T, typename U>
 void	print_fake_and_real(T fake, const char *fake_name,
-		T real, const char *real_name) {
+		U real, const char *real_name) {
 	std::cout << std::boolalpha;
 	std::cout << fake_name << ": " << std::setw(5) << fake;
 	std::cout << " | " << real_name << ": " << std::setw(5) << real;
@@ -90,7 +90,7 @@ void	iterator_tests(ft::vector<T> &vec, std::vector<T> &realvec) {
 	typename std::vector<T>::const_iterator real_it = realvec.begin();
 	for (unsigned int i = 0; i < realvec.size(); ++i)
 		print_fake_and_real(it[i], "ft::vector", real_it[i], "std::vector");
-	
+
 
 	print_info(BLUE, "Incrementing towards end");
 	std::cout << "ft::vector: ";
@@ -197,8 +197,8 @@ void	iterator_tests(ft::vector<T> &vec, std::vector<T> &realvec) {
 	print_fake_and_real((nc_it > it), "ft::vector", (nc_real_it > real_it), "std::vector");
 
 	print_info(WHITE, "Reverse Iterator tests");
-	typename ft::vector<int>::const_reverse_iterator	rit = vec.rbegin();
-	typename std::vector<int>::const_reverse_iterator	real_rit = realvec.rbegin();
+	typename ft::vector<T>::const_reverse_iterator	rit = vec.rbegin();
+	typename std::vector<T>::const_reverse_iterator	real_rit = realvec.rbegin();
 
 	print_info(BLUE, "Reverse Incrementing towards reverse end (beginning)");
 	std::cout << "ft::vector: ";
@@ -219,15 +219,92 @@ void	iterator_tests(ft::vector<T> &vec, std::vector<T> &realvec) {
 	std::cout << std::endl;
 
 	print_info(BLUE, "Reverse iterator constructions and conversions");
+	// Both should not compile!
 	// it = ft::vector<int>::const_iterator(rit);
-	// real_it = realvec.end();
-	typename ft::vector<int>::const_reverse_iterator	rit2(it);
-	typename std::vector<int>::const_reverse_iterator	real_rit2(real_it);
+	// real_it = std::vector<T>::const_iterator(real_rit);
+	typename ft::vector<T>::reverse_iterator	nc_rit(vec.rbegin());
+	typename std::vector<T>::reverse_iterator	nc_real_rit(realvec.rbegin());
+	typename ft::vector<T>::const_reverse_iterator	rit2(nc_rit);
+	typename std::vector<T>::const_reverse_iterator	real_rit2(nc_real_rit);
+	typename ft::vector<T>::const_reverse_iterator	rit3 = nc_rit;
+	typename std::vector<T>::const_reverse_iterator	real_rit3 = nc_real_rit;
+	rit3 += 2;
+	real_rit3 += 2;
 
 	print_fake_and_real(*it, "ft::vector", *real_it, "std::vector");
 	print_fake_and_real(*rit2, "ft::vector", *real_rit2, "std::vector");
+	print_fake_and_real(*rit3, "ft::vector", *real_rit3, "std::vector");
 
-	// ADD REVERSE CONST ITERATOR TESTS WHEN PREPARED
+	print_info(WHITE, "Edits with non-const reverse iterators");
+	print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
+	std::cout << std::endl;
+	print_info(BLUE, "Addition to all values");
+
+	// Both should not compile!
+	// nc_rit != vec.end();
+	// nc_real_rit != realvec.end();
+
+	for (nc_rit = vec.rbegin(); nc_rit != vec.rend(); nc_rit++)
+		*(nc_rit) += 2;
+	for (nc_real_rit = realvec.rbegin(); nc_real_rit != realvec.rend(); nc_real_rit++)
+		*(nc_real_rit) += 2;
+	print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
+	std::cout << std::endl;
+
+	nc_rit = vec.rbegin();
+	nc_real_rit = realvec.rbegin() + 1;
+	print_info(WHITE, "base() test");
+	print_fake_and_real(*nc_rit, "ft::vector", *nc_real_rit, "std::vector");
+	print_fake_and_real(*(nc_rit.base()), "ft::vector", *(nc_real_rit.base()), "std::vector");
+	print_fake_and_real(*(rit2.base() - 1), "ft::vector", *(real_rit2.base() - 1), "std::vector");
+	print_fake_and_real(*(rit3.base()), "ft::vector", *(real_rit3.base()), "std::vector");
+
+	print_info(WHITE, "Addition, subtraction of reverse iterators");
+	print_info(BLUE, "Compound operations");
+	rit = vec.rbegin();
+	real_rit = realvec.rbegin();
+	rit += 3;
+	real_rit += 3;
+	print_fake_and_real(*it, "ft::vector", *real_it, "std::vector");
+	rit -= 2;
+	real_rit -= 2;
+	print_fake_and_real(*it, "ft::vector", *real_it, "std::vector");
+
+	print_info(BLUE, "Addition/subtraction with ints, subtraction with pointer");
+	rit += 2;
+	real_rit += 2;
+	print_fake_and_real(*(rit + 2), "ft::vector", *(real_rit + 2), "std::vector");
+	print_fake_and_real(*(rit - 2), "ft::vector", *(real_rit - 2), "std::vector");
+	print_fake_and_real(*(2 + rit), "ft::vector", *(2 + real_rit), "std::vector");
+	print_fake_and_real(*(1 + rit + 1), "ft::vector", *(1 + real_rit + 1), "std::vector");
+	rit2 = vec.rbegin() + 4;
+	real_rit2 = realvec.rbegin() + 4;
+	print_fake_and_real((rit2 - rit), "ft::vector", (real_rit2 - real_rit), "std::vector");
+	rit2 = vec.rbegin() + 2;
+	real_rit2 = realvec.rbegin() + 2;
+	print_fake_and_real((rit2 - rit), "ft::vector", (real_rit2 - real_rit), "std::vector");
+	print_info(BLUE, "Assignment with =");
+	rit2 = rit;
+	real_rit2 = real_rit;
+	print_fake_and_real(*rit2, "ft::vector", *real_rit2, "std::vector");
+
+	print_info(WHITE, "Reverse iterator comparisons");
+	rit = vec.rbegin();
+	nc_rit = vec.rbegin();
+	real_rit = realvec.rbegin();
+	nc_real_rit = realvec.rbegin();
+	print_fake_and_real((rit == nc_rit), "ft::vector", (real_rit == nc_real_rit), "std::vector");
+	print_fake_and_real((nc_rit == rit), "ft::vector", (nc_real_rit == real_rit), "std::vector");
+	rit += 1;
+	real_rit += 1;
+	print_fake_and_real((rit >= nc_rit), "ft::vector", (real_rit >= nc_real_rit), "std::vector");
+	print_fake_and_real((nc_rit >= rit), "ft::vector", (nc_real_rit >= real_rit), "std::vector");
+	print_fake_and_real((rit <= nc_rit), "ft::vector", (real_rit <= nc_real_rit), "std::vector");
+	print_fake_and_real((nc_rit <= rit), "ft::vector", (nc_real_rit <= real_rit), "std::vector");
+	print_fake_and_real((rit < nc_rit), "ft::vector", (real_rit < nc_real_rit), "std::vector");
+	print_fake_and_real((nc_rit < rit), "ft::vector", (nc_real_rit < real_rit), "std::vector");
+	print_fake_and_real((rit > nc_rit), "ft::vector", (real_rit > nc_real_rit), "std::vector");
+	print_fake_and_real((nc_rit > rit), "ft::vector", (nc_real_rit > real_rit), "std::vector");
 
 	return ;
 }

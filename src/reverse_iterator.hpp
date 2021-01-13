@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/13 09:55:05 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/01/13 13:48:05 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/01/13 15:00:18 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,12 +39,12 @@ namespace ft {
 			public:
 			ReverseIterator(void) : _it(0) {}
 			ReverseIterator(pointer p) : _it(iterator_type(p)) {}
-			ReverseIterator(iterator_type const &src) : _it(src) {
+			explicit ReverseIterator(iterator_type const &src) : _it(src) {
 				_it -= 1;
 			}
 			ReverseIterator(const ReverseIterator &src) : _it(src._it) {}
 			iterator_type	base(void) const {
-				return _it;
+				return (_it + 1);
 			}
 			this_type		&operator=(this_type const &rhs) {
 				if (this == &rhs) { return *this; }
@@ -81,10 +81,9 @@ namespace ft {
 				return &*tmp;
 			}
 			// Maybe should be non-member?
-			this_type		operator-(this_type const &rhs) const {
+			difference_type	operator-(this_type const &rhs) const {
 				this_type	tmp(*this);
-				tmp._it - rhs._it;
-				return tmp;
+				return rhs._it - _it;
 			}
 			this_type		&operator+=(difference_type n) {
 				_it -= n;
@@ -124,10 +123,75 @@ namespace ft {
 			operator	const_type() const {
 				typename iterator_type::const_type  c_it(_it);
 
-				// const_type		c_rit(&*(c_it));
 				return (&(*c_it));
 			}
 		};
+
+	// Allows n + it
+	template <typename Iter>
+		ReverseIterator<Iter> operator+(
+			const typename ReverseIterator<Iter>::difference_type n,
+			const ReverseIterator<Iter>& rev_it) {
+			return rev_it + n;
+		}
+		
+	// Non-member for it1 - it2
+	template <typename Iter>
+		ReverseIterator<Iter> operator-(
+			const ReverseIterator<Iter>& rev_it1,
+			const ReverseIterator<Iter>& rev_it2) {
+			return rev_it1 - rev_it2;
+		}
+
+	template <typename Iter1, typename Iter2>
+				 inline bool operator==(const ReverseIterator<Iter1> &it1,
+						 const ReverseIterator<Iter2> &it2) {
+					 typename ReverseIterator<Iter1>::const_type	const1 = it1;
+					 typename ReverseIterator<Iter2>::const_type	const2 = it2;
+
+					 return (const1 == const2);
+				 }
+	template <typename Iter1, typename Iter2>
+				 inline bool operator!=(const ReverseIterator<Iter1> &it1,
+						 const ReverseIterator<Iter2> &it2) {
+					 typename ReverseIterator<Iter1>::const_type	const1 = it1;
+					 typename ReverseIterator<Iter2>::const_type	const2 = it2;
+
+					 return (const1 != const2);
+				 }
+	template <typename Iter1, typename Iter2>
+				 inline bool operator>=(const ReverseIterator<Iter1> &it1,
+						 const ReverseIterator<Iter2> &it2) {
+					 typename ReverseIterator<Iter1>::const_type	const1 = it1;
+					 typename ReverseIterator<Iter2>::const_type	const2 = it2;
+
+					 return (const1 >= const2);
+				 }
+	template <typename Iter1, typename Iter2>
+				 inline bool operator>(const ReverseIterator<Iter1> &it1,
+						 const ReverseIterator<Iter2> &it2) {
+					 typename ReverseIterator<Iter1>::const_type	const1 = it1;
+					 typename ReverseIterator<Iter2>::const_type	const2 = it2;
+
+					 return (const1 > const2);
+				 }
+	template <typename Iter1, typename Iter2>
+				 inline bool operator<=(const ReverseIterator<Iter1> &it1,
+						 const ReverseIterator<Iter2> &it2) {
+					 typename ReverseIterator<Iter1>::const_type	const1 = it1;
+					 typename ReverseIterator<Iter2>::const_type	const2 = it2;
+
+					 return (const1 <= const2);
+				 }
+	template <typename Iter1, typename Iter2>
+				 inline bool operator<(const ReverseIterator<Iter1> &it1,
+						 const ReverseIterator<Iter2> &it2) {
+					 typename ReverseIterator<Iter1>::const_type	const1 = it1;
+					 typename ReverseIterator<Iter2>::const_type	const2 = it2;
+
+					 return (const1 < const2);
+				 }
+
 }
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/10 14:27:55 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/01/13 11:18:35 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/01/13 14:28:24 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,13 +115,21 @@ namespace ft {
 			operator	const_type() const {
 				return const_type(_p);
 			}
-
 	};
+	// Allows n + it
 	template <typename T, typename Diff, typename P, typename R>
 		RandAccessIterator<T, Diff, P, R> operator+(
 				const typename RandAccessIterator<T, Diff, P, R>::difference_type n,
 				const RandAccessIterator<T, Diff, P, R> it) {
 			return (it + n);
+		}
+
+	// Non-member for it1 - it2
+	template <typename T, typename Diff, typename P, typename R>
+		RandAccessIterator<T, Diff, P, R> operator-(
+				const RandAccessIterator<T, Diff, P, R> it1,
+				const RandAccessIterator<T, Diff, P, R> it2) {
+			return (it1 - it2);
 		}
 
 	template <typename T, typename Diff, typename P1, typename P2, typename R1,
