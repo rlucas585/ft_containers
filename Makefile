@@ -6,7 +6,7 @@
 #    By: rlucas <marvin@codam.nl>                     +#+                      #
 #                                                    +#+                       #
 #    Created: 2020/07/27 14:22:41 by rlucas        #+#    #+#                  #
-#    Updated: 2021/01/08 10:33:39 by rlucas        ########   odam.nl          #
+#    Updated: 2021/01/15 14:59:55 by rlucas        ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,6 +31,7 @@ SRCLST = main \
 SRC = $(addprefix $(SRCDIR)/, $(addsuffix $(EXT), $(SRCLST)))
 
 FLAGS = -Wall -Wextra -Werror -std=c++98 -pedantic
+# FLAGS = -Wall -Wextra -Werror -std=c++11 -pedantic
 
 OBJ := $(addprefix $(OBJDIR), $(SRCLST:%=%.o))
 

@@ -6,7 +6,7 @@
 /*   By: rlucas <ryanl585codam@gmail.com>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/06 12:52:10 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/01/13 17:11:24 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/01/15 15:08:32 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,10 @@
 # define SYSTEM_BITS 32
 # endif
 # endif
+
+# include <sstream>
+# define SSTR( x ) static_cast<std::ostringstream & >( \
+		(std::ostringstream() << std::dec << x)).str()
 
 namespace ft {
 
@@ -71,6 +75,8 @@ namespace ft {
 				vector		&operator=(vector const &rhs) {
 					if (&rhs == this) { return *this; }
 
+					T		initialized_obj;
+
 					_a = rhs._a;
 					if (_data) {
 						for (size_type i = 0; i < _capacity; i++)
@@ -80,6 +86,8 @@ namespace ft {
 					_data = _a.allocate(rhs._capacity);
 					for (size_type i = 0; i < rhs._size; i++)
 						_a.construct(_data + i, rhs._data[i]);
+					for (size_type i = rhs._size; i != rhs._capacity; i++)
+						_a.construct(_data + i, initialized_obj);
 					_capacity = rhs._capacity;
 					_size = rhs._size;
 					return (*this);
@@ -147,6 +155,7 @@ namespace ft {
 					if (n <= _capacity)
 						return ;
 					// new_cap = std::max(n, _capacity * 2);	// Customization
+																// Not in std::vector
 					new_cap = n;
 					new_data = _a.allocate(sizeof(T) * new_cap);
 					for (size_type i = 0; i < new_cap; i++) {
@@ -163,7 +172,101 @@ namespace ft {
 					_data = new_data;
 				}
 
+				// Element Access
+				reference	operator[](size_type n) {
+					return (*(_data + n));
+				}
+
+				const_reference	operator[](size_type n) const {
+					return *(_data + n);
+				}
+
+				reference	at(size_type n) {
+					if (_size == 0 || n > _size - 1)
+						_runtimeThrow(n);
+					return *(_data + n);
+				}
+
+				const_reference	at(size_type n) const {
+					if (_size == 0 || n > _size - 1)
+						_runtimeThrow(n);
+					return *(_data + n);
+				}
+
+				reference	front(void) {
+					return *_data;
+				}
+
+				const_reference	front(void) const {
+					return *_data;
+				}
+
+				reference	back(void) {
+					return *(_data + _size - 1);
+				}
+
+				const_reference	back(void) const {
+					return *(_data + _size - 1);
+				}
+
 				// Modifier functions.
+
+				template <class InputIterator>
+					void	assign(InputIterator first, InputIterator last) {
+						size_type		new_size = last - first;
+						pointer			new_data;
+						T				initialized_obj;
+
+						if (first >= last)
+							return ;
+						if (new_size > _capacity) {
+							new_data = _a.allocate(sizeof(T) * new_size);
+							for (size_type i = 0; first != last; first++, i++) {
+								if (i < _size)
+									_a.destroy(_data + i);
+								_a.construct(new_data + i, *first);
+							}
+							_a.deallocate(_data, _capacity);
+							_capacity = new_size;
+							_data = new_data;
+						} else {
+							for (size_type i = 0; first != last; first++, i++)
+								*(_data + i) = *first;
+							for (size_type i = new_size; i < _size; i++) {
+								_a.destroy(_data + i);
+								_a.construct(_data + i, initialized_obj);
+							}
+						}
+						_size = new_size;
+					}
+
+				void		assign(size_type n, const value_type& val) {
+					pointer			new_data;
+					T				initialized_obj;
+
+					if (n > _capacity) {
+						new_data = _a.allocate(sizeof(T) * n);
+						for (size_type i = 0; i < n; i++) {
+							if (i < _size)
+								_a.destroy(_data + i);
+							_a.construct(new_data + i, val);
+						}
+						_a.deallocate(_data, _capacity);
+						_capacity = n;
+						_data = new_data;
+					} else {
+						for (size_type i = 0; i < _size; i++) {
+							if (i < n)
+								*(_data + i) = val;
+							else {
+								_a.destroy(_data + i);
+								_a.construct(_data + i, initialized_obj);
+							}
+						}
+					}
+					_size = n;
+				}
+
 				void		push_back(T val) {
 					if (_size == _capacity) {
 						this->reserve(_capacity * 2);
@@ -172,27 +275,46 @@ namespace ft {
 					_size += 1;
 				}
 
-				// Element Access
-				T			&operator[](size_type n) const {
-					if (_size == 0 || n > _size - 1)
-						throw vector::OutOfBoundsException();
-					return (*(_data + n));
+				void		pop_back(void) {
+					if (_size == 0) { return ; }
+					_a.destroy(_data + _size - 1);
+					_size -= 1;
 				}
 
 				// Relational operators.
 
-				class	OutOfBoundsException : public std::exception {
-					public:
-						virtual const char 		*what() const throw() {
-							return ("Accessing vector out of Bounds");
-						}
-				};
+				// class	OutOfBoundsException : public std::exception {
+				// 	public:
+				// 		OutOfBoundsException(size_type n, size_type size)
+				// 			: _position(n), _size(size) {}
+                //
+				// 		virtual const char 		*what() const throw() {
+				// 			msg = stream.str();
+				// 			return (std::runtime_error(msg));
+				// 		}
+				// 	private:
+				// 		size_type	_position;
+				// 		size_type	_size;
+				// };
 
 			private:
 				pointer			_data;
 				size_type		_size;
 				size_type		_capacity;
 				allocator_type	_a;
+
+				void		_runtimeThrow(size_type n) {
+					std::stringstream	stream;
+					std::string			msg;
+
+					stream << "ft::vector::_rangeCheck: _n (which is ";
+					stream << n;
+					stream << ") >= this->size() (which is ";
+					stream << _size;
+					stream << ")";
+					msg = stream.str();
+					throw std::runtime_error(msg);
+				}
 		};
 }
 

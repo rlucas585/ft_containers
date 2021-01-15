@@ -6,7 +6,7 @@
 /*   By: rlucas <ryanl585codam@gmail.com>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/06 12:49:55 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/01/13 17:11:59 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/01/15 15:08:36 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,39 +61,119 @@ void	print_fake_and_real(T fake, const char *fake_name,
 }
 
 template <typename T>
-void	basic_method_tests(ft::vector<T> &vec, std::vector<T> &realvec) {
+void	basic_method_tests(ft::vector<T> &vec, std::vector<T> &realvec, std::vector<T> &newvals) {
 	print_info(RED, "Basic tests");
 
-	print_info(WHITE, "empty() tests");
+	print_info(WHITE, "empty() tests 1");
 	print_fake_and_real(vec.empty(), "ft::vector", realvec.empty(), "std::vector");
 
 	print_info(WHITE, "push_back() tests");
 	print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
 	std::cout << std::endl;
-	for (unsigned int i = 5; i <= 30; i += 5) {
-		vec.push_back(i);
-		realvec.push_back(i);
+	for (unsigned int i = 0; i < newvals.size(); i += 1) {
+		vec.push_back(newvals[i]);
+		realvec.push_back(newvals[i]);
 	}
 	print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
 	std::cout << std::endl;
 
-	print_info(WHITE, "size() tests");
+	print_info(WHITE, "size() tests 1");
 	print_fake_and_real(vec.size(), "ft::vector", realvec.size(), "std::vector");
 
 	print_info(WHITE, "max_size() tests");
 	print_fake_and_real(vec.max_size(), "ft::vector", realvec.max_size(), "std::vector");
 
+	print_info(WHITE, "Element access [] test");
+	print_fake_and_real(vec[2], "ft::vector", realvec[2], "std::vector");
+	print_fake_and_real(vec[5], "ft::vector", realvec[5], "std::vector");
+	// std::cout << "Undefined:" << std::endl;
+	// print_fake_and_real(vec[-1], "ft::vector", realvec[-1], "std::vector");
+	// print_fake_and_real(vec[6], "ft::vector", realvec[6], "std::vector");
+
 	print_info(WHITE, "resize() tests");
 	print_fake_and_real(vec.size(), "ft::vector", realvec.size(), "std::vector");
-	vec.resize(vec.size() * 2);
-	realvec.resize(realvec.size() * 2);
+	vec.resize(vec.size() + 3);
+	realvec.resize(realvec.size() + 3);
 	print_fake_and_real(vec.size(), "ft::vector", realvec.size(), "std::vector");
+	print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
+	std::cout << std::endl;
+	vec.resize(vec.size() + 3, *(newvals.begin() + 2));
+	realvec.resize(realvec.size() + 3, *(newvals.begin() + 2));
+	print_fake_and_real(vec.size(), "ft::vector", realvec.size(), "std::vector");
+	print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
+	std::cout << std::endl;
 
 	print_info(WHITE, "capacity() tests");
 	print_fake_and_real(vec.capacity(), "ft::vector", realvec.capacity(), "std::vector");
-	vec.push_back(8);
-	realvec.push_back(8);
+	vec.push_back(newvals.front());
+	realvec.push_back(newvals.front());
 	print_fake_and_real(vec.capacity(), "ft::vector", realvec.capacity(), "std::vector");
+
+	print_info(WHITE, "empty() tests 2");
+	print_fake_and_real(vec.empty(), "ft::vector", realvec.empty(), "std::vector");
+
+	print_info(WHITE, "size() tests 2");
+	print_fake_and_real(vec.size(), "ft::vector", realvec.size(), "std::vector");
+
+	print_info(WHITE, "at() tests");
+	try {
+		std::cout << "ft::vector: " << vec.at(3) << std::endl;
+		std::cout << "ft::vector: " << vec.at(20) << std::endl;
+	} catch (std::exception &e) {
+		std::cout << e.what() << std::endl;
+	}
+	try {
+		std::cout << "std::vector: " << realvec.at(3) << std::endl;
+		std::cout << "std::vector: " << realvec.at(20) << std::endl;
+	} catch (std::exception &e) {
+		std::cout << e.what() << std::endl;
+	}
+	try {
+		std::cout << "ft::vector: " << vec.at(-1) << std::endl;
+	} catch (std::exception &e) {
+		std::cout << e.what() << std::endl;
+	}
+	try {
+		std::cout << "std::vector: " << realvec.at(-1) << std::endl;
+	} catch (std::exception &e) {
+		std::cout << e.what() << std::endl;
+	}
+
+	print_info(WHITE, "front() and back() tests");
+	print_fake_and_real(vec.front(), "ft::vector", realvec.front(), "std::vector");
+	print_fake_and_real(vec.back(), "ft::vector", realvec.back(), "std::vector");
+
+	print_info(WHITE, "pop_back() tests");
+	print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
+	std::cout << std::endl;
+	ft::vector<T>	tmp1 = vec;
+	std::vector<T>	tmp2 = realvec;
+	for (unsigned int i = 0; i < 2; i++) {
+		vec.pop_back();
+		realvec.pop_back();
+	}
+	print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
+	std::cout << std::endl;
+	while (!vec.empty()) {
+		vec.pop_back();
+		realvec.pop_back();
+	}
+	print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
+	std::cout << std::endl;
+
+	print_info(WHITE, "assign() tests");
+	vec.assign(tmp1.begin(), tmp1.end());
+	realvec.assign(tmp2.begin(), tmp2.end());
+	print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
+	std::cout << std::endl;
+	print_fake_and_real(vec.size(), "ft::vector", realvec.size(), "std::vector");
+	print_fake_and_real(vec.capacity(), "ft::vector", realvec.capacity(), "std::vector");
+
+	// vec.assign(static_cast<size_t>(25), newvals[1]);
+	// vec.assign(25, newvals[1]);
+	// realvec.assign(25, newvals[1]);
+	// print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
+	// std::cout << std::endl;
 }
 
 template <typename T>
@@ -454,9 +534,13 @@ void	int_vector_tests(void (*f1)(int &n), void (*f2)(int &n), void (*f3)(int &n)
 
 	ft::vector<int>			vec;
 	std::vector<int>	realvec;
+	std::vector<int>	newvals;
+
+	for (unsigned int i = 5; i <= 30; i += 5)
+		newvals.push_back(i);
 
 	(void)f1;(void)f2;(void)f3;
-	basic_method_tests(vec, realvec);
+	basic_method_tests(vec, realvec, newvals);
 	// iterator_tests(vec, realvec, f1, f2, f3);
 
 	print_line(CYAN);
@@ -466,21 +550,17 @@ void	string_vector_tests(void) {
 	print_divider(MAGENTA, "ft::vector<std::string> tests");
 
 	ft::vector<std::string>		vec;
+	std::vector<std::string>	realvec;
+	std::vector<std::string>	newvals;
 
-	vec.push_back("hello");
-	try_index(vec, 0);
-	try_index(vec, 1);
-	vec.push_back("there");
-	try_index(vec, 1);
-	vec.push_back("!");
-	vec.push_back("General");
-	vec.push_back("Kenobi");
-	vec.push_back("!");
-	try_index(vec, 1);
-	try_index(vec, 2);
-	try_index(vec, 3);
-	try_index(vec, 4);
-	try_index(vec, 5);
+	newvals.push_back("Lorem");
+	newvals.push_back("ipsum");
+	newvals.push_back("dolor");
+	newvals.push_back("sit");
+	newvals.push_back("amet,");
+	newvals.push_back("consectetur");
+
+	basic_method_tests(vec, realvec, newvals);
 
 	print_line(MAGENTA);
 }
