@@ -6,7 +6,7 @@
 /*   By: rlucas <ryanl585codam@gmail.com>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/06 12:52:10 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/01/15 17:31:17 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/01/15 21:39:25 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -208,10 +208,9 @@ namespace ft {
 				}
 
 				// Modifier functions.
-
 				template <class InputIterator>
 					void	assign(InputIterator first, InputIterator last,
-							typename ft::enable_if<ft::isIterator<InputIterator>::value, T>::type = 0) {
+							typename ft::enable_if<ft::isIterator<InputIterator>::value, InputIterator>::type = 0) {
 						size_type		new_size = last - first;
 						pointer			new_data;
 						T				initialized_obj;

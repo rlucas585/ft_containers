@@ -6,7 +6,7 @@
 /*   By: rlucas <ryanl585codam@gmail.com>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/06 12:49:55 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/01/15 17:40:39 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/01/15 21:40:27 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,6 +161,7 @@ void	basic_method_tests(ft::vector<T> &vec, std::vector<T> &realvec, std::vector
 	print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
 	std::cout << std::endl;
 
+	std::cout << *(tmp1.begin()) << std::endl;
 	vec.assign(tmp1.begin(), tmp1.end());
 	realvec.assign(tmp2.begin(), tmp2.end());
 	print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
@@ -531,8 +532,10 @@ void	int_vector_tests(void (*f1)(int &n), void (*f2)(int &n), void (*f3)(int &n)
 	print_divider(CYAN, "ft::vector<int> tests");
 
 	ft::vector<int>			vec;
-	std::vector<int>	realvec;
-	std::vector<int>	newvals;
+	std::vector<int>		realvec;
+	std::vector<int>		newvals;
+	// ft::vector<int>			original;
+	// std::vector<int>		real_original;
 
 	for (unsigned int i = 5; i <= 30; i += 5)
 		newvals.push_back(i);
