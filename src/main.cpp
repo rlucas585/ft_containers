@@ -6,7 +6,7 @@
 /*   By: rlucas <ryanl585codam@gmail.com>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/06 12:49:55 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/01/15 15:08:36 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/01/15 17:08:43 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,7 +161,6 @@ void	basic_method_tests(ft::vector<T> &vec, std::vector<T> &realvec, std::vector
 	print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
 	std::cout << std::endl;
 
-	print_info(WHITE, "assign() tests");
 	vec.assign(tmp1.begin(), tmp1.end());
 	realvec.assign(tmp2.begin(), tmp2.end());
 	print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
@@ -169,11 +168,11 @@ void	basic_method_tests(ft::vector<T> &vec, std::vector<T> &realvec, std::vector
 	print_fake_and_real(vec.size(), "ft::vector", realvec.size(), "std::vector");
 	print_fake_and_real(vec.capacity(), "ft::vector", realvec.capacity(), "std::vector");
 
-	// vec.assign(static_cast<size_t>(25), newvals[1]);
-	// vec.assign(25, newvals[1]);
-	// realvec.assign(25, newvals[1]);
-	// print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
-	// std::cout << std::endl;
+	vec.assign(static_cast<size_t>(25), newvals[1]);
+	vec.assign(25, newvals[1]);
+	realvec.assign(25, newvals[1]);
+	print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
+	std::cout << std::endl;
 }
 
 template <typename T>

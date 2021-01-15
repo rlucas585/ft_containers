@@ -6,7 +6,7 @@
 /*   By: rlucas <ryanl585codam@gmail.com>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/06 12:52:10 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/01/15 15:08:32 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/01/15 17:07:35 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,26 @@
 		(std::ostringstream() << std::dec << x)).str()
 
 namespace ft {
+
+	template <bool B, class T = void>
+		struct enable_if {};
+
+	template <class T>
+		struct enable_if<true, T> { typedef T type; };
+
+	template <class T>
+		class isIterator {
+			private:
+				typedef char	_one;
+				struct _two { char x[2]; };
+
+				template <typename U> static _one _test(
+						typename U::iterator_category* = 0
+						);
+				template <class U> static _two _test(...);
+			public:
+				enum { value = sizeof(_test<T>(0)) == sizeof(char) };
+		};
 
 	template <typename T, typename A = std::allocator<T> >
 		class vector {
@@ -212,7 +232,8 @@ namespace ft {
 				// Modifier functions.
 
 				template <class InputIterator>
-					void	assign(InputIterator first, InputIterator last) {
+					void	assign(InputIterator first, InputIterator last,
+							typename ft::enable_if<isIterator<InputIterator>::value, T>::type = 0) {
 						size_type		new_size = last - first;
 						pointer			new_data;
 						T				initialized_obj;
