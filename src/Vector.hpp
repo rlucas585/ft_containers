@@ -6,7 +6,7 @@
 /*   By: rlucas <ryanl585codam@gmail.com>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/06 12:52:10 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/01/15 21:39:25 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/01/16 22:52:57 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -269,7 +269,7 @@ namespace ft {
 					if (_size == _capacity) {
 						this->reserve(_capacity * 2);
 					}
-					*(_data + _size) = val;
+					_a.construct(_data + _size, val);
 					_size += 1;
 				}
 
@@ -277,6 +277,68 @@ namespace ft {
 					if (_size == 0) { return ; }
 					_a.destroy(_data + _size - 1);
 					_size -= 1;
+				}
+
+				// See insert.cpp in C++ learning directory, insert to left of position
+				iterator	insert(iterator position, const value_type& val) {
+					pointer		new_data;
+					T			initialized_obj;
+					size_type	target = position - this->begin();
+					size_type	new_cap = _capacity * 2;
+					size_type	offset = 0;
+
+					if (_size == _capacity) {	
+						new_data = _a.allocate(sizeof(T) * new_cap);
+						_size += 1;
+						for (size_type i = 0; i < new_cap; i++) {
+							if (i == target) {
+								_a.construct(new_data + i + offset, val);
+								offset += 1;
+							} else if (i < _size)
+								_a.construct(new_data + i, *(_data + i - offset));
+							else
+								_a.construct(new_data + i, initialized_obj);
+						}
+						_capacity = new_cap;
+						_data = new_data;
+					} else {
+						_size += 1;
+						for (size_type i = _size; i > target; i--)
+							_a.construct(_data + i, *(_data + i - 1));
+						_a.construct(_data + target, val);
+					}
+					return _data + target;
+				}
+
+				void	insert(iterator position, size_type n, const value_type& val) {
+					pointer		new_data;
+					T			initialized_obj;
+					size_type	target = position - this->begin();
+					size_type	new_cap = std::max(_capacity * 2, _size + n);
+					size_type	offset = 0;
+
+					if (_size + n >= _capacity) {	
+						new_data = _a.allocate(sizeof(T) * new_cap);
+						_size += n;
+						for (size_type i = 0; i < new_cap; i++) {
+							if (i >= target && i < target + n) {
+								_a.construct(new_data + i, val);
+								offset += 1;
+							} else if (i < _size)
+								_a.construct(new_data + i, *(_data + i - offset));
+							else
+								_a.construct(new_data + i, initialized_obj);
+						}
+						_capacity = new_cap;
+						_data = new_data;
+					} else {
+						_size += n;
+						for (size_type i = _size; i > target; i--)
+							_a.construct(_data + i, *(_data + i - n));
+						for (size_type i = target; i < n; i++)
+							_a.construct(_data + i, val);
+					}
+					return _data + target;
 				}
 
 				// Relational operators.

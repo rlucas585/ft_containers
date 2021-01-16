@@ -6,7 +6,7 @@
 /*   By: rlucas <ryanl585codam@gmail.com>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/06 12:49:55 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/01/15 21:40:27 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/01/16 22:56:52 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,8 @@ void	print_fake_and_real_collection(T &fake, const char *fake_name,
 		U &real, const char *real_name) {
 	std::cout << fake_name << ": ";
 	print_vector(fake);
-	std::cout << " | " << real_name << ": ";
+	std::cout << std::endl;
+	std::cout << real_name << ": ";
 	print_vector(real);
 }
 
@@ -161,6 +162,7 @@ void	basic_method_tests(ft::vector<T> &vec, std::vector<T> &realvec, std::vector
 	print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
 	std::cout << std::endl;
 
+	print_info(WHITE, "assign() tests");
 	std::cout << *(tmp1.begin()) << std::endl;
 	vec.assign(tmp1.begin(), tmp1.end());
 	realvec.assign(tmp2.begin(), tmp2.end());
@@ -171,6 +173,26 @@ void	basic_method_tests(ft::vector<T> &vec, std::vector<T> &realvec, std::vector
 
 	vec.assign(25, newvals[1]);
 	realvec.assign(25, newvals[1]);
+	print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
+	std::cout << std::endl;
+
+	vec = tmp1;
+	realvec = tmp2;
+
+	print_info(WHITE, "insert() tests");
+	std::cout << "ft::vector: " << *(vec.insert(vec.begin() + 2, newvals[0])) << std::endl;
+	std::cout << "std::vector: " << *(realvec.insert(realvec.begin() + 2, newvals[0])) << std::endl;
+	print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
+	std::cout << std::endl;
+
+	std::cout << "ft::vector: " << *(vec.insert(vec.begin() + 5, newvals[4])) << std::endl;
+	std::cout << "std::vector: " << *(realvec.insert(realvec.begin() + 5, newvals[4])) << std::endl;
+	print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
+	std::cout << std::endl;
+
+	// Cast is required for this insert() in std::vector in C++98, not in C++11
+	// std::cout << "ft::vector: " << *(vec.insert(vec.begin() + 3, static_cast<size_t>(8), newvals[4])) << std::endl;
+	std::cout << "std::vector: " << *(realvec.insert(realvec.begin() + 3, static_cast<size_t>(8), newvals[4])) << std::endl;
 	print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
 	std::cout << std::endl;
 }
@@ -542,6 +564,7 @@ void	int_vector_tests(void (*f1)(int &n), void (*f2)(int &n), void (*f3)(int &n)
 
 	(void)f1;(void)f2;(void)f3;
 	basic_method_tests(vec, realvec, newvals);
+
 	// iterator_tests(vec, realvec, f1, f2, f3);
 
 	print_line(CYAN);
