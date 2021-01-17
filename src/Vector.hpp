@@ -6,7 +6,7 @@
 /*   By: rlucas <ryanl585codam@gmail.com>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/06 12:52:10 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/01/17 10:31:32 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/01/17 12:16:55 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,8 +96,8 @@ namespace ft {
 									_a.construct(_data + i, *(rhs._data + i));
 								else
 									_a.construct(_data + i, initialized_obj);
-								_capacity = rhs._capacity;
 							}
+							_capacity = rhs._capacity;
 						}
 					} else {
 						_data = _a.allocate(rhs._capacity);
@@ -275,9 +275,11 @@ namespace ft {
 						_capacity = n;
 						_data = new_data;
 					} else {
-						for (size_type i = 0; i < _size; i++) {
-							if (i < n)
-								*(_data + i) = val;
+						for (size_type i = 0; i < _capacity; i++) {
+							if (i < n) {
+								_a.destroy(_data + i);
+								_a.construct(_data + i, val);
+							}
 							else {
 								_a.destroy(_data + i);
 								_a.construct(_data + i, initialized_obj);
@@ -321,12 +323,15 @@ namespace ft {
 							else
 								_a.construct(new_data + i, initialized_obj);
 						}
+						_a.deallocate(_data, _capacity);
 						_capacity = new_cap;
 						_data = new_data;
 					} else {
 						_size += 1;
-						for (size_type i = _size; i > target; i--)
+						for (size_type i = _size; i > target; i--) {
+							_a.destroy(_data + i);
 							_a.construct(_data + i, *(_data + i - 1));
+						}
 						_a.construct(_data + target, val);
 					}
 					return _data + target;
@@ -351,16 +356,61 @@ namespace ft {
 							else
 								_a.construct(new_data + i, initialized_obj);
 						}
+						_a.deallocate(_data, _capacity);
 						_capacity = new_cap;
 						_data = new_data;
 					} else {
 						_size += n;
-						for (size_type i = _size; i > target; i--)
+						for (size_type i = _size; i >= target + n; i--) {
+							_a.destroy(_data + i);
 							_a.construct(_data + i, *(_data + i - n));
-						for (size_type i = target; i < n; i++)
+						}
+						for (size_type i = target; i < target + n; i++) {
+							_a.destroy(_data + i);
 							_a.construct(_data + i, val);
+						}
 					}
 				}
+
+				template <class InputIterator>
+					void insert (iterator position, InputIterator first, InputIterator last,
+							typename ft::enable_if<ft::isIterator<InputIterator>::value, InputIterator>::type = 0) {
+						pointer		new_data;
+						T			initialized_obj;
+						size_type	target = position - this->begin();
+						size_type	n = last - first;
+						size_type	new_cap = std::max(_capacity * 2, _size + n);
+						size_type	offset = 0;
+
+						if (_size + n >= _capacity) {
+							new_data = _a.allocate(sizeof(T) * new_cap);
+							_size += n;
+							for (size_type i = 0; i < new_cap; i++) {
+								if (i >= target && i < target + n) {
+									_a.construct(new_data + i, *first);
+									first++;
+									offset += 1;
+								} else if (i < _size)
+									_a.construct(new_data + i, *(_data + i - offset));
+								else
+									_a.construct(new_data + i, initialized_obj);
+							}
+							_a.deallocate(_data, _capacity);
+							_capacity = new_cap;
+							_data = new_data;
+						} else {
+							_size += n;
+							for (size_type i = _size; i >= target + n; i--) {
+								_a.destroy(_data + i);
+								_a.construct(_data + i, *(_data + i - n));
+							}
+							for (size_type i = target; i < target + n; i++) {
+								_a.destroy(_data + i);
+								_a.construct(_data + i, *first);
+								first++;
+							}
+						}
+					}
 
 				// Relational operators.
 

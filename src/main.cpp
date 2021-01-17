@@ -6,7 +6,7 @@
 /*   By: rlucas <ryanl585codam@gmail.com>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/06 12:49:55 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/01/17 10:32:36 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/01/17 12:17:51 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,8 +162,12 @@ void	basic_method_tests(ft::vector<T> &vec, std::vector<T> &realvec, std::vector
 	print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
 	std::cout << std::endl;
 
+	ft::vector<T>	tmp3 = vec;
+	std::vector<T>	tmp4 = realvec;
+	tmp3.assign(120, newvals[3]);
+	tmp4.assign(120, newvals[3]);
+
 	print_info(WHITE, "assign() tests");
-	std::cout << *(tmp1.begin()) << std::endl;
 	vec.assign(tmp1.begin(), tmp1.end());
 	realvec.assign(tmp2.begin(), tmp2.end());
 	print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
@@ -171,16 +175,27 @@ void	basic_method_tests(ft::vector<T> &vec, std::vector<T> &realvec, std::vector
 	print_fake_and_real(vec.size(), "ft::vector", realvec.size(), "std::vector");
 	print_fake_and_real(vec.capacity(), "ft::vector", realvec.capacity(), "std::vector");
 
-	vec.assign(25, newvals[1]);
-	realvec.assign(25, newvals[1]);
+	vec.assign(tmp3.begin(), tmp3.end());
+	realvec.assign(tmp4.begin(), tmp4.end());
 	print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
 	std::cout << std::endl;
+	print_fake_and_real(vec.size(), "ft::vector", realvec.size(), "std::vector");
 	print_fake_and_real(vec.capacity(), "ft::vector", realvec.capacity(), "std::vector");
 
 	vec = tmp1;
 	realvec = tmp2;
 
-	print_info(WHITE, "insert() tests");
+	vec.assign(30, newvals[1]);
+	realvec.assign(30, newvals[1]);
+	print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
+	std::cout << std::endl;
+	print_fake_and_real(vec.size(), "ft::vector", realvec.size(), "std::vector");
+	print_fake_and_real(vec.capacity(), "ft::vector", realvec.capacity(), "std::vector");
+
+	vec = tmp1;
+	realvec = tmp2;
+
+	print_info(WHITE, "insert() tests part 1");
 	std::cout << "ft::vector: " << *(vec.insert(vec.begin() + 2, newvals[0])) << std::endl;
 	std::cout << "std::vector: " << *(realvec.insert(realvec.begin() + 2, newvals[0])) << std::endl;
 	print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
@@ -191,14 +206,33 @@ void	basic_method_tests(ft::vector<T> &vec, std::vector<T> &realvec, std::vector
 	print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
 	std::cout << std::endl;
 
-	// Cast is required for this insert() in std::vector in C++98, not in C++11
-	// std::cout << "ft::vector: " << *(vec.insert(vec.begin() + 3, static_cast<size_t>(8), newvals[4])) << std::endl;
-	print_fake_and_real(vec.capacity(), "ft::vector", realvec.capacity(), "std::vector");
-	// vec.insert(vec.begin() + 3, static_cast<size_t>(8), newvals[4]);
-	// realvec.insert(realvec.begin() + 3, static_cast<unsigned int>(8), newvals[4]);
-	// std::cout << "std::vector: " << *(realvec.insert(realvec.begin() + 3, static_cast<unsigned int>(8), newvals[4])) << std::endl;
+	print_info(WHITE, "insert() tests part 2");
+	vec.insert(vec.begin() + 3, 8, newvals[4]);
+	realvec.insert(realvec.begin() + 3, 8, newvals[4]);
 	print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
 	std::cout << std::endl;
+	print_fake_and_real(vec.size(), "ft::vector", realvec.size(), "std::vector");
+	print_fake_and_real(vec.capacity(), "ft::vector", realvec.capacity(), "std::vector");
+
+	vec = tmp1;
+	realvec = tmp2;
+	vec.insert(vec.begin() + 3, 50, newvals[4]);
+	realvec.insert(realvec.begin() + 3, 50, newvals[4]);
+	print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
+	std::cout << std::endl;
+	print_fake_and_real(vec.size(), "ft::vector", realvec.size(), "std::vector");
+	print_fake_and_real(vec.capacity(), "ft::vector", realvec.capacity(), "std::vector");
+
+	vec = tmp1;
+	realvec = tmp2;
+
+	print_info(WHITE, "insert() tests part 3");
+	vec.insert(vec.begin() + 3, tmp1.begin(), tmp1.end());
+	realvec.insert(realvec.begin() + 3, tmp2.begin(), tmp2.end());
+	print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
+	std::cout << std::endl;
+	print_fake_and_real(vec.size(), "ft::vector", realvec.size(), "std::vector");
+	print_fake_and_real(vec.capacity(), "ft::vector", realvec.capacity(), "std::vector");
 }
 
 template <typename T>
