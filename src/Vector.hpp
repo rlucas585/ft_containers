@@ -6,7 +6,7 @@
 /*   By: rlucas <ryanl585codam@gmail.com>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/06 12:52:10 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/01/17 12:16:55 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/01/17 17:04:46 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,14 +100,12 @@ namespace ft {
 							_capacity = rhs._capacity;
 						}
 					} else {
-						_data = _a.allocate(rhs._capacity);
-						for (size_type i = 0; i < rhs._capacity; i++) {
+						_data = _a.allocate(rhs._size);
+						for (size_type i = 0; i < rhs._size; i++) {
 							if (i < rhs._size)
 								_a.construct(_data + i, *(rhs._data + i));
-							else
-								_a.construct(_data + i, initialized_obj);
 						}
-						_capacity = rhs._capacity;
+						_capacity = rhs._size;
 					}
 					_size = rhs._size;
 					return (*this);
@@ -116,7 +114,12 @@ namespace ft {
 				// Iterator functions.
 				iterator	begin(void) {
 					iterator	i(_data);
-					return (i);
+					return i;
+				}
+
+				const_iterator	begin(void) const {
+					const_iterator	i(_data);
+					return i;
 				}
 
 				iterator	end(void) {
@@ -124,13 +127,27 @@ namespace ft {
 					return (i);
 				}
 
+				const_iterator	end(void) const {
+					const_iterator	i(_data + _size);
+					return i;
+				}
+
 				reverse_iterator	rbegin(void) {
 					reverse_iterator	ri(_data + _size - 1);
 					return (ri);
 				}
 
+				const_reverse_iterator	rbegin(void) const {
+					reverse_iterator	ri(_data + _size - 1);
+				}
+
 				reverse_iterator	rend(void) {
 					reverse_iterator	ri(_data - 1);
+					return (ri);
+				}
+
+				const_reverse_iterator	rend(void) const {
+					const_reverse_iterator	ri(_data - 1);
 					return (ri);
 				}
 
@@ -412,21 +429,66 @@ namespace ft {
 						}
 					}
 
+				iterator	erase(iterator position) {
+					size_type	target = position - this->begin();
+					T			initialized_obj;
+
+					_size -= 1;
+					for (size_type i = target; i < _size; i++) {
+						_a.destroy(_data + i);
+						_a.construct(_data + i, *(_data + i + 1));
+					}
+					_a.destroy(_data + _size);
+					_a.construct(_data + _size, initialized_obj);
+					return position;
+				}
+
+				iterator	erase(iterator first, iterator last) {
+					size_type	n = last - first;
+					size_type	target = first - this->begin();
+					T			initialized_obj;
+
+					_size -= n;
+					for (size_type i = target; i < target + n; i++) {
+						_a.destroy(_data + i);
+						_a.construct(_data + i, *(_data + i + n));
+					}
+					for (size_type i = target + n; i < _size; i++) {
+						_a.destroy(_data + i);
+						_a.construct(_data + i, *(_data + i + n));
+					}
+					for (size_type i = _size; i < _size + n; i++) {
+						_a.destroy(_data + i);
+						_a.construct(_data + i, initialized_obj);
+					}
+					return first;
+				}
+
+				void		swap(vector& x) {
+					pointer		tmpdata = _data;
+					size_type	tmpsize = _size;
+					size_type	tmpcap = _capacity;
+
+					_data = x._data;
+					_size = x._size;
+					_capacity = x._capacity;
+					x._data = tmpdata;
+					x._size = tmpsize;
+					x._capacity = tmpcap;
+				}
+
+				void		clear(void) {
+					T			initialized_obj;
+
+					for (size_type i = 0; i < _size; i++) {
+						_a.destroy(_data + i);
+						_a.construct(_data + i, initialized_obj);
+					}
+					_size = 0;
+				}
+
 				// Relational operators.
 
-				// class	OutOfBoundsException : public std::exception {
-				// 	public:
-				// 		OutOfBoundsException(size_type n, size_type size)
-				// 			: _position(n), _size(size) {}
-				//
-				// 		virtual const char 		*what() const throw() {
-				// 			msg = stream.str();
-				// 			return (std::runtime_error(msg));
-				// 		}
-				// 	private:
-				// 		size_type	_position;
-				// 		size_type	_size;
-				// };
 
 			private:
 				pointer			_data;
@@ -447,6 +509,43 @@ namespace ft {
 					throw std::runtime_error(msg);
 				}
 		};
+
+	template <class T, class Alloc>
+		void	swap(vector<T,Alloc>& x, vector<T,Alloc>& y) {
+			x.swap(y);
+		}
+
+	template <class T, class Alloc>
+		bool operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
+			if (lhs.size() != rhs.size())
+				return false;
+			return std::equal(lhs.begin(), lhs.end(), rhs.begin());
+		}
+
+template <class T, class Alloc>
+	bool operator!= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
+		return !(lhs == rhs);
+	}
+
+template <class T, class Alloc>
+	bool operator<  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
+		return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
+	}
+
+template <class T, class Alloc>
+	bool operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
+		return !(rhs < lhs);
+	}
+
+template <class T, class Alloc>
+	bool operator>  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
+		return rhs < lhs;
+	}
+
+template <class T, class Alloc>
+	bool operator>= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
+		return !(lhs < rhs);
+	}
 }
 
 #endif
