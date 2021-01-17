@@ -6,7 +6,7 @@
 /*   By: rlucas <ryanl585codam@gmail.com>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/06 12:49:55 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/01/16 22:56:52 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/01/17 10:32:36 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,6 +175,7 @@ void	basic_method_tests(ft::vector<T> &vec, std::vector<T> &realvec, std::vector
 	realvec.assign(25, newvals[1]);
 	print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
 	std::cout << std::endl;
+	print_fake_and_real(vec.capacity(), "ft::vector", realvec.capacity(), "std::vector");
 
 	vec = tmp1;
 	realvec = tmp2;
@@ -192,7 +193,10 @@ void	basic_method_tests(ft::vector<T> &vec, std::vector<T> &realvec, std::vector
 
 	// Cast is required for this insert() in std::vector in C++98, not in C++11
 	// std::cout << "ft::vector: " << *(vec.insert(vec.begin() + 3, static_cast<size_t>(8), newvals[4])) << std::endl;
-	std::cout << "std::vector: " << *(realvec.insert(realvec.begin() + 3, static_cast<size_t>(8), newvals[4])) << std::endl;
+	print_fake_and_real(vec.capacity(), "ft::vector", realvec.capacity(), "std::vector");
+	// vec.insert(vec.begin() + 3, static_cast<size_t>(8), newvals[4]);
+	// realvec.insert(realvec.begin() + 3, static_cast<unsigned int>(8), newvals[4]);
+	// std::cout << "std::vector: " << *(realvec.insert(realvec.begin() + 3, static_cast<unsigned int>(8), newvals[4])) << std::endl;
 	print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
 	std::cout << std::endl;
 }

@@ -6,7 +6,7 @@
 /*   By: rlucas <ryanl585codam@gmail.com>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/06 12:52:10 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/01/16 22:52:57 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/01/17 10:31:32 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,16 +77,38 @@ namespace ft {
 
 					_a = rhs._a;
 					if (_data) {
-						for (size_type i = 0; i < _capacity; i++)
-							_a.destroy(_data + i);
-						_a.deallocate(_data, _capacity);
+						if (_capacity > rhs._capacity) {
+							for (size_type i = 0; i < rhs._capacity; i++) {
+								_a.destroy(_data + i);
+								_a.construct(_data + i, *(rhs._data + i));
+							}
+							for (size_type i = rhs._capacity; i < _capacity; i++) {
+								_a.destroy(_data + i);
+								_a.construct(_data + i, initialized_obj);
+							}
+						} else {
+							for (size_type i = 0; i < _capacity; i++)
+								_a.destroy(_data + i);
+							_a.deallocate(_data, _capacity);
+							_data = _a.allocate(rhs._capacity);
+							for (size_type i = 0; i < rhs._capacity; i++) {
+								if (i < rhs._size)
+									_a.construct(_data + i, *(rhs._data + i));
+								else
+									_a.construct(_data + i, initialized_obj);
+								_capacity = rhs._capacity;
+							}
+						}
+					} else {
+						_data = _a.allocate(rhs._capacity);
+						for (size_type i = 0; i < rhs._capacity; i++) {
+							if (i < rhs._size)
+								_a.construct(_data + i, *(rhs._data + i));
+							else
+								_a.construct(_data + i, initialized_obj);
+						}
+						_capacity = rhs._capacity;
 					}
-					_data = _a.allocate(rhs._capacity);
-					for (size_type i = 0; i < rhs._size; i++)
-						_a.construct(_data + i, rhs._data[i]);
-					for (size_type i = rhs._size; i != rhs._capacity; i++)
-						_a.construct(_data + i, initialized_obj);
-					_capacity = rhs._capacity;
 					_size = rhs._size;
 					return (*this);
 				}
@@ -153,7 +175,7 @@ namespace ft {
 					if (n <= _capacity)
 						return ;
 					// new_cap = std::max(n, _capacity * 2);	// Customization
-																// Not in std::vector
+					// Not in std::vector
 					new_cap = n;
 					new_data = _a.allocate(sizeof(T) * new_cap);
 					for (size_type i = 0; i < new_cap; i++) {
@@ -338,7 +360,6 @@ namespace ft {
 						for (size_type i = target; i < n; i++)
 							_a.construct(_data + i, val);
 					}
-					return _data + target;
 				}
 
 				// Relational operators.
@@ -347,7 +368,7 @@ namespace ft {
 				// 	public:
 				// 		OutOfBoundsException(size_type n, size_type size)
 				// 			: _position(n), _size(size) {}
-                //
+				//
 				// 		virtual const char 		*what() const throw() {
 				// 			msg = stream.str();
 				// 			return (std::runtime_error(msg));
