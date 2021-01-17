@@ -6,7 +6,7 @@
 /*   By: rlucas <ryanl585codam@gmail.com>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/06 12:49:55 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/01/17 17:08:14 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/01/17 17:13:52 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -736,6 +736,7 @@ void	string_vector_tests(void (*f1)(std::string &s), void (*f2)(std::string &s))
 	newvals.push_back("sit");
 	newvals.push_back("amet,");
 	newvals.push_back("consectetur");
+	newvals.push_back("adipiscing elit. Donec aliquam tempus orci. Pellentesque bibendum consequat mauris, id pharetra urna molestie eget. Quisque a vulputate dolor.");
 
 	basic_method_tests(vec, realvec, newvals, f1, f2);
 
