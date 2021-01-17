@@ -6,7 +6,7 @@
 /*   By: rlucas <ryanl585codam@gmail.com>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/06 12:49:55 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/01/17 17:13:52 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/01/17 22:22:57 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ void	print_fake_and_real(T fake, const char *fake_name,
 template <typename T>
 void	basic_method_tests(ft::vector<T> &vec, std::vector<T> &realvec, std::vector<T> &newvals,
 		void (*f1)(T &n), void (*f2)(T &n)) {
+	(void)f1; (void)f2;
 	print_info(RED, "Basic tests");
 
 	print_info(WHITE, "empty() tests 1");
@@ -72,6 +73,10 @@ void	basic_method_tests(ft::vector<T> &vec, std::vector<T> &realvec, std::vector
 	print_info(WHITE, "push_back() tests");
 	print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
 	std::cout << std::endl;
+	// for (unsigned int i = 0; i < newvals.size(); i += 1) {
+	// 	vec.push_back(newvals[i]);
+	// 	realvec.push_back(newvals[i]);
+	// }
 	for (unsigned int i = 0; i < newvals.size(); i += 1) {
 		vec.push_back(newvals[i]);
 		realvec.push_back(newvals[i]);
@@ -201,6 +206,8 @@ void	basic_method_tests(ft::vector<T> &vec, std::vector<T> &realvec, std::vector
 	std::cout << "std::vector: " << *(realvec.insert(realvec.begin() + 2, newvals[0])) << std::endl;
 	print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
 	std::cout << std::endl;
+	std::cout << "ft::vector " << vec.size() << " std::vector " << realvec.size() << std::endl;
+	std::cout << "ft::vector " << vec.capacity() << " std::vector " << realvec.capacity() << std::endl;
 
 	std::cout << "ft::vector: " << *(vec.insert(vec.begin() + 5, newvals[4])) << std::endl;
 	std::cout << "std::vector: " << *(realvec.insert(realvec.begin() + 5, newvals[4])) << std::endl;
@@ -248,106 +255,108 @@ void	basic_method_tests(ft::vector<T> &vec, std::vector<T> &realvec, std::vector
 	// Both should segmentation fault
 	// std::cout << "ft::vector: " << *(vec.erase(vec.end())) << std::endl;
 	// std::cout << "std::vector: " << *(realvec.erase(realvec.end())) << std::endl;
+	
+	// This is currently an error!
 	std::cout << "ft::vector: " << *(vec.erase(vec.end() - 1)) << std::endl;
 	std::cout << "std::vector: " << *(realvec.erase(realvec.end() - 1)) << std::endl;
 	print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
 	std::cout << std::endl;
 
-	vec = tmp1;
-	realvec = tmp2;
-
-	print_info(WHITE, "erase() tests part 2");
-	print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
-	std::cout << std::endl;
-	std::cout << "ft::vector: " << *(vec.erase(vec.begin() + 1, vec.begin() + 4)) << std::endl;
-	std::cout << "std::vector: " << *(realvec.erase(realvec.begin() + 1, realvec.begin() + 4)) << std::endl;
-	print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
-	std::cout << std::endl;
-	// Both should segmentation fault
-	// std::cout << "ft::vector: " << *(vec.erase(vec.begin(), vec.end() + 4)) << std::endl;
-	// std::cout << "std::vector: " << *(realvec.erase(realvec.begin(), realvec.end() + 4)) << std::endl;
-	std::cout << "ft::vector: " << *(vec.erase(vec.begin() + 1, vec.end() - 2)) << std::endl;
-	std::cout << "std::vector: " << *(realvec.erase(realvec.begin() + 1, realvec.end() - 2)) << std::endl;
-	print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
-	std::cout << std::endl;
-
-	std::cout << "Difference here is undefined behaviour:" << std::endl;
-	std::cout << "ft::vector: " << *(vec.erase(vec.begin(), vec.end())) << std::endl;
-	std::cout << "std::vector: " << *(realvec.erase(realvec.begin(), realvec.end())) << std::endl;
-	print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
-	std::cout << std::endl;
-	print_fake_and_real(vec.size(), "ft::vector", realvec.size(), "std::vector");
-	print_fake_and_real(vec.capacity(), "ft::vector", realvec.capacity(), "std::vector");
-
-	vec = tmp1;
-	realvec = tmp2;
-
-	print_info(WHITE, "swap() tests part 1");
-	vec.assign(tmp3.begin() + 3, tmp3.end());
-	realvec.assign(tmp4.begin() + 3, tmp4.end());
-	print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
-	std::cout << std::endl;
-	print_fake_and_real(vec.size(), "ft::vector", realvec.size(), "std::vector");
-	print_fake_and_real(vec.capacity(), "ft::vector", realvec.capacity(), "std::vector");
-
-	vec.swap(tmp1);
-	realvec.swap(tmp2);
-	print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
-	std::cout << std::endl;
-	print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
-	std::cout << std::endl;
-	print_fake_and_real(vec.size(), "ft::vector", realvec.size(), "std::vector");
-	print_fake_and_real(vec.capacity(), "ft::vector", realvec.capacity(), "std::vector");
-
-	print_info(WHITE, "swap() tests part 2");
-	swap(vec, tmp1);
-	swap(realvec, tmp2);
-	print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
-	std::cout << std::endl;
-	print_fake_and_real(vec.size(), "ft::vector", realvec.size(), "std::vector");
-	print_fake_and_real(vec.capacity(), "ft::vector", realvec.capacity(), "std::vector");
-
-	print_info(WHITE, "clear() tests");
-	vec.swap(tmp1);
-	realvec.swap(tmp2);
-	print_fake_and_real(vec.size(), "ft::vector", realvec.size(), "std::vector");
-	print_fake_and_real(vec.capacity(), "ft::vector", realvec.capacity(), "std::vector");
-	vec.clear();
-	realvec.clear();
-	print_fake_and_real(vec.size(), "ft::vector", realvec.size(), "std::vector");
-	print_fake_and_real(vec.capacity(), "ft::vector", realvec.capacity(), "std::vector");
-	print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
-	std::cout << std::endl;
-
-	print_info(WHITE, "Relational operator tests");
-	vec = tmp1;
-	realvec = tmp2;
-	ft::vector<T>	vec2 = tmp1;
-	std::vector<T>	realvec2 = tmp2;
-	print_fake_and_real((vec == tmp1), "ft::vector", (realvec == tmp2), "std::vector");
-	print_fake_and_real((vec != tmp1), "ft::vector", (realvec != tmp2), "std::vector");
-	print_fake_and_real((vec < tmp1), "ft::vector", (realvec < tmp2), "std::vector");
-	print_fake_and_real((vec2 < tmp1), "ft::vector", (realvec2 < tmp2), "std::vector");
-	print_fake_and_real((vec <= tmp1), "ft::vector", (realvec <= tmp2), "std::vector");
-	print_fake_and_real((vec2 <= tmp1), "ft::vector", (realvec2 <= tmp2), "std::vector");
-	print_fake_and_real((vec > tmp1), "ft::vector", (realvec > tmp2), "std::vector");
-	print_fake_and_real((vec2 > tmp1), "ft::vector", (realvec2 > tmp2), "std::vector");
-	print_fake_and_real((vec >= tmp1), "ft::vector", (realvec >= tmp2), "std::vector");
-	print_fake_and_real((vec2 >= tmp1), "ft::vector", (realvec2 >= tmp2), "std::vector");
-	f1(vec.at(0));
-	f1(realvec.at(0));
-	f2(vec2.at(0));
-	f2(realvec2.at(0));
-	print_fake_and_real((vec == tmp1), "ft::vector", (realvec == tmp2), "std::vector");
-	print_fake_and_real((vec != tmp1), "ft::vector", (realvec != tmp2), "std::vector");
-	print_fake_and_real((vec < tmp1), "ft::vector", (realvec < tmp2), "std::vector");
-	print_fake_and_real((vec2 < tmp1), "ft::vector", (realvec2 < tmp2), "std::vector");
-	print_fake_and_real((vec <= tmp1), "ft::vector", (realvec <= tmp2), "std::vector");
-	print_fake_and_real((vec2 <= tmp1), "ft::vector", (realvec2 <= tmp2), "std::vector");
-	print_fake_and_real((vec > tmp1), "ft::vector", (realvec > tmp2), "std::vector");
-	print_fake_and_real((vec2 > tmp1), "ft::vector", (realvec2 > tmp2), "std::vector");
-	print_fake_and_real((vec >= tmp1), "ft::vector", (realvec >= tmp2), "std::vector");
-	print_fake_and_real((vec2 >= tmp1), "ft::vector", (realvec2 >= tmp2), "std::vector");
+	// vec = tmp1;
+	// realvec = tmp2;
+    //
+	// print_info(WHITE, "erase() tests part 2");
+	// print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
+	// std::cout << std::endl;
+	// std::cout << "ft::vector: " << *(vec.erase(vec.begin() + 1, vec.begin() + 4)) << std::endl;
+	// std::cout << "std::vector: " << *(realvec.erase(realvec.begin() + 1, realvec.begin() + 4)) << std::endl;
+	// print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
+	// std::cout << std::endl;
+	// // Both should segmentation fault
+	// // std::cout << "ft::vector: " << *(vec.erase(vec.begin(), vec.end() + 4)) << std::endl;
+	// // std::cout << "std::vector: " << *(realvec.erase(realvec.begin(), realvec.end() + 4)) << std::endl;
+	// std::cout << "ft::vector: " << *(vec.erase(vec.begin() + 1, vec.end() - 2)) << std::endl;
+	// std::cout << "std::vector: " << *(realvec.erase(realvec.begin() + 1, realvec.end() - 2)) << std::endl;
+	// print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
+	// std::cout << std::endl;
+    //
+	// std::cout << "Difference here is undefined behaviour:" << std::endl;
+	// std::cout << "ft::vector: " << *(vec.erase(vec.begin(), vec.end())) << std::endl;
+	// std::cout << "std::vector: " << *(realvec.erase(realvec.begin(), realvec.end())) << std::endl;
+	// print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
+	// std::cout << std::endl;
+	// print_fake_and_real(vec.size(), "ft::vector", realvec.size(), "std::vector");
+	// print_fake_and_real(vec.capacity(), "ft::vector", realvec.capacity(), "std::vector");
+    //
+	// vec = tmp1;
+	// realvec = tmp2;
+    //
+	// print_info(WHITE, "swap() tests part 1");
+	// vec.assign(tmp3.begin() + 3, tmp3.end());
+	// realvec.assign(tmp4.begin() + 3, tmp4.end());
+	// print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
+	// std::cout << std::endl;
+	// print_fake_and_real(vec.size(), "ft::vector", realvec.size(), "std::vector");
+	// print_fake_and_real(vec.capacity(), "ft::vector", realvec.capacity(), "std::vector");
+    //
+	// vec.swap(tmp1);
+	// realvec.swap(tmp2);
+	// print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
+	// std::cout << std::endl;
+	// print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
+	// std::cout << std::endl;
+	// print_fake_and_real(vec.size(), "ft::vector", realvec.size(), "std::vector");
+	// print_fake_and_real(vec.capacity(), "ft::vector", realvec.capacity(), "std::vector");
+    //
+	// print_info(WHITE, "swap() tests part 2");
+	// swap(vec, tmp1);
+	// swap(realvec, tmp2);
+	// print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
+	// std::cout << std::endl;
+	// print_fake_and_real(vec.size(), "ft::vector", realvec.size(), "std::vector");
+	// print_fake_and_real(vec.capacity(), "ft::vector", realvec.capacity(), "std::vector");
+    //
+	// print_info(WHITE, "clear() tests");
+	// vec.swap(tmp1);
+	// realvec.swap(tmp2);
+	// print_fake_and_real(vec.size(), "ft::vector", realvec.size(), "std::vector");
+	// print_fake_and_real(vec.capacity(), "ft::vector", realvec.capacity(), "std::vector");
+	// vec.clear();
+	// realvec.clear();
+	// print_fake_and_real(vec.size(), "ft::vector", realvec.size(), "std::vector");
+	// print_fake_and_real(vec.capacity(), "ft::vector", realvec.capacity(), "std::vector");
+	// print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
+	// std::cout << std::endl;
+    //
+	// print_info(WHITE, "Relational operator tests");
+	// vec = tmp1;
+	// realvec = tmp2;
+	// ft::vector<T>	vec2 = tmp1;
+	// std::vector<T>	realvec2 = tmp2;
+	// print_fake_and_real((vec == tmp1), "ft::vector", (realvec == tmp2), "std::vector");
+	// print_fake_and_real((vec != tmp1), "ft::vector", (realvec != tmp2), "std::vector");
+	// print_fake_and_real((vec < tmp1), "ft::vector", (realvec < tmp2), "std::vector");
+	// print_fake_and_real((vec2 < tmp1), "ft::vector", (realvec2 < tmp2), "std::vector");
+	// print_fake_and_real((vec <= tmp1), "ft::vector", (realvec <= tmp2), "std::vector");
+	// print_fake_and_real((vec2 <= tmp1), "ft::vector", (realvec2 <= tmp2), "std::vector");
+	// print_fake_and_real((vec > tmp1), "ft::vector", (realvec > tmp2), "std::vector");
+	// print_fake_and_real((vec2 > tmp1), "ft::vector", (realvec2 > tmp2), "std::vector");
+	// print_fake_and_real((vec >= tmp1), "ft::vector", (realvec >= tmp2), "std::vector");
+	// print_fake_and_real((vec2 >= tmp1), "ft::vector", (realvec2 >= tmp2), "std::vector");
+	// f1(vec.at(0));
+	// f1(realvec.at(0));
+	// f2(vec2.at(0));
+	// f2(realvec2.at(0));
+	// print_fake_and_real((vec == tmp1), "ft::vector", (realvec == tmp2), "std::vector");
+	// print_fake_and_real((vec != tmp1), "ft::vector", (realvec != tmp2), "std::vector");
+	// print_fake_and_real((vec < tmp1), "ft::vector", (realvec < tmp2), "std::vector");
+	// print_fake_and_real((vec2 < tmp1), "ft::vector", (realvec2 < tmp2), "std::vector");
+	// print_fake_and_real((vec <= tmp1), "ft::vector", (realvec <= tmp2), "std::vector");
+	// print_fake_and_real((vec2 <= tmp1), "ft::vector", (realvec2 <= tmp2), "std::vector");
+	// print_fake_and_real((vec > tmp1), "ft::vector", (realvec > tmp2), "std::vector");
+	// print_fake_and_real((vec2 > tmp1), "ft::vector", (realvec2 > tmp2), "std::vector");
+	// print_fake_and_real((vec >= tmp1), "ft::vector", (realvec >= tmp2), "std::vector");
+	// print_fake_and_real((vec2 >= tmp1), "ft::vector", (realvec2 >= tmp2), "std::vector");
 }
 
 template <typename T>
@@ -733,8 +742,8 @@ void	string_vector_tests(void (*f1)(std::string &s), void (*f2)(std::string &s))
 	newvals.push_back("Lorem");
 	newvals.push_back("ipsum");
 	newvals.push_back("dolor");
-	newvals.push_back("sit");
 	newvals.push_back("amet,");
+	newvals.push_back("sit long long long long long long long long long long long long long long long long");
 	newvals.push_back("consectetur");
 	newvals.push_back("adipiscing elit. Donec aliquam tempus orci. Pellentesque bibendum consequat mauris, id pharetra urna molestie eget. Quisque a vulputate dolor.");
 
@@ -780,7 +789,7 @@ void	string_sub_func(std::string &s) { if (s.size() == 0) { return ; } else { s[
 
 int		main(void)
 {
-	int_vector_tests(int_add_func, int_sub_func, int_mul_func);
+	// int_vector_tests(int_add_func, int_sub_func, int_mul_func);
 	string_vector_tests(string_add_func, string_sub_func);
 	// any_object_tests();
 

@@ -6,7 +6,7 @@
 /*   By: rlucas <ryanl585codam@gmail.com>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/06 12:52:10 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/01/17 17:04:46 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/01/17 22:21:25 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -310,13 +310,17 @@ namespace ft {
 					if (_size == _capacity) {
 						this->reserve(_capacity * 2);
 					}
+					_a.destroy(_data + _size);
 					_a.construct(_data + _size, val);
 					_size += 1;
 				}
 
 				void		pop_back(void) {
+					T			initialized_obj;
 					if (_size == 0) { return ; }
+					std::cout << "About to destroy at index: " << _size << std::endl;
 					_a.destroy(_data + _size - 1);
+					_a.construct(_data + _size, initialized_obj);
 					_size -= 1;
 				}
 
@@ -349,6 +353,7 @@ namespace ft {
 							_a.destroy(_data + i);
 							_a.construct(_data + i, *(_data + i - 1));
 						}
+						_a.destroy(_data + target);
 						_a.construct(_data + target, val);
 					}
 					return _data + target;
