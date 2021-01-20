@@ -6,7 +6,7 @@
 /*   By: rlucas <ryanl585codam@gmail.com>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/06 12:52:10 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/01/19 21:24:38 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/01/20 10:35:11 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,9 @@ namespace ft {
 					*this = src;
 				}
 				~vector(void) {
-					for (size_type i = 0; i < _capacity; i++)
+					for (size_type i = 0; i < _size; i++) {
 						_a.destroy(_data + i);
+					}
 					if (_data)
 						_a.deallocate(_data, _capacity);
 				}
@@ -73,38 +74,28 @@ namespace ft {
 				vector		&operator=(vector const &rhs) {
 					if (&rhs == this) { return *this; }
 
-					T		initialized_obj;
-
 					_a = rhs._a;
 					if (_data) {
 						if (_capacity > rhs._capacity) {
-							for (size_type i = 0; i < rhs._capacity; i++) {
+							for (size_type i = 0; i < rhs._size; i++) {
 								_a.destroy(_data + i);
 								_a.construct(_data + i, *(rhs._data + i));
 							}
-							for (size_type i = rhs._capacity; i < _capacity; i++) {
+							for (size_type i = rhs._size; i < _size; i++)
 								_a.destroy(_data + i);
-								_a.construct(_data + i, initialized_obj);
-							}
 						} else {
-							for (size_type i = 0; i < _capacity; i++)
+							for (size_type i = 0; i < _size; i++)
 								_a.destroy(_data + i);
 							_a.deallocate(_data, _capacity);
 							_data = _a.allocate(rhs._capacity);
-							for (size_type i = 0; i < rhs._capacity; i++) {
-								if (i < rhs._size)
-									_a.construct(_data + i, *(rhs._data + i));
-								else
-									_a.construct(_data + i, initialized_obj);
-							}
+							for (size_type i = 0; i < rhs._size; i++)
+								_a.construct(_data + i, *(rhs._data + i));
 							_capacity = rhs._capacity;
 						}
 					} else {
 						_data = _a.allocate(rhs._size);
-						for (size_type i = 0; i < rhs._size; i++) {
-							if (i < rhs._size)
+						for (size_type i = 0; i < rhs._size; i++)
 								_a.construct(_data + i, *(rhs._data + i));
-						}
 						_capacity = rhs._size;
 					}
 					_size = rhs._size;
@@ -164,16 +155,14 @@ namespace ft {
 
 				void		resize(size_type n, value_type val = value_type()) {
 					if (n < _size) {
-						for (size_type i = n; i < _size; i++) {
+						for (size_type i = n; i < _size; i++)
 							_a.destroy(_data + i);
-						}
 					}
 					if (n > _capacity) {
 						this->reserve(std::max(n, (_capacity * 2) - 2));
 					}
-					for (; _size < n; _size++) {
+					for (; _size < n; _size++)
 						_a.construct(_data + _size, val);
-					}
 				}
 
 				size_type	capacity(void) const {
@@ -187,7 +176,6 @@ namespace ft {
 				void		reserve(size_type n) {
 					size_type	new_cap;	
 					pointer		new_data;
-					T			initialized_obj;
 
 					if (n <= _capacity)
 						return ;
@@ -195,16 +183,13 @@ namespace ft {
 					// Not in std::vector
 					new_cap = n;
 					new_data = _a.allocate(sizeof(T) * new_cap);
-					for (size_type i = 0; i < new_cap; i++) {
-						if (i < _size)
-							_a.construct(new_data + i, *(_data + i));
-						else
-							_a.construct(new_data + i, initialized_obj);
-					}
-					for (size_type i = 0; i < _capacity; i++)
-						_a.destroy(_data + i);
-					if (_data)
+					for (size_type i = 0; i < _size; i++)
+						_a.construct(new_data + i, *(_data + i));
+					if (_data) {
+						for (size_type i = 0; i < _size; i++)
+							_a.destroy(_data + i);
 						_a.deallocate(_data, _capacity);
+					}
 					_capacity = new_cap;
 					_data = new_data;
 				}
@@ -252,7 +237,6 @@ namespace ft {
 							typename ft::enable_if<ft::isIterator<InputIterator>::value, InputIterator>::type = 0) {
 						size_type		new_size = last - first;
 						pointer			new_data;
-						T				initialized_obj;
 
 						if (first >= last)
 							return ;
@@ -267,19 +251,19 @@ namespace ft {
 							_capacity = new_size;
 							_data = new_data;
 						} else {
-							for (size_type i = 0; first != last; first++, i++)
-								*(_data + i) = *first;
-							for (size_type i = new_size; i < _size; i++) {
-								_a.destroy(_data + i);
-								_a.construct(_data + i, initialized_obj);
+							for (size_type i = 0; first != last; first++, i++) {
+								if (i < _size)
+									_a.destroy(_data + i);
+								_a.construct(_data + i, *first);
 							}
+							for (size_type i = new_size - 1; i < _size; i++)
+								_a.destroy(_data + i);
 						}
 						_size = new_size;
 					}
 
 				void		assign(size_type n, const value_type& val) {
 					pointer			new_data;
-					T				initialized_obj;
 
 					if (n > _capacity) {
 						new_data = _a.allocate(sizeof(T) * n);
@@ -292,16 +276,16 @@ namespace ft {
 						_capacity = n;
 						_data = new_data;
 					} else {
-						for (size_type i = 0; i < _capacity; i++) {
+						for (size_type i = 0; i < _size; i++) {
 							if (i < n) {
 								_a.destroy(_data + i);
 								_a.construct(_data + i, val);
 							}
-							else {
+							else
 								_a.destroy(_data + i);
-								_a.construct(_data + i, initialized_obj);
-							}
 						}
+						for (size_type i = _size; i < _size + n; i++)
+							_a.construct(_data + i, val);
 					}
 					_size = n;
 				}
@@ -310,46 +294,39 @@ namespace ft {
 					if (_size == _capacity) {
 						this->reserve(_capacity * 2);
 					}
-					_a.destroy(_data + _size);
 					_a.construct(_data + _size, val);
 					_size += 1;
 				}
 
 				void		pop_back(void) {
-					T			initialized_obj;
 					if (_size == 0) { return ; }
 					_a.destroy(_data + _size - 1);
-					_a.construct(_data + _size, initialized_obj);
 					_size -= 1;
 				}
 
-				// See insert.cpp in C++ learning directory, insert to left of position
 				iterator	insert(iterator position, const value_type& val) {
 					pointer		new_data;
-					T			initialized_obj;
 					size_type	target = position - this->begin();
 					size_type	new_cap = _capacity * 2;
-					size_type	offset = 0;
 
 					if (_size == _capacity) {	
 						new_data = _a.allocate(sizeof(T) * new_cap);
 						_size += 1;
-						for (size_type i = 0; i < new_cap; i++) {
-							if (i == target) {
-								_a.construct(new_data + i + offset, val);
-								offset += 1;
-							} else if (i < _size)
-								_a.construct(new_data + i, *(_data + i - offset));
-							else
-								_a.construct(new_data + i, initialized_obj);
-						}
+						for (size_type i = 0; i < target; i++)	// Copy up to target pos
+							_a.construct(new_data + i, *(_data + i));
+						_a.construct(new_data + target, val);	// Insert new val
+						for (size_type i = target + 1; i < _size; i++)	// Copy from target pos to end
+							_a.construct(new_data + i, *(_data + i - 1));
+						for (size_type i = 0; i < _size - 1; i++)	// Destroy prev vals
+							_a.destroy(_data + i);
 						_a.deallocate(_data, _capacity);
 						_capacity = new_cap;
 						_data = new_data;
 					} else {
 						_size += 1;
-						for (size_type i = _size; i > target; i--) {
-							_a.destroy(_data + i);
+						for (size_type i = _size - 1; i > target; i--) {
+							if (i != _size - 1)
+								_a.destroy(_data + i);
 							_a.construct(_data + i, *(_data + i - 1));
 						}
 						_a.destroy(_data + target);
@@ -360,34 +337,32 @@ namespace ft {
 
 				void	insert(iterator position, size_type n, const value_type& val) {
 					pointer		new_data;
-					T			initialized_obj;
 					size_type	target = position - this->begin();
 					size_type	new_cap = std::max(_capacity * 2, _size + n);
-					size_type	offset = 0;
 
 					if (_size + n >= _capacity) {	
 						new_data = _a.allocate(sizeof(T) * new_cap);
 						_size += n;
-						for (size_type i = 0; i < new_cap; i++) {
-							if (i >= target && i < target + n) {
-								_a.construct(new_data + i, val);
-								offset += 1;
-							} else if (i < _size)
-								_a.construct(new_data + i, *(_data + i - offset));
-							else
-								_a.construct(new_data + i, initialized_obj);
+						for (size_type i = 0; i < target; i++) {	// Copy up to target
+							_a.construct(new_data + i, *(_data + i));
+							_a.destroy(_data + i);
+						}
+						for (size_type i = target; i < target + n; i++)	// Construct from val in range
+							_a.construct(new_data + i, val);
+						for (size_type i = target + n; i < _size; i++) {	// Copy from past target + n
+							_a.construct(new_data + i, *(_data + i - n));
+							_a.destroy(_data + i - n);
 						}
 						_a.deallocate(_data, _capacity);
 						_capacity = new_cap;
 						_data = new_data;
 					} else {
 						_size += n;
-						for (size_type i = _size; i >= target + n; i--) {
-							_a.destroy(_data + i);
+						for (size_type i = _size - 1; i >= target + n; i--)
 							_a.construct(_data + i, *(_data + i - n));
-						}
 						for (size_type i = target; i < target + n; i++) {
-							_a.destroy(_data + i);
+							if (i < _size - n - 1)
+								_a.destroy(_data + i);
 							_a.construct(_data + i, val);
 						}
 					}
@@ -397,45 +372,40 @@ namespace ft {
 					void insert (iterator position, InputIterator first, InputIterator last,
 							typename ft::enable_if<ft::isIterator<InputIterator>::value, InputIterator>::type = 0) {
 						pointer		new_data;
-						T			initialized_obj;
 						size_type	target = position - this->begin();
 						size_type	n = last - first;
 						size_type	new_cap = std::max(_capacity * 2, _size + n);
-						size_type	offset = 0;
 
 						if (_size + n >= _capacity) {
 							new_data = _a.allocate(sizeof(T) * new_cap);
 							_size += n;
-							for (size_type i = 0; i < new_cap; i++) {
-								if (i >= target && i < target + n) {
-									_a.construct(new_data + i, *first);
-									first++;
-									offset += 1;
-								} else if (i < _size)
-									_a.construct(new_data + i, *(_data + i - offset));
-								else
-									_a.construct(new_data + i, initialized_obj);
+							for (size_type i = 0; i < target; i++) {
+								_a.construct(new_data + i, *(_data + i));
+								_a.destroy(_data + i);
+							}
+							for (size_type i = target; i < target + n; i++, first++)
+								_a.construct(new_data + i, *first);
+							for (size_type i = target + n; i < _size; i++) {
+								_a.construct(new_data + i, *(_data + i - n));
+								_a.destroy(_data + i - n);
 							}
 							_a.deallocate(_data, _capacity);
 							_capacity = new_cap;
 							_data = new_data;
 						} else {
 							_size += n;
-							for (size_type i = _size; i >= target + n; i--) {
-								_a.destroy(_data + i);
+							for (size_type i = _size - 1; i >= target + n; i--)
 								_a.construct(_data + i, *(_data + i - n));
-							}
-							for (size_type i = target; i < target + n; i++) {
-								_a.destroy(_data + i);
+							for (size_type i = target; i < target + n; i++, first++) {
+								if (i < _size - n - 1)
+									_a.destroy(_data + i);
 								_a.construct(_data + i, *first);
-								first++;
 							}
 						}
 					}
 
 				iterator	erase(iterator position) {
 					size_type	target = position - this->begin();
-					// T			initialized_obj;
 
 					_size -= 1;
 					for (size_type i = target; i < _size; i++) {
@@ -443,14 +413,12 @@ namespace ft {
 						_a.construct(_data + i, *(_data + i + 1));
 					}
 					_a.destroy(_data + _size);
-					// _a.construct(_data + _size, initialized_obj);
 					return position;
 				}
 
 				iterator	erase(iterator first, iterator last) {
 					size_type	n = last - first;
 					size_type	target = first - this->begin();
-					T			initialized_obj;
 
 					_size -= n;
 					for (size_type i = target; i < target + n; i++) {
@@ -461,10 +429,8 @@ namespace ft {
 						_a.destroy(_data + i);
 						_a.construct(_data + i, *(_data + i + n));
 					}
-					for (size_type i = _size; i < _size + n; i++) {
+					for (size_type i = _size; i < _size + n; i++)
 						_a.destroy(_data + i);
-						_a.construct(_data + i, initialized_obj);
-					}
 					return first;
 				}
 
@@ -482,17 +448,10 @@ namespace ft {
 				}
 
 				void		clear(void) {
-					T			initialized_obj;
-
-					for (size_type i = 0; i < _size; i++) {
+					for (size_type i = 0; i < _size; i++)
 						_a.destroy(_data + i);
-						_a.construct(_data + i, initialized_obj);
-					}
 					_size = 0;
 				}
-
-				// Relational operators.
-
 
 			private:
 				pointer			_data;
