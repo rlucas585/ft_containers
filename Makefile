@@ -6,7 +6,7 @@
 #    By: rlucas <marvin@codam.nl>                     +#+                      #
 #                                                    +#+                       #
 #    Created: 2020/07/27 14:22:41 by rlucas        #+#    #+#                  #
-#    Updated: 2021/01/16 22:55:58 by rlucas        ########   odam.nl          #
+#    Updated: 2021/01/20 10:50:07 by rlucas        ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,7 +24,8 @@ INCLUDES = -Isrc/
 EXT = .cpp
 
 SRCLST = main \
-	  utils
+	  utils \
+	  vector_tests
 
 # Configuration above, logic below
 

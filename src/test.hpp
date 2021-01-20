@@ -1,29 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   main.cpp                                           :+:    :+:            */
+/*   test.hpp                                           :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: rlucas <ryanl585codam@gmail.com>             +#+                     */
+/*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2021/01/06 12:49:55 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/01/20 10:49:43 by rlucas        ########   odam.nl         */
+/*   Created: 2021/01/20 10:46:32 by rlucas        #+#    #+#                 */
+/*   Updated: 2021/01/20 10:49:22 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdexcept>
-#include <iostream>
-#include <iomanip>
-#include <algorithm>
-#include <vector>
+#ifndef TEST_HPP
+# define TEST_HPP
 
-#include "colors.hpp"
-#include "utils.hpp"
-#include "test.hpp"
+void	vector_tests(bool int_test, bool string_test, bool object_test);
 
-
-int		main(void)
-{
-	vector_tests(true, false, false);
-
-	return (0);
-}
+#endif

@@ -6,12 +6,14 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/08/06 23:05:51 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/01/06 14:56:54 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/01/20 10:53:52 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "colors.hpp"
+#include "vector.hpp"
 #include <iostream>
+#include <iomanip>
 #include <string>
 
 void	print_divider(std::string color, std::string message)
