@@ -6,7 +6,7 @@
 /*   By: rlucas <ryanl585codam@gmail.com>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/06 12:52:10 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/01/20 10:35:11 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/01/20 12:10:01 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define VECTOR_HPP 
 
 # include <iterator>
-# include <memory>
+# include <memory> /* allocator */
 # include <stdexcept>
 # include <algorithm>
 # include <cmath>
@@ -39,7 +39,6 @@ namespace ft {
 		class vector {
 
 			public:
-
 				typedef A											allocator_type;
 				typedef T											value_type;
 				typedef typename allocator_type::reference			reference;

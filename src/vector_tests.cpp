@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/20 10:43:05 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/01/20 10:53:53 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/01/20 15:50:11 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,18 +22,7 @@
 #include "vector.hpp"
 
 template <typename T>
-void	try_index(ft::vector<T> &vec, size_t i) {
-	T		val;
-	try {
-		val = vec[i];
-		std::cout << "Index " << i << ": " << val << std::endl;
-	} catch (std::exception &e) {
-		std::cerr << "Error " << ": " << e.what() << std::endl;
-	}
-}
-
-template <typename T>
-void	print_vector(T &vec) {
+static void	print_vector(T &vec) {
 	std::cout << "[";
 	for (unsigned int i = 0; i < vec.size(); i++) {
 		if (i == vec.size() - 1)
@@ -44,7 +33,7 @@ void	print_vector(T &vec) {
 }
 
 template <typename T, typename U>
-void	print_fake_and_real_collection(T &fake, const char *fake_name,
+static void	print_fake_and_real_collection(T &fake, const char *fake_name,
 		U &real, const char *real_name) {
 	std::cout << fake_name << ": ";
 	print_vector(fake);
@@ -55,7 +44,7 @@ void	print_fake_and_real_collection(T &fake, const char *fake_name,
 }
 
 template <typename T, typename U>
-void	print_fake_and_real(T fake, const char *fake_name,
+static void	print_fake_and_real(T fake, const char *fake_name,
 		U real, const char *real_name) {
 	std::cout << std::boolalpha;
 	std::cout << fake_name << ": " << std::setw(5) << fake;
@@ -63,11 +52,9 @@ void	print_fake_and_real(T fake, const char *fake_name,
 	std::cout << std::endl;
 }
 
-
 template <typename T>
-void	basic_method_tests(ft::vector<T> &vec, std::vector<T> &realvec, std::vector<T> &newvals,
+static void	basic_method_tests(ft::vector<T> &vec, std::vector<T> &realvec, std::vector<T> &newvals,
 		void (*f1)(T &n), void (*f2)(T &n)) {
-	(void)f1; (void)f2;
 	print_info(RED, "Basic tests");
 
 	print_info(WHITE, "empty() tests 1");
@@ -295,8 +282,6 @@ void	basic_method_tests(ft::vector<T> &vec, std::vector<T> &realvec, std::vector
 	print_fake_and_real(vec.capacity(), "ft::vector", realvec.capacity(), "std::vector");
 
 	print_info(WHITE, "clear() tests");
-	vec.swap(tmp1);
-	realvec.swap(tmp2);
 	print_fake_and_real(vec.size(), "ft::vector", realvec.size(), "std::vector");
 	print_fake_and_real(vec.capacity(), "ft::vector", realvec.capacity(), "std::vector");
 	vec.clear();
@@ -337,7 +322,7 @@ void	basic_method_tests(ft::vector<T> &vec, std::vector<T> &realvec, std::vector
 }
 
 template <typename T>
-void	increment_tests(ft::vector<T> &vec, std::vector<T> &realvec) {
+static void	increment_tests(ft::vector<T> &vec, std::vector<T> &realvec) {
 	typename ft::vector<T>::const_iterator it = vec.begin();
 	typename std::vector<T>::const_iterator real_it = realvec.begin();
 
@@ -367,7 +352,7 @@ void	increment_tests(ft::vector<T> &vec, std::vector<T> &realvec) {
 }
 
 template <typename T>
-void	operation_tests(ft::vector<T> &vec, std::vector<T> &realvec) {
+static void	operation_tests(ft::vector<T> &vec, std::vector<T> &realvec) {
 	typename ft::vector<T>::const_iterator it = vec.begin();
 	typename std::vector<T>::const_iterator real_it = realvec.begin();
 
@@ -400,7 +385,7 @@ void	operation_tests(ft::vector<T> &vec, std::vector<T> &realvec) {
 }
 
 template <typename T>
-void	copy_comparison_tests(ft::vector<T> &vec, std::vector<T> &realvec) {
+static void	copy_comparison_tests(ft::vector<T> &vec, std::vector<T> &realvec) {
 	typename ft::vector<T>::const_iterator it = vec.begin();
 	typename std::vector<T>::const_iterator real_it = realvec.begin();
 
@@ -441,8 +426,8 @@ void	copy_comparison_tests(ft::vector<T> &vec, std::vector<T> &realvec) {
 }
 
 template <typename T>
-void	modification_tests(ft::vector<T> &vec, std::vector<T> &realvec,
-		void (*f1)(int &n), void (*f2)(int &n), void (*f3)(int &n)) {
+static void	modification_tests(ft::vector<T> &vec, std::vector<T> &realvec,
+		void (*f1)(T &n), void (*f2)(T &n), void (*f3)(T &n)) {
 	print_info(WHITE, "Edits with non-const iterators");
 	typename ft::vector<T>::iterator nc_it;
 	typename std::vector<T>::iterator nc_real_it;
@@ -481,7 +466,7 @@ void	modification_tests(ft::vector<T> &vec, std::vector<T> &realvec,
 }
 
 template <typename T>
-void	reverse_increment_tests(ft::vector<T> &vec, std::vector<T> &realvec) {
+static void	reverse_increment_tests(ft::vector<T> &vec, std::vector<T> &realvec) {
 	typename ft::vector<T>::const_reverse_iterator	rit = vec.rbegin();
 	typename std::vector<T>::const_reverse_iterator	real_rit = realvec.rbegin();
 	typename ft::vector<T>::const_reverse_iterator	rit2 = vec.rbegin();
@@ -532,7 +517,7 @@ void	reverse_increment_tests(ft::vector<T> &vec, std::vector<T> &realvec) {
 }
 
 template <typename T>
-void	reverse_copy_comparison_tests(ft::vector<T> &vec, std::vector<T> &realvec) {
+static void	reverse_copy_comparison_tests(ft::vector<T> &vec, std::vector<T> &realvec) {
 	typename ft::vector<T>::const_iterator it = vec.begin();
 	typename std::vector<T>::const_iterator real_it = realvec.begin();
 	typename ft::vector<T>::const_reverse_iterator	rit = vec.rbegin();
@@ -582,8 +567,8 @@ void	reverse_copy_comparison_tests(ft::vector<T> &vec, std::vector<T> &realvec) 
 }
 
 template <typename T>
-void	reverse_modification_tests(ft::vector<T> &vec, std::vector<T> &realvec,
-		void (*f1)(int &n), void (*f2)(int &n), void (*f3)(int &n)) {
+static void	reverse_modification_tests(ft::vector<T> &vec, std::vector<T> &realvec,
+		void (*f1)(T &n), void (*f2)(T &n), void (*f3)(T &n)) {
 	typename ft::vector<T>::reverse_iterator	nc_rit(vec.rbegin());
 	typename std::vector<T>::reverse_iterator	nc_real_rit(realvec.rbegin());
 
@@ -596,9 +581,9 @@ void	reverse_modification_tests(ft::vector<T> &vec, std::vector<T> &realvec,
 
 	print_info(BLUE, "Addition to all values");
 	for (nc_rit = vec.rbegin(); nc_rit != vec.rend(); nc_rit++)
-		*(nc_rit) += 2;
+		f1(*(nc_rit));
 	for (nc_real_rit = realvec.rbegin(); nc_real_rit != realvec.rend(); nc_real_rit++)
-		*(nc_real_rit) += 2;
+		f1(*(nc_real_rit));
 	print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
 
 	if (!f2)
@@ -606,9 +591,9 @@ void	reverse_modification_tests(ft::vector<T> &vec, std::vector<T> &realvec,
 
 	print_info(BLUE, "Subtraction to all values");
 	for (nc_rit = vec.rbegin(); nc_rit != vec.rend(); nc_rit++)
-		(*nc_rit) -= 4;
+		f2(*(nc_rit));
 	for (nc_real_rit = realvec.rbegin(); nc_real_rit != realvec.rend(); nc_real_rit++)
-		*(nc_real_rit) -= 4;
+		f2(*(nc_real_rit));
 	print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
 
 	if (!f3)
@@ -616,14 +601,14 @@ void	reverse_modification_tests(ft::vector<T> &vec, std::vector<T> &realvec,
 
 	print_info(BLUE, "Multiplication to all values");
 	for (nc_rit = vec.rbegin(); nc_rit != vec.rend(); nc_rit++)
-		(*nc_rit) *= 4;
+		f3(*(nc_rit));
 	for (nc_real_rit = realvec.rbegin(); nc_real_rit != realvec.rend(); nc_real_rit++)
-		*(nc_real_rit) *= 4;
+		f3(*(nc_real_rit));
 	print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
 }
 
 template <typename T>
-void	reverse_base_tests(ft::vector<T> &vec, std::vector<T> &realvec) {
+static void	reverse_base_tests(ft::vector<T> &vec, std::vector<T> &realvec) {
 	typename ft::vector<T>::reverse_iterator	nc_rit(vec.rbegin());
 	typename std::vector<T>::reverse_iterator	nc_real_rit(realvec.rbegin());
 	typename ft::vector<T>::const_reverse_iterator	rit2(nc_rit);
@@ -641,8 +626,8 @@ void	reverse_base_tests(ft::vector<T> &vec, std::vector<T> &realvec) {
 }
 
 template <typename T>
-void	reverse_iteration_tests(ft::vector<T> &vec, std::vector<T> &realvec,
-		void (*f1)(int &n), void (*f2)(int &n), void (*f3)(int &n)) {
+static void	reverse_iteration_tests(ft::vector<T> &vec, std::vector<T> &realvec,
+		void (*f1)(T &n), void (*f2)(T &n), void (*f3)(T &n)) {
 	print_info(RED, "Reverse Iterator tests");
 
 	reverse_increment_tests(vec, realvec);
@@ -652,8 +637,8 @@ void	reverse_iteration_tests(ft::vector<T> &vec, std::vector<T> &realvec,
 }
 
 template <typename T>
-void	iterator_tests(ft::vector<T> &vec, std::vector<T> &realvec,
-		void (*f1)(int &n), void (*f2)(int &n), void (*f3)(int &n)) {
+static void	iterator_tests(ft::vector<T> &vec, std::vector<T> &realvec,
+		void (*f1)(T &n), void (*f2)(T &n), void (*f3)(T &n)) {
 	ft::vector<T>	original_fake = vec;	// Also testing copy
 	std::vector<T>	original_real = realvec;
 
@@ -674,12 +659,12 @@ void	iterator_tests(ft::vector<T> &vec, std::vector<T> &realvec,
 }
 
 template <typename T>
-void	algorithm_tests(ft::vector<T> &vec, std::vector<T> &realvec) {
+static void	algorithm_tests(ft::vector<T> &vec, std::vector<T> &realvec) {
 	print_info(RED, "Algorithm function tests");
 
 }
 
-void	int_vector_tests(void (*f1)(int &n), void (*f2)(int &n), void (*f3)(int &n))
+static void	int_vector_tests(void (*f1)(int &n), void (*f2)(int &n), void (*f3)(int &n))
 {
 	print_divider(CYAN, "ft::vector<int> tests");
 
@@ -695,12 +680,13 @@ void	int_vector_tests(void (*f1)(int &n), void (*f2)(int &n), void (*f3)(int &n)
 	(void)f1;(void)f2;(void)f3;
 	basic_method_tests(vec, realvec, newvals, f1, f2);
 
-	// iterator_tests(vec, realvec, f1, f2, f3);
+	iterator_tests(vec, realvec, f1, f2, f3);
 
 	print_line(CYAN);
 }
 
-void	string_vector_tests(void (*f1)(std::string &s), void (*f2)(std::string &s)) {
+static void	string_vector_tests(void (*f1)(std::string &s), void (*f2)(std::string &s),
+		void (*f3)(std::string &s)) {
 	print_divider(MAGENTA, "ft::vector<std::string> tests");
 
 	ft::vector<std::string>		vec;
@@ -717,6 +703,8 @@ void	string_vector_tests(void (*f1)(std::string &s), void (*f2)(std::string &s))
 
 	basic_method_tests(vec, realvec, newvals, f1, f2);
 
+	iterator_tests(vec, realvec, f1, f2, f3);
+
 	print_line(MAGENTA);
 }
 
@@ -731,7 +719,7 @@ class Example {
 		int		_val;
 };
 
-void	any_object_tests(void) {
+static void	any_object_tests(void) {
 	print_divider(RED, "ft::vector<Example> tests");
 
 	Example				three;
@@ -749,17 +737,18 @@ void	any_object_tests(void) {
 	print_line(RED);
 }
 
-void	int_add_func(int &n) { n += 2; }
-void	int_sub_func(int &n) { n -= 2; }
-void	int_mul_func(int &n) { n *= 4; }
-void	string_add_func(std::string &s) { if (s.size() == 0) { return ; } else { s[0] += 1; } }
-void	string_sub_func(std::string &s) { if (s.size() == 0) { return ; } else { s[0] -= 1; } }
+static void	int_add_func(int &n) { n += 2; }
+static void	int_sub_func(int &n) { n -= 2; }
+static void	int_mul_func(int &n) { n *= 4; }
+static void	string_add_func(std::string &s) { if (s.size() == 0) { return ; } else { s[0] += 1; } }
+static void	string_sub_func(std::string &s) { if (s.size() == 0) { return ; } else { s[0] -= 1; } }
+static void	string_not_func(std::string &s) { (void)s; return ; }
 
 void	vector_tests(bool int_test, bool string_test, bool object_test) {
 	if (int_test)
 		int_vector_tests(int_add_func, int_sub_func, int_mul_func);
 	if (string_test)
-		string_vector_tests(string_add_func, string_sub_func);
+		string_vector_tests(string_add_func, string_sub_func, string_not_func);
 	if (object_test)
 		any_object_tests();
 }

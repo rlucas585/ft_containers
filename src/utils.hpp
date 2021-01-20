@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/08/06 23:18:06 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/01/20 10:45:59 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/01/20 11:04:37 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,5 +29,7 @@ void	print_fake_and_real_collection(T &fake, const char *fake_name,
 template <typename T, typename U>
 void	print_fake_and_real(T fake, const char *fake_name,
 		U real, const char *real_name);
+// template <typename T>
+// void	print_list(T &list);
 
 #endif

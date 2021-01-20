@@ -6,10 +6,9 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/10 14:27:55 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/01/13 14:28:24 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/01/20 15:11:15 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #ifndef RANDACCESSITERATOR_HPP
 # define RANDACCESSITERATOR_HPP
@@ -64,7 +63,7 @@ namespace ft {
 			this_type	operator--(int) {
 				this_type	tmp(*this);
 				operator--();
-				return *this;
+				return tmp;
 			}
 			this_type	operator+(difference_type n) const {
 				return _p + n;
@@ -72,7 +71,6 @@ namespace ft {
 			this_type	operator-(difference_type n) const {
 				return _p - n;
 			}
-			// Maybe should be non-member?
 			difference_type	operator-(const this_type &rhs) const {
 				return _p - rhs._p;
 			}
