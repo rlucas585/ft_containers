@@ -6,7 +6,7 @@
 /*   By: rlucas <ryanl585codam@gmail.com>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/06 12:52:10 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/01/17 22:21:25 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/01/19 21:24:38 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,7 +169,7 @@ namespace ft {
 						}
 					}
 					if (n > _capacity) {
-						this->reserve(n);
+						this->reserve(std::max(n, (_capacity * 2) - 2));
 					}
 					for (; _size < n; _size++) {
 						_a.construct(_data + _size, val);
@@ -318,7 +318,6 @@ namespace ft {
 				void		pop_back(void) {
 					T			initialized_obj;
 					if (_size == 0) { return ; }
-					std::cout << "About to destroy at index: " << _size << std::endl;
 					_a.destroy(_data + _size - 1);
 					_a.construct(_data + _size, initialized_obj);
 					_size -= 1;
@@ -436,7 +435,7 @@ namespace ft {
 
 				iterator	erase(iterator position) {
 					size_type	target = position - this->begin();
-					T			initialized_obj;
+					// T			initialized_obj;
 
 					_size -= 1;
 					for (size_type i = target; i < _size; i++) {
@@ -444,7 +443,7 @@ namespace ft {
 						_a.construct(_data + i, *(_data + i + 1));
 					}
 					_a.destroy(_data + _size);
-					_a.construct(_data + _size, initialized_obj);
+					// _a.construct(_data + _size, initialized_obj);
 					return position;
 				}
 

@@ -6,7 +6,7 @@
 /*   By: rlucas <ryanl585codam@gmail.com>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/06 12:49:55 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/01/17 22:22:57 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/01/19 21:29:24 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -234,28 +234,30 @@ void	basic_method_tests(ft::vector<T> &vec, std::vector<T> &realvec, std::vector
 	vec = tmp1;
 	realvec = tmp2;
 
-	print_info(WHITE, "insert() tests part 3");
-	vec.insert(vec.begin() + 3, tmp1.begin(), tmp1.end());
-	realvec.insert(realvec.begin() + 3, tmp2.begin(), tmp2.end());
-	print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
-	std::cout << std::endl;
-	print_fake_and_real(vec.size(), "ft::vector", realvec.size(), "std::vector");
-	print_fake_and_real(vec.capacity(), "ft::vector", realvec.capacity(), "std::vector");
+	// print_info(WHITE, "insert() tests part 3");
+	// vec.insert(vec.begin() + 3, tmp1.begin(), tmp1.end());
+	// realvec.insert(realvec.begin() + 3, tmp2.begin(), tmp2.end());
+	// print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
+	// std::cout << std::endl;
+	// print_fake_and_real(vec.size(), "ft::vector", realvec.size(), "std::vector");
+	// print_fake_and_real(vec.capacity(), "ft::vector", realvec.capacity(), "std::vector");
 
-	vec = tmp1;
-	realvec = tmp2;
-
-	print_info(WHITE, "erase() tests part 1");
-	print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
-	std::cout << std::endl;
-	std::cout << "ft::vector: " << *(vec.erase(vec.begin() + 3)) << std::endl;
-	std::cout << "std::vector: " << *(realvec.erase(realvec.begin() + 3)) << std::endl;
-	print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
-	std::cout << std::endl;
+	// vec = tmp1;
+	// realvec = tmp2;
+    //
+	// print_info(WHITE, "erase() tests part 1");
+	// print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
+	// std::cout << std::endl;
+	// std::cout << "ft::vector: " << *(vec.erase(vec.begin() + 3)) << std::endl;
+	// std::cout << "std::vector: " << *(realvec.erase(realvec.begin() + 3)) << std::endl;
+	// print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
+	// std::cout << std::endl;
 	// Both should segmentation fault
 	// std::cout << "ft::vector: " << *(vec.erase(vec.end())) << std::endl;
 	// std::cout << "std::vector: " << *(realvec.erase(realvec.end())) << std::endl;
 	
+	print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
+	std::cout << std::endl;
 	// This is currently an error!
 	std::cout << "ft::vector: " << *(vec.erase(vec.end() - 1)) << std::endl;
 	std::cout << "std::vector: " << *(realvec.erase(realvec.end() - 1)) << std::endl;
