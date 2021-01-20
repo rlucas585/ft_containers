@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/20 11:23:00 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/01/20 16:17:12 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/01/20 16:28:17 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,9 @@ namespace ft {
 			}
 			this_type	&operator--() {
 				_p = _p->getPrev();
+				return *this;
 			}
-			this_type	&operator--(int) {
+			this_type	operator--(int) {
 				this_type	tmp(*this);
 				operator--();
 				return tmp;

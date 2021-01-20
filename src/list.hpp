@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/20 11:02:05 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/01/20 16:10:49 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/01/20 17:02:02 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 # include <stdexcept>
 
 # include "list_iterator.hpp"
-# include "reverse_iterator.hpp"
+# include "reverse_bi_iterator.hpp"
 
 # include <iostream> /* delete later! */
 
@@ -85,8 +85,8 @@ namespace ft {
 						reference, node>							iterator;
 				typedef ListIterator<T, difference_type, const_pointer,
 						const_reference, const node>				const_iterator;
-				typedef ReverseIterator<iterator>					reverse_iterator;
-				typedef ReverseIterator<const_iterator>				const_reverse_iterator;
+				typedef ReverseBiIterator<iterator>					reverse_iterator;
+				typedef ReverseBiIterator<const_iterator>				const_reverse_iterator;
 				typedef	std::allocator<node>						node_allocator;
 
 				list(const allocator_type &a = allocator_type())
@@ -133,6 +133,22 @@ namespace ft {
 				const_iterator	end(void) const {
 					const_iterator	i(0);
 					return i;
+				}
+				reverse_iterator	rbegin(void) {
+					reverse_iterator	ri(_tail);
+					return (ri);
+				}
+				const_reverse_iterator	rbegin(void) const {
+					const_reverse_iterator	ri(_tail);
+					return (ri);
+				}
+				reverse_iterator	rend(void) {
+					reverse_iterator	ri(0);
+					return (ri);
+				}
+				const_reverse_iterator	rend(void) const {
+					const_reverse_iterator	ri(0);
+					return (ri);
 				}
 
 				// Capacity

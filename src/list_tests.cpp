@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/20 11:02:33 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/01/20 16:11:52 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/01/20 17:11:24 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,24 @@ static void	print_list(T &list) {
 	std::cout << "]";
 }
 
+// I made this just to check the reverse iteration...
+template <typename T>
+static void	print_list_reverse(T &list) {
+	std::cout << "Bollocks" << std::endl;
+	typename T::const_reverse_iterator it = list.rbegin();
+
+	std::cout << "it should be 5: " << *it << std::endl;
+	it++;
+	std::cout << "it should be 5: " << *it << std::endl;
+	std::cout << "Reverse printing" << std::endl;
+	std::cout << "[";
+	// while (it != list.rend()) {
+	// 	std::cout << *it << ", ";
+	// 	it++;
+	// }
+	std::cout << "]";
+}
+
 template <typename T, typename U>
 static void	print_fake_and_real_collection(T &fake, const char *fake_name,
 		U &real, const char *real_name) {
@@ -50,6 +68,17 @@ static void	print_fake_and_real_collection(T &fake, const char *fake_name,
 	std::cout << std::endl;
 	std::cout << real_name << ": ";
 	print_list(real);
+	std::cout << std::endl;
+}
+
+template <typename T, typename U>
+static void	print_fake_and_real_collection_reverse(T &fake, const char *fake_name,
+		U &real, const char *real_name) {
+	std::cout << fake_name << ": ";
+	print_list_reverse(fake);
+	std::cout << std::endl;
+	std::cout << real_name << ": ";
+	print_list_reverse(real);
 	std::cout << std::endl;
 }
 
@@ -87,6 +116,7 @@ static void	int_list_tests(void (*f1)(int &n), void (*f2)(int &n), void (*f3)(in
 	reallist.push_back(5);
 
 	print_fake_and_real_collection(list, "ft::list", reallist, "std::list");
+	print_fake_and_real_collection_reverse(list, "ft::list", reallist, "std::list");
 
 	list.push_back(10);
 	reallist.push_back(10);
