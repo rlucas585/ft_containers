@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/20 11:02:05 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/01/22 13:54:53 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/01/22 14:58:30 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -375,6 +375,84 @@ namespace ft {
 					}
 				}
 
+				void			remove(const value_type& val) {
+					iterator		it = this->begin();
+					iterator		tmp;
+					node			*a_node;
+
+					while (it != this->end()) {
+						tmp = it;
+						tmp++;
+						if (*it == val) {
+							a_node = _removeNode(it);
+							_destroyNode(a_node);
+						}
+						it = tmp;
+					}
+				}
+
+				template <class Predicate>
+					void		remove_if(Predicate pred) {
+						iterator		it = this->begin();
+						iterator		tmp;
+						node			*a_node;
+
+						while (it != this->end()) {
+							tmp = it;
+							tmp++;
+							if (pred(*it)) {
+								a_node = _removeNode(it);
+								_destroyNode(a_node);
+							}
+							it = tmp;
+						}
+					}
+
+				void			unique(void) {
+					iterator		it = this->begin();
+					iterator		tmp;
+					value_type		*current_value = 0;
+					node			*a_node;
+
+					if (_size == 1)
+						return ;
+					current_value = &(*it);
+					it++;
+					while (it != this->end()) {
+						tmp = it;
+						tmp++;
+						if (*it == *current_value) {
+							a_node = _removeNode(it);
+							_destroyNode(a_node);
+						} else
+							current_value = &(*it);
+						it = tmp;
+					}
+				}
+
+				template <class BinaryPredicate>
+					void		unique(BinaryPredicate binary_pred) {
+						iterator		it = this->begin();
+						iterator		tmp;
+						value_type		*current_value = 0;
+						node			*a_node;
+
+						if (_size == 1)
+							return ;
+						current_value = &(*it);
+						it++;
+						while (it != this->end()) {
+							tmp = it;
+							tmp++;
+							if (binary_pred(*current_value, *it)) {
+								a_node = _removeNode(it);
+								_destroyNode(a_node);
+							} else
+								current_value = &(*it);
+							it = tmp;
+						}
+					}
+
 				void			reverse(void) {
 					node		*cur = _head;
 					size_type	i = 0;
@@ -385,7 +463,7 @@ namespace ft {
 						i += 1;
 					}
 				}
-			
+
 			private:
 				node			*_head;
 				size_type		_size;
@@ -462,6 +540,43 @@ namespace ft {
 					return reinterpret_cast<node *>(valptr);
 				}
 		};
+
+	template <class T, class Alloc>
+		void	swap(list<T,Alloc>& x, list<T,Alloc>& y) {
+			x.swap(y);
+		}
+
+	template <class T, class Alloc>
+		bool operator== (const list<T,Alloc>& lhs, const list<T,Alloc>& rhs) {
+			if (lhs.size() != rhs.size())
+				return false;
+			return std::equal(lhs.begin(), lhs.end(), rhs.begin());
+		}
+
+	template <class T, class Alloc>
+		bool operator!= (const list<T,Alloc>& lhs, const list<T,Alloc>& rhs) {
+			return !(lhs == rhs);
+		}
+
+	template <class T, class Alloc>
+		bool operator<  (const list<T,Alloc>& lhs, const list<T,Alloc>& rhs) {
+			return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
+		}
+
+	template <class T, class Alloc>
+		bool operator<= (const list<T,Alloc>& lhs, const list<T,Alloc>& rhs) {
+			return !(rhs < lhs);
+		}
+
+	template <class T, class Alloc>
+		bool operator>  (const list<T,Alloc>& lhs, const list<T,Alloc>& rhs) {
+			return rhs < lhs;
+		}
+
+	template <class T, class Alloc>
+		bool operator>= (const list<T,Alloc>& lhs, const list<T,Alloc>& rhs) {
+			return !(lhs < rhs);
+		}
 }
 
 #endif

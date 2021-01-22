@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/20 11:02:33 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/01/22 13:54:56 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/01/22 15:05:07 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,12 +79,6 @@ static void	print_fake_and_real_collection_reverse(T &fake, const char *fake_nam
 	std::cout << std::endl;
 }
 
-static void	int_add_func(int &n) { n += 2; }
-static void	int_sub_func(int &n) { n -= 2; }
-static void	int_mul_func(int &n) { n *= 4; }
-// static void	string_add_func(std::string &s) { if (s.size() == 0) { return ; } else { s[0] += 1; } }
-// static void	string_sub_func(std::string &s) { if (s.size() == 0) { return ; } else { s[0] -= 1; } }
-
 static void fill_int_list(ft::list<int> &list, std::list<int> &reallist) {
 	list.clear();
 	reallist.clear();
@@ -123,7 +117,7 @@ static void swap_test(ft::list<T> &list, std::list<T> &reallist) {
 		tmp1.pop_back();
 		tmp2.pop_back();
 	}
-	print_info(WHITE, "swap() test");
+	print_info(WHITE, "swap() test 1 (member)");
 	print_fake_and_real_info(list, reallist);
 	print_fake_and_real_info(tmp1, "tmp1", tmp2, "tmp2");
 	std::cout << "Swapping..." << std::endl;
@@ -131,8 +125,12 @@ static void swap_test(ft::list<T> &list, std::list<T> &reallist) {
 	tmp2.swap(reallist);
 	print_fake_and_real_info(list, reallist);
 	print_fake_and_real_info(tmp1, "tmp1", tmp2, "tmp2");
-	tmp1.swap(list);
-	tmp2.swap(reallist);
+
+	print_info(WHITE, "swap() test 2 (non-member)");
+	ft::swap(list, tmp1);
+	std::swap(reallist, tmp2);
+	print_fake_and_real_info(list, reallist);
+	print_fake_and_real_info(tmp1, "tmp1", tmp2, "tmp2");
 }
 
 template <typename T>
@@ -323,6 +321,119 @@ static void	splice_test(ft::list<T> &list, std::list<T> &reallist) {
 	print_fake_and_real_info(tmplist, "srclist (ft): ", tmpreallist, "srclist (std):");
 }
 
+bool	divides_by_three(int const& x) {
+	return x % 3 == 0;
+}
+
+bool	isThreeTimes(int const& x, int const &y) {
+	return 3 * x == y;
+}
+
+template <typename T>
+static void	remove_test(ft::list<T> &list, std::list<T> &reallist) {
+	ft::list<T>		orig = list;
+	std::list<T>	orig_real = reallist;
+
+	print_info(WHITE, "remove() test");
+	std::cout << "Removing 6..." << std::endl;
+	list.remove(6);
+	reallist.remove(6);
+	print_fake_and_real_info(list, reallist);
+
+	std::cout << "Removing 15..." << std::endl;
+	list.remove(15);
+	reallist.remove(15);
+	print_fake_and_real_info(list, reallist);
+
+	list = orig;
+	reallist = orig_real;
+
+	std::cout << "Regenerating list..." << std::endl;
+	print_fake_and_real_info(list, reallist);
+
+	std::cout << "Removing multiples of 3..." << std::endl;
+	list.remove_if(divides_by_three);
+	reallist.remove_if(divides_by_three);
+	print_fake_and_real_info(list, reallist);
+
+}
+
+template <typename T>
+static void	unique_test(ft::list<T> &list, std::list<T> &reallist) {
+	ft::list<T>		tmplist = create_tmp_list();
+	std::list<T>	tmpreallist = create_tmp_list_real();
+
+	print_info(WHITE, "unique() test 1 (no parameters)");
+	list.assign(20, tmplist.front());
+	reallist.assign(20, tmpreallist.front());
+	for (int i = 0; i < 3; i++) {
+		list.push_front(tmplist.back());
+		reallist.push_front(tmpreallist.back());
+	}
+	print_fake_and_real_info(list, reallist);
+	list.unique();
+	reallist.unique();
+	print_fake_and_real_info(list, reallist);
+
+	for (int i = 4; i < 15000; i *= 3) {
+		list.push_back(i);
+		reallist.push_back(i);
+	}
+	print_info(WHITE, "unique() test 2 (binary predicate)");
+	print_fake_and_real_info(list, reallist);
+	list.unique(isThreeTimes);
+	reallist.unique(isThreeTimes);
+	print_fake_and_real_info(list, reallist);
+}
+
+template <typename T>
+static void	relational_operators_test(ft::list<T> &list, std::list<T> &reallist,
+		void (*f1)(T &n), void (*f2)(T &n)) {
+	ft::list<T>		tmplist = list;
+	std::list<T>	tmpreallist = reallist;
+	ft::list<T>		list2 = tmplist;
+	std::list<T>	reallist2 = tmpreallist;
+	typename ft::list<T>::iterator				it = list.begin();
+	typename std::list<T>::iterator				realit = reallist.begin();
+	typename ft::list<T>::iterator				it2 = list2.begin();
+	typename std::list<T>::iterator				realit2 = reallist2.begin();
+
+	it++;
+	realit++;
+	print_fake_and_real((list == tmplist), "ft::list", (reallist == tmpreallist), "std::list");
+	print_fake_and_real((list != tmplist), "ft::list", (reallist != tmpreallist), "std::list");
+	print_fake_and_real((list < tmplist), "ft::list", (reallist < tmpreallist), "std::list");
+	print_fake_and_real((list2 < tmplist), "ft::list", (reallist2 < tmpreallist), "std::list");
+	print_fake_and_real((list <= tmplist), "ft::list", (reallist <= tmpreallist), "std::list");
+	print_fake_and_real((list2 <= tmplist), "ft::list", (reallist2 <= tmpreallist), "std::list");
+	print_fake_and_real((list > tmplist), "ft::list", (reallist > tmpreallist), "std::list");
+	print_fake_and_real((list2 > tmplist), "ft::list", (reallist2 > tmpreallist), "std::list");
+	print_fake_and_real((list >= tmplist), "ft::list", (reallist >= tmpreallist), "std::list");
+	print_fake_and_real((list2 >= tmplist), "ft::list", (reallist2 >= tmpreallist), "std::list");
+	f1(*it);
+	f1(*realit);
+	f2(*it2);
+	f2(*realit2);
+	print_fake_and_real((list == tmplist), "ft::list", (reallist == tmpreallist), "std::list");
+	print_fake_and_real((list != tmplist), "ft::list", (reallist != tmpreallist), "std::list");
+	print_fake_and_real((list < tmplist), "ft::list", (reallist < tmpreallist), "std::list");
+	print_fake_and_real((list2 < tmplist), "ft::list", (reallist2 < tmpreallist), "std::list");
+	print_fake_and_real((list <= tmplist), "ft::list", (reallist <= tmpreallist), "std::list");
+	print_fake_and_real((list2 <= tmplist), "ft::list", (reallist2 <= tmpreallist), "std::list");
+	print_fake_and_real((list > tmplist), "ft::list", (reallist > tmpreallist), "std::list");
+	print_fake_and_real((list2 > tmplist), "ft::list", (reallist2 > tmpreallist), "std::list");
+	print_fake_and_real((list >= tmplist), "ft::list", (reallist >= tmpreallist), "std::list");
+	print_fake_and_real((list2 >= tmplist), "ft::list", (reallist2 >= tmpreallist), "std::list");
+}
+
+// template <typename T>
+// static void	algorithm_sort_test(ft::list<T> &list, std::list<T> &reallist) {
+// 	print_info(WHITE, "std::sort() test");
+// 	// std::sort(list.begin(), list.end());
+// 	std::sort(reallist.begin(), reallist.end());
+// 	print_fake_and_real_info(list, reallist);
+// }
+
 template <typename T>
 static void	reverse_iterator_test(ft::list<T> &list, std::list<T> &reallist) {
 	typename ft::list<T>::iterator				it = list.begin();
@@ -343,7 +454,7 @@ static void	reverse_iterator_test(ft::list<T> &list, std::list<T> &reallist) {
 static void	int_list_tests(void (*f1)(int &n), void (*f2)(int &n), void (*f3)(int &n)) {
 	print_divider(CYAN, "ft::list<int> tests");
 
-	(void)f1;(void)f2;(void)f3;
+	(void)f3;
 	ft::list<int>		list;
 	std::list<int>		reallist;
 	// std::list<int>		newvals;
@@ -426,8 +537,20 @@ static void	int_list_tests(void (*f1)(int &n), void (*f2)(int &n), void (*f3)(in
 
 	splice_test(list, reallist);
 
+	remove_test(list, reallist);
+
+	unique_test(list, reallist);
+
+	relational_operators_test(list, reallist, f1, f2);
+
 	print_line(CYAN);
 }
+
+static void	int_add_func(int &n) { n += 2; }
+static void	int_sub_func(int &n) { n -= 2; }
+static void	int_mul_func(int &n) { n *= 4; }
+// static void	string_add_func(std::string &s) { if (s.size() == 0) { return ; } else { s[0] += 1; } }
+// static void	string_sub_func(std::string &s) { if (s.size() == 0) { return ; } else { s[0] -= 1; } }
 
 void	list_tests(bool int_test, bool string_test, bool object_test) {
 	(void)string_test;
