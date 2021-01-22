@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/10 14:27:55 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/01/20 15:11:15 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/01/22 11:36:53 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ namespace ft {
 			pointer		_p;
 		public:
 			RandAccessIterator(void) : _p(0) {}
-			RandAccessIterator(pointer x) : _p(x) {}
+			explicit RandAccessIterator(pointer x) : _p(x) {}
 			RandAccessIterator(const this_type &it) : _p(it._p) {}
 			this_type	&operator=(this_type const &rhs) {
 				if (this == &rhs) { return *this; }
@@ -66,10 +66,10 @@ namespace ft {
 				return tmp;
 			}
 			this_type	operator+(difference_type n) const {
-				return _p + n;
+				return this_type(_p + n);
 			}
 			this_type	operator-(difference_type n) const {
-				return _p - n;
+				return this_type(_p - n);
 			}
 			difference_type	operator-(const this_type &rhs) const {
 				return _p - rhs._p;

@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/20 10:43:05 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/01/20 15:50:11 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/01/22 11:42:05 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,8 +149,8 @@ static void	basic_method_tests(ft::vector<T> &vec, std::vector<T> &realvec, std:
 
 	ft::vector<T>	tmp3 = vec;
 	std::vector<T>	tmp4 = realvec;
-	tmp3.assign(120, newvals[3]);
-	tmp4.assign(120, newvals[3]);
+	tmp3.assign(20, newvals[3]);
+	tmp4.assign(20, newvals[3]);
 
 	print_info(WHITE, "assign() tests");
 	vec.assign(tmp1.begin(), tmp1.end());
@@ -200,8 +200,8 @@ static void	basic_method_tests(ft::vector<T> &vec, std::vector<T> &realvec, std:
 	vec = tmp1;
 	realvec = tmp2;
 
-	vec.insert(vec.begin() + 3, 50, newvals[4]);
-	realvec.insert(realvec.begin() + 3, 50, newvals[4]);
+	vec.insert(vec.begin() + 3, 5, newvals[4]);
+	realvec.insert(realvec.begin() + 3, 5, newvals[4]);
 	print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
 	print_fake_and_real(vec.size(), "ft::vector", realvec.size(), "std::vector");
 	print_fake_and_real(vec.capacity(), "ft::vector", realvec.capacity(), "std::vector");
@@ -250,9 +250,9 @@ static void	basic_method_tests(ft::vector<T> &vec, std::vector<T> &realvec, std:
 	std::cout << "std::vector: " << *(realvec.erase(realvec.begin() + 1, realvec.end() - 2)) << std::endl;
 	print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
 
-	std::cout << "Difference here is undefined behaviour:" << std::endl;
-	std::cout << "ft::vector: " << *(vec.erase(vec.begin(), vec.end())) << std::endl;
-	std::cout << "std::vector: " << *(realvec.erase(realvec.begin(), realvec.end())) << std::endl;
+	// std::cout << "Difference here is undefined behaviour:" << std::endl;
+	// std::cout << "ft::vector: " << *(vec.erase(vec.begin(), vec.end())) << std::endl;
+	// std::cout << "std::vector: " << *(realvec.erase(realvec.begin(), realvec.end())) << std::endl;
 	print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
 	print_fake_and_real(vec.size(), "ft::vector", realvec.size(), "std::vector");
 	print_fake_and_real(vec.capacity(), "ft::vector", realvec.capacity(), "std::vector");
@@ -692,14 +692,19 @@ static void	string_vector_tests(void (*f1)(std::string &s), void (*f2)(std::stri
 	ft::vector<std::string>		vec;
 	std::vector<std::string>	realvec;
 	std::vector<std::string>	newvals;
+	// Set the following boolean true to test with strings that must use heap
+	// allocation
+	bool						bigStringTest = false;
 
 	newvals.push_back("Lorem");
 	newvals.push_back("ipsum");
 	newvals.push_back("dolor");
 	newvals.push_back("amet,");
-	newvals.push_back("sit long long long long long long long long long long long long long long long long");
+	if (bigStringTest)
+		newvals.push_back("sit long long long long long long long long long long long long long long long long");
 	newvals.push_back("consectetur");
-	newvals.push_back("adipiscing elit. Donec aliquam tempus orci. Pellentesque bibendum consequat mauris, id pharetra urna molestie eget. Quisque a vulputate dolor.");
+	if (bigStringTest)
+		newvals.push_back("adipiscing elit. Donec aliquam tempus orci. Pellentesque bibendum consequat mauris, id pharetra urna molestie eget. Quisque a vulputate dolor.");
 
 	basic_method_tests(vec, realvec, newvals, f1, f2);
 

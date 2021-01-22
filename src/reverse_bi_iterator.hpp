@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/20 16:31:39 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/01/20 17:08:08 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/01/22 10:18:15 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ namespace ft {
 				ReverseBiIterator(void) : _it(0) {}
 				ReverseBiIterator(node_pointer p) : _it(iterator_type(p)) {}
 				explicit ReverseBiIterator(iterator_type const& src) : _it(src) {
-					std::cout << "this constructor was called" << std::endl;
 					_it--;
 				}
 				ReverseBiIterator(const ReverseBiIterator &src) : _it(src._it) {}
@@ -61,7 +60,7 @@ namespace ft {
 				this_type		operator--(int) {
 					this_type	tmp(*this);
 					operator--();
-					return &*tmp;
+					return tmp;
 				}
 				reference		operator*() {
 					return *_it;
@@ -89,10 +88,7 @@ namespace ft {
 				}
 				operator	const_type() const {
 					typename iterator_type::const_type	c_it(_it);
-					std::cout << "Conversion complete" << std::endl;
-					std::cout << "*c_it = " << *c_it << std::endl;
-					// c_it++;
-					std::cout << "*c_it = " << *c_it << std::endl;
+					c_it++;
 
 					return (ReverseBiIterator<typename iterator_type::const_type>(c_it));
 				}

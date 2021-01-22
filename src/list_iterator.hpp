@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/20 11:23:00 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/01/20 16:28:17 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/01/22 12:20:50 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ namespace ft {
 
 		public:
 			ListIterator(void) : _p(0) {}
-			ListIterator(node_pointer x) : _p(x) {}
+			explicit ListIterator(node_pointer x) : _p(x) {}
 			ListIterator(const this_type &it) : _p(it._p) {}
 			this_type	&operator=(this_type const &rhs) {
 				if (this == &rhs) { return *this; }
@@ -81,18 +81,6 @@ namespace ft {
 			}
 			bool		operator!=(const this_type &rhs) const {
 				return _p != rhs._p;
-			}
-			bool		operator>(const this_type &rhs) const {
-				return _p > rhs._p;
-			}
-			bool		operator>=(const this_type &rhs) const {
-				return _p >= rhs._p;
-			}
-			bool		operator<(const this_type &rhs) const {
-				return _p < rhs._p;
-			}
-			bool		operator<=(const this_type &rhs) const {
-				return _p <= rhs._p;
 			}
 			operator	const_type() const {
 				return const_type(_p);

@@ -6,7 +6,7 @@
 /*   By: rlucas <ryanl585codam@gmail.com>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/06 12:52:10 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/01/20 12:10:01 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/01/22 13:21:25 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # include "reverse_iterator.hpp"
 # include "sfinae.hpp"
 
+# ifndef SYSTEM_BITS
 # ifdef __x86_64
 # define SYSTEM_BITS 64
 # else
@@ -31,6 +32,7 @@
 # define SYSTEM_BITS 64
 # else
 # define SYSTEM_BITS 32
+# endif
 # endif
 # endif
 
@@ -233,7 +235,7 @@ namespace ft {
 				// Modifier functions.
 				template <class InputIterator>
 					void	assign(InputIterator first, InputIterator last,
-							typename ft::enable_if<ft::isIterator<InputIterator>::value, InputIterator>::type = 0) {
+							typename ft::enable_if<ft::isIterator<InputIterator>::value, InputIterator>::type* = 0) {
 						size_type		new_size = last - first;
 						pointer			new_data;
 
@@ -331,7 +333,7 @@ namespace ft {
 						_a.destroy(_data + target);
 						_a.construct(_data + target, val);
 					}
-					return _data + target;
+					return iterator(_data + target);
 				}
 
 				void	insert(iterator position, size_type n, const value_type& val) {
@@ -369,7 +371,7 @@ namespace ft {
 
 				template <class InputIterator>
 					void insert (iterator position, InputIterator first, InputIterator last,
-							typename ft::enable_if<ft::isIterator<InputIterator>::value, InputIterator>::type = 0) {
+							typename ft::enable_if<ft::isIterator<InputIterator>::value, InputIterator>::type* = 0) {
 						pointer		new_data;
 						size_type	target = position - this->begin();
 						size_type	n = last - first;
@@ -434,16 +436,9 @@ namespace ft {
 				}
 
 				void		swap(vector& x) {
-					pointer		tmpdata = _data;
-					size_type	tmpsize = _size;
-					size_type	tmpcap = _capacity;
-
-					_data = x._data;
-					_size = x._size;
-					_capacity = x._capacity;
-					x._data = tmpdata;
-					x._size = tmpsize;
-					x._capacity = tmpcap;
+					std::swap(_data, x._data);
+					std::swap(_size, x._size);
+					std::swap(_capacity, x._capacity);
 				}
 
 				void		clear(void) {
