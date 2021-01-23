@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/20 11:02:05 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/01/23 21:29:53 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/01/23 21:41:54 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,12 +107,32 @@ namespace ft {
 				typedef ReverseBiIterator<const_iterator>			const_reverse_iterator;
 				typedef	std::allocator<node>						node_allocator;
 
-				list(const allocator_type &a = allocator_type())
+				explicit list(const allocator_type &a = allocator_type())
 					: _head(0), _size(0), _a(a), _node_alloc() {
 						node		*dummy = _createDummyNode();
 
 						_head = dummy;
 						_size = 1;
+					}
+				explicit list(size_type n, const value_type& val = value_type(),
+						const allocator_type &a = allocator_type())
+					: _head(0), _size(0), _a(a), _node_alloc() {
+						node		*dummy = _createDummyNode();
+
+						_head = dummy;
+						_size = 1;
+						this->assign(n, val);
+				}
+				template <typename InputIterator>
+				list(InputIterator first, InputIterator last,
+						const allocator_type &a = allocator_type())
+					: _head(0), _size(0), _a(a), _node_alloc() {
+
+						node		*dummy = _createDummyNode();
+
+						_head = dummy;
+						_size = 1;
+						this->assign(first, last);
 					}
 				list(list const &src) : _head(_createDummyNode()), _size(1) {
 					*this = src;

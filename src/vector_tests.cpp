@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/20 10:43:05 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/01/22 11:42:05 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/01/23 21:54:36 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,19 @@ static void	print_fake_and_real(T fake, const char *fake_name,
 }
 
 template <typename T>
+static void	different_constructors_test(std::vector<T> &newvals) {
+	print_info(WHITE, "Fill constructor test");
+	ft::vector<T>		vector(20, newvals.front());
+	std::vector<T>	realvector(20, newvals.front());
+	print_fake_and_real_collection(vector, "ft::vector", realvector, "std::vector");
+
+	print_info(WHITE, "Range constructor test");
+	ft::vector<T>		vector2(newvals.begin(), newvals.end());
+	std::vector<T>	realvector2(newvals.begin(), newvals.end());
+	print_fake_and_real_collection(vector, "ft::vector", realvector, "std::vector");
+}
+
+template <typename T>
 static void	basic_method_tests(ft::vector<T> &vec, std::vector<T> &realvec, std::vector<T> &newvals,
 		void (*f1)(T &n), void (*f2)(T &n)) {
 	print_info(RED, "Basic tests");
@@ -76,7 +89,7 @@ static void	basic_method_tests(ft::vector<T> &vec, std::vector<T> &realvec, std:
 
 	print_info(WHITE, "Element access [] test");
 	print_fake_and_real(vec[2], "ft::vector", realvec[2], "std::vector");
-	print_fake_and_real(vec[5], "ft::vector", realvec[5], "std::vector");
+	print_fake_and_real(vec[3], "ft::vector", realvec[3], "std::vector");
 	// std::cout << "Undefined:" << std::endl;
 	// print_fake_and_real(vec[-1], "ft::vector", realvec[-1], "std::vector");
 	// print_fake_and_real(vec[6], "ft::vector", realvec[6], "std::vector");
@@ -289,6 +302,8 @@ static void	basic_method_tests(ft::vector<T> &vec, std::vector<T> &realvec, std:
 	print_fake_and_real(vec.size(), "ft::vector", realvec.size(), "std::vector");
 	print_fake_and_real(vec.capacity(), "ft::vector", realvec.capacity(), "std::vector");
 	print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
+
+	different_constructors_test(newvals);
 
 	print_info(WHITE, "Relational operator tests");
 	vec = tmp1;

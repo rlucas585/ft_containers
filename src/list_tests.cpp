@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/20 11:02:33 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/01/23 21:29:14 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/01/23 21:40:48 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -493,6 +493,22 @@ static void	merge_test(ft::list<T> &list, std::list<T> &reallist) {
 }
 
 template <typename T>
+static void	different_constructors_test(void) {
+	ft::list<T>		tmplist = create_tmp_list();
+	std::list<T>	tmpreallist = create_tmp_list_real();
+
+	print_info(WHITE, "Fill constructor test");
+	ft::list<T>		list(20, tmplist.front());
+	std::list<T>	reallist(20, tmpreallist.front());
+	print_fake_and_real_info(list, reallist);
+
+	print_info(WHITE, "Range constructor test");
+	ft::list<T>		list2(tmplist.begin(), tmplist.end());
+	std::list<T>	reallist2(tmpreallist.begin(), tmpreallist.end());
+	print_fake_and_real_info(list2, reallist2);
+}
+
+template <typename T>
 static void	reverse_iterator_test(ft::list<T> &list, std::list<T> &reallist) {
 	typename ft::list<T>::iterator				it = list.begin();
 	typename ft::list<T>::reverse_iterator		rit = list.rend();
@@ -604,6 +620,8 @@ static void	int_list_tests(void (*f1)(int &n), void (*f2)(int &n), void (*f3)(in
 	sort_test(list, reallist);
 
 	merge_test(list, reallist);
+
+	different_constructors_test<int>();
 
 	print_line(CYAN);
 }

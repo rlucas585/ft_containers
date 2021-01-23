@@ -6,7 +6,7 @@
 /*   By: rlucas <ryanl585codam@gmail.com>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/06 12:52:10 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/01/22 15:58:10 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/01/23 21:52:46 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,10 +56,23 @@ namespace ft {
 				typedef ReverseIterator<iterator>					reverse_iterator;
 				typedef ReverseIterator<const_iterator>				const_reverse_iterator;
 
-				vector(const allocator_type &a = allocator_type())
-					: _data(0), _size(0), _capacity(0), _a(a) {
+				explicit vector(const allocator_type& alloc = allocator_type())
+					: _data(0), _size(0), _capacity(0), _a(alloc) {
 						this->reserve(4);
 					};
+				explicit vector(size_type n, const value_type& val = value_type(),
+						const allocator_type &alloc = allocator_type())
+					: _data(0), _size(0), _capacity(0), _a(alloc) {
+						this->reserve(4);
+						this->assign(n, val);
+					}
+				template <class InputIterator>
+					vector (InputIterator first, InputIterator last,
+							const allocator_type& alloc = allocator_type())
+					: _data(0), _size(0), _capacity(0), _a(alloc) {
+						this->reserve(4);
+						this->assign(first, last);
+					}
 				vector(vector const &src) : _data(0), _size(0), _capacity(0) {
 					*this = src;
 				}
