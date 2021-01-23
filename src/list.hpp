@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/20 11:02:05 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/01/22 17:29:43 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/01/23 21:00:20 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -210,7 +210,7 @@ namespace ft {
 					for (; n > 0; n--)
 						this->push_back(val);
 				}
-				
+
 				void			push_front(const value_type& val) {
 					node		*new_node = _createNewNode(val);
 					node		*prev_first = _head->getNext();
@@ -457,8 +457,24 @@ namespace ft {
 					}
 
 				void			sort(void) {
-					
+					node		*low = _head->getNext();
+					node		*high = _head->getPrev();
+
+					if (_size < 2)
+						return ;
+					_quicksort(low, high, _lessThan);
 				}
+
+				template <class Compare>
+					void		sort(Compare comp) {
+						node		*low = _head->getNext();
+						node		*high = _head->getPrev();
+
+						std::cout << "Calling this sort" << std::endl;
+						if (_size < 2)
+							return ;
+						_quicksort(low, high, comp);
+					}
 
 				void			reverse(void) {
 					node		*cur = _head;
@@ -490,49 +506,41 @@ namespace ft {
 					_node_alloc.deallocate(target, 1);
 				}
 
-			public:
-				template <typename BinaryPredicate>
-					void		_quicksort(iterator low, iterator high, BinaryPredicate pred) {
-						iterator		it;
-						iterator		tmp;
+				static bool		_lessThan(T const& n, T const& m) {
+					return n < m;
+				}
 
-						if (low != high) {
-							it = _partition(low, high, pred);
-							tmp = it;
-							tmp--;
-							_quicksort(low, tmp, pred);
-							tmp++;
-							tmp++;
-							_quicksort(tmp, high, pred);
+				template <typename BinaryPredicate>
+					void		_quicksort(node *low, node *high, BinaryPredicate pred) {
+						node		*p;
+
+						// Make sure to stay in bounds
+						if (low == _head || high == _head)
+							return ;
+						if (high != _head && low != high) {
+							if (high->getNext() != _head)
+								if (low == high->getNext())
+									return ;
+							p = _partition(low, high, pred);
+							_quicksort(low, p->getPrev(), pred);
+							_quicksort(p->getNext(), high, pred);
 						}
 					}
 
 				template <typename BinaryPredicate>
-				iterator	_partition(iterator low, iterator high, BinaryPredicate pred) {
-					iterator		tmp;
-					iterator		it = low;
-					while (it != high) {
-						if (pred(*it, *high)) {
-							tmp = it;
-							tmp++;
-							std::cout << "Swapping " << *low << " and " << *it << std::endl;
-							_swapNodes(low, it);
-							print_list(*this);
-							std::cout << std::endl;
-							low = it;
-							low++;
-							it = tmp;
-						} else
-							it++;
+					node	*_partition(node *low, node *high, BinaryPredicate pred) {
+						node		*i = low->getPrev();
+
+						for (node *j = low; j != high; j = j->getNext()) {
+							if (pred(j->getData(), high->getData())) {
+								i = (i == _head) ? low : i->getNext();
+								std::swap(i->getData(), j->getData());
+							}
+						}
+						i = (i == _head) ? low : i->getNext();
+						std::swap(i->getData(), high->getData());
+						return i;
 					}
-					std::cout << "Swapping " << *low << " and " << *high << std::endl;
-					_swapNodes(low, high);
-					print_list(*this);
-					std::cout << std::endl;
-					high++;
-					return high;
-				}
-			private:
 
 				node		*_createNewNode(const value_type& val) {
 					node		*new_node;
@@ -569,40 +577,6 @@ namespace ft {
 					node		*target = _getPtrFromIterator(i);
 
 					return _removeNode(target);
-				}
-
-				void		_swapNodes(node *node1, node *node2) {
-					node			*next1 = node1->getNext();
-					node			*prev1 = node1->getPrev();
-					node			*next2 = node2->getNext();
-					node			*prev2 = node2->getPrev();
-
-						next1->setPrev(node2);
-						prev1->setNext(node2);
-						next2->setPrev(node1);
-						prev2->setNext(node1);
-						if (node1 != next2)
-							node1->setNext(next2);
-						else
-							node1->setNext(node2);
-						if (node1 != prev2)
-							node1->setPrev(prev2);
-						else
-							node1->setPrev(node2);
-						if (node2 != next1)
-							node2->setNext(next1);
-						else
-							node2->setNext(node1);
-						if (node2 != prev1)
-							node2->setPrev(prev1);
-						else
-							node2->setPrev(node1);
-				}
-
-				void		_swapNodes(iterator it1, iterator it2) {
-					node		*node1 = _getPtrFromIterator(it1);
-					node		*node2 = _getPtrFromIterator(it2);
-					_swapNodes(node1, node2);
 				}
 
 				void		_destroyNode(node *target) {

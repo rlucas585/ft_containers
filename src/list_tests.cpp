@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/20 11:02:33 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/01/22 17:30:11 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/01/23 20:56:24 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -434,27 +434,28 @@ static void	relational_operators_test(ft::list<T> &list, std::list<T> &reallist,
 // 	print_fake_and_real_info(list, reallist);
 // }
 
-bool	lessThan(int const& n, int const& m) {
-	std::cout << "Checking less than with " << n << " and " << m << std::endl;
-	return n < m;
+bool	moreThan(int const& n, int const& m) {
+	return n > m;
 }
 
 template <typename T>
 static void	sort_test(ft::list<T> &list, std::list<T> &reallist) {
-	print_info(WHITE, "sort() test 1 (standard comp)");
-	typename ft::list<T>::iterator		it = list.end();
 	ft::list<T>		tmplist = create_tmp_list();
 
+	print_info(WHITE, "sort() test 1 (standard comp)");
 	typename ft::list<T>::iterator		tmpit = tmplist.end();
 	tmpit--;
 	tmpit--;
 	list.push_back(*tmpit);
 	reallist.push_back(*tmpit);
-	it--;
 	print_fake_and_real_info(list, reallist);
-	typename ft::list<T>::iterator		ret = list._partition(list.begin(), it, lessThan);
-	std::cout << "Partition return = " << *ret << std::endl;
-	// list._quicksort(list.begin(), it, lessThan);
+	list.sort();
+	reallist.sort();
+	print_fake_and_real_info(list, reallist);
+
+	print_info(WHITE, "sort() test 2 (specialised comp)");
+	list.sort(moreThan);
+	reallist.sort(moreThan);
 	print_fake_and_real_info(list, reallist);
 }
 
