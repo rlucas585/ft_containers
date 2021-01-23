@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/20 11:02:33 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/01/23 20:56:24 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/01/23 21:29:14 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -460,6 +460,39 @@ static void	sort_test(ft::list<T> &list, std::list<T> &reallist) {
 }
 
 template <typename T>
+static void	merge_test(ft::list<T> &list, std::list<T> &reallist) {
+	ft::list<T>		tmplist = create_tmp_list();
+	std::list<T>	tmpreallist = create_tmp_list_real();
+
+	list.reverse();
+	reallist.reverse();
+	print_info(WHITE, "merge() test 1 (standard merge)");
+	print_fake_and_real_info(list, reallist);
+	print_fake_and_real_info(tmplist, tmpreallist);
+	std::cout << "Merging..." << std::endl;
+	list.merge(tmplist);
+	reallist.merge(tmpreallist);
+	print_fake_and_real_info(list, reallist);
+	print_fake_and_real_info(tmplist, tmpreallist);
+
+	list.reverse();
+	reallist.reverse();
+	tmplist = create_tmp_list();
+	tmpreallist = create_tmp_list_real();
+	tmplist.reverse();
+	tmpreallist.reverse();
+
+	print_info(WHITE, "merge() test 2 (specialised comp)");
+	print_fake_and_real_info(list, reallist);
+	print_fake_and_real_info(tmplist, tmpreallist);
+	std::cout << "Merging..." << std::endl;
+	list.merge(tmplist, moreThan);
+	reallist.merge(tmpreallist, moreThan);
+	print_fake_and_real_info(list, reallist);
+	print_fake_and_real_info(tmplist, tmpreallist);
+}
+
+template <typename T>
 static void	reverse_iterator_test(ft::list<T> &list, std::list<T> &reallist) {
 	typename ft::list<T>::iterator				it = list.begin();
 	typename ft::list<T>::reverse_iterator		rit = list.rend();
@@ -569,6 +602,8 @@ static void	int_list_tests(void (*f1)(int &n), void (*f2)(int &n), void (*f3)(in
 	relational_operators_test(list, reallist, f1, f2);
 
 	sort_test(list, reallist);
+
+	merge_test(list, reallist);
 
 	print_line(CYAN);
 }

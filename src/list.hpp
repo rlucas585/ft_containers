@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/20 11:02:05 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/01/23 21:00:20 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/01/23 21:29:53 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -453,6 +453,41 @@ namespace ft {
 							} else
 								current_value = &(*it);
 							it = tmp;
+						}
+					}
+
+				void	merge(list& x) {
+					this->merge(x, _lessThan);
+				}
+
+				template <class Compare>
+					void	merge(list& x, Compare comp) {
+						node		*a_node;
+						iterator	thisListIt = this->begin();
+						iterator	it;
+
+						if (_size == 1) {
+							while (x.size() > 0) {
+								a_node = x._removeNode(x.begin());
+								_insertNode(this->end(), a_node);
+							}
+							return ;
+						}
+						for (iterator x_it = x.begin(); x_it != x.end();) {
+							while (!comp(*x_it, *thisListIt)) {
+								thisListIt++;
+								if (thisListIt == this->end()) {
+									while (x.size() > 0) {
+										a_node = x._removeNode(x.begin());
+										_insertNode(this->end(), a_node);
+									}
+									return ;
+								}
+							}
+							it = x_it;
+							x_it++;
+							a_node = x._removeNode(it);
+							this->_insertNode(thisListIt, a_node);
 						}
 					}
 
