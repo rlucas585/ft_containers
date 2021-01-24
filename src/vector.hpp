@@ -6,7 +6,7 @@
 /*   By: rlucas <ryanl585codam@gmail.com>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/06 12:52:10 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/01/23 21:52:46 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/01/24 12:07:45 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -498,7 +498,7 @@ namespace ft {
 		}
 
 	template <class T, class Alloc>
-		bool operator<  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
+		bool operator< (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
 			return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
 		}
 
@@ -508,7 +508,7 @@ namespace ft {
 		}
 
 	template <class T, class Alloc>
-		bool operator>  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
+		bool operator> (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
 			return rhs < lhs;
 		}
 

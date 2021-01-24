@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/20 11:02:05 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/01/23 21:41:54 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/01/24 12:02:33 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,6 @@
 # include "list_iterator.hpp"
 # include "reverse_bi_iterator.hpp"
 # include "sfinae.hpp"
-
-# include <iostream> /* delete later! */
 
 # ifndef SYSTEM_BITS
 # ifdef __x86_64
@@ -310,8 +308,6 @@ namespace ft {
 
 					if (_size == 1)
 						return iterator(_head);
-					// std::cout << "Erasing (size = " << _size << ")" <<
-					// 	"*position = " << *position << std::endl;
 					cur = _getPtrFromIterator(position);
 					prev = cur->getPrev();
 					next = cur->getNext();
@@ -525,7 +521,6 @@ namespace ft {
 						node		*low = _head->getNext();
 						node		*high = _head->getPrev();
 
-						std::cout << "Calling this sort" << std::endl;
 						if (_size < 2)
 							return ;
 						_quicksort(low, high, comp);
