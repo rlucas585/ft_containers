@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/20 10:43:05 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/01/23 21:54:36 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/01/29 09:20:39 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,13 +96,16 @@ static void	basic_method_tests(ft::vector<T> &vec, std::vector<T> &realvec, std:
 
 	print_info(WHITE, "resize() tests");
 	print_fake_and_real(vec.size(), "ft::vector", realvec.size(), "std::vector");
+	print_fake_and_real(vec.capacity(), "ft::vector", realvec.capacity(), "std::vector");
 	vec.resize(vec.size() + 3);
 	realvec.resize(realvec.size() + 3);
 	print_fake_and_real(vec.size(), "ft::vector", realvec.size(), "std::vector");
+	print_fake_and_real(vec.capacity(), "ft::vector", realvec.capacity(), "std::vector");
 	print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
 	vec.resize(vec.size() + 3, *(newvals.begin() + 2));
 	realvec.resize(realvec.size() + 3, *(newvals.begin() + 2));
 	print_fake_and_real(vec.size(), "ft::vector", realvec.size(), "std::vector");
+	print_fake_and_real(vec.capacity(), "ft::vector", realvec.capacity(), "std::vector");
 	print_fake_and_real_collection(vec, "ft::vector", realvec, "std::vector");
 
 	print_info(WHITE, "capacity() tests");

@@ -6,7 +6,7 @@
 /*   By: rlucas <ryanl585codam@gmail.com>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/06 12:52:10 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/01/24 12:07:45 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/01/29 09:23:59 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,7 +173,10 @@ namespace ft {
 							_a.destroy(_data + i);
 					}
 					if (n > _capacity) {
-						this->reserve(std::max(n, (_capacity * 2) - 2));
+						if (n > _size * 2)
+							this->reserve(std::max(n, (_capacity * 2) - 2));
+						else
+							this->reserve(_size * 2);
 					}
 					for (; _size < n; _size++)
 						_a.construct(_data + _size, val);
