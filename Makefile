@@ -6,11 +6,12 @@
 #    By: rlucas <marvin@codam.nl>                     +#+                      #
 #                                                    +#+                       #
 #    Created: 2020/07/27 14:22:41 by rlucas        #+#    #+#                  #
-#    Updated: 2021/01/29 09:37:05 by rlucas        ########   odam.nl          #
+#    Updated: 2021/02/13 18:31:35 by rlucas        ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = ft_containers
+TESTNAME = test
 
 ifeq ($(shell uname), Linux)
 	CC = g++
@@ -29,16 +30,29 @@ SRCLST = main \
 	  list_tests \
 	  map_tests
 
+TESTSRCLST = main \
+			 vector
+
+TESTOBJDIR = testobj/
+TESTDIR = tests/
+TESTLIBS = -L/mnt/hard_drive/usr/local/lib/ -lgtest -lpthread
+
 # Configuration above, logic below
 
 SRC = $(addprefix $(SRCDIR)/, $(addsuffix $(EXT), $(SRCLST)))
+TESTSRC = $(addprefix $(TESTDIR)/, $(addsuffix $(EXT), $(TESTSRCLST)))
 
 FLAGS = -Wall -Wextra -Werror -std=c++98 -pedantic
 # FLAGS = -Wall -Wextra -Werror -std=c++11 -pedantic
 
 OBJ := $(addprefix $(OBJDIR), $(SRCLST:%=%.o))
+TESTOBJ := $(addprefix $(TESTOBJDIR), $(TESTSRCLST:%=%.o))
 
 all: $(NAME)
+
+test: $(TESTOBJ)
+	@echo "Compiling test executable..."
+	@$(CC) $(FLAGS) $(TESTOBJ) -o $(TESTNAME) $(INCLUDES) $(TESTLIBS)
 
 $(NAME): $(OBJ)
 	@echo "Compiling executable..."
@@ -49,13 +63,20 @@ $(OBJ):	$(SRC)
 	@echo "Compiling $@"
 	@$(CC) -c $(FLAGS) -o $@ $(patsubst $(OBJDIR)%.o,$(SRCDIR)%.cpp, $@) $(INCLUDES)
 
+$(TESTOBJ): $(TESTSRC)
+	@mkdir -p $(TESTOBJDIR)
+	@echo "Compiling $@"
+	@$(CC) -c $(FLAGS) -o $@ $(patsubst $(TESTOBJDIR)%.o,$(TESTDIR)%.cpp, $@) $(INCLUDES)
+
 clean:
 	@echo "Removing objects..."
 	@rm -rf $(OBJDIR)
+	@rm -rf $(TESTOBJDIR)
 
 fclean: clean
 	@echo "Deleting executable..."
 	@rm -f $(NAME)
+	@rm -f $(TESTNAME)
 
 re: fclean all
 
