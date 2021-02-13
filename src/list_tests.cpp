@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/20 11:02:33 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/01/23 21:40:48 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/13 15:31:20 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 #include <iomanip>
 #include <algorithm>
 #include <list>
-#include <vector>
 
 #include "colors.hpp"
 #include "utils.hpp"

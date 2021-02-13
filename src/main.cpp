@@ -6,7 +6,7 @@
 /*   By: rlucas <ryanl585codam@gmail.com>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/06 12:49:55 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/01/29 09:22:20 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/13 15:31:52 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,9 @@
 
 int		main(void)
 {
-	vector_tests(true, false, false);
+	// vector_tests(true, false, false);
 	// list_tests(true, false, false);
+	map_tests(true, false, false);
 
 	return (0);
 }

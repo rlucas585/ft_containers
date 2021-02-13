@@ -6,7 +6,7 @@
 #    By: rlucas <marvin@codam.nl>                     +#+                      #
 #                                                    +#+                       #
 #    Created: 2020/07/27 14:22:41 by rlucas        #+#    #+#                  #
-#    Updated: 2021/01/20 13:54:31 by rlucas        ########   odam.nl          #
+#    Updated: 2021/01/29 09:37:05 by rlucas        ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,8 @@ EXT = .cpp
 SRCLST = main \
 	  utils \
 	  vector_tests \
-	  list_tests
+	  list_tests \
+	  map_tests
 
 # Configuration above, logic below
 

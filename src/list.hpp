@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/20 11:02:05 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/01/24 12:02:33 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/13 15:31:08 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ namespace ft {
 							return _val;
 						}
 
-					protected:
+					private:
 						node		*_prev;
 						node		*_next;
 						T			_val;
