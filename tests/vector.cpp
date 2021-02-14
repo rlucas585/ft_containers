@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/13 17:58:24 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/14 18:39:44 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/14 19:18:21 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -527,8 +527,99 @@ TYPED_TEST(vector_tester, relational_operators_test) {
 	ASSERT_EQ((vecCopy > vec), (realvecCopy > realvec));
 }
 
+TYPED_TEST(vector_tester, iterator_dereference_tests) {
+	ft::vector<TypeParam>	vec;
+	std::vector<TypeParam>	realvec;
+	initialise_default_vector(vec, realvec);
+
+	typename ft::vector<TypeParam>::const_iterator	it = vec.begin();
+	typename std::vector<TypeParam>::const_iterator	real_it = realvec.begin();
+
+	for (size_t i = 0; i < realvec.size(); i++)
+		ASSERT_EQ(it[i], real_it[i]);
+}
+
 TYPED_TEST(vector_tester, iterator_increment_tests) {
 	ft::vector<TypeParam>	vec;
 	std::vector<TypeParam>	realvec;
 	initialise_default_vector(vec, realvec);
+
+	typename ft::vector<TypeParam>::const_iterator	it = vec.begin();
+	typename std::vector<TypeParam>::const_iterator	real_it = realvec.begin();
+
+	for (; it != vec.end(); it++, real_it++)
+		ASSERT_EQ(*it, *real_it);
+}
+
+TYPED_TEST(vector_tester, iterator_decrement_tests) {
+	ft::vector<TypeParam>	vec;
+	std::vector<TypeParam>	realvec;
+	initialise_default_vector(vec, realvec);
+
+	typename ft::vector<TypeParam>::const_iterator	it = vec.end() - 1;
+	typename std::vector<TypeParam>::const_iterator	real_it = realvec.end() - 1;
+
+	for (; it >= vec.begin(); it--, real_it--)
+		ASSERT_EQ(*it, *real_it);
+}
+
+TYPED_TEST(vector_tester, iterator_operation_tests) {
+	ft::vector<TypeParam>	vec;
+	std::vector<TypeParam>	realvec;
+	initialise_default_vector(vec, realvec);
+
+	typename ft::vector<TypeParam>::const_iterator	it = vec.begin();
+	typename std::vector<TypeParam>::const_iterator	real_it = realvec.begin();
+
+	ASSERT_EQ(*(it + 3), *(real_it + 3));
+	ASSERT_EQ(*(it + vec.size() - 1), *(real_it + realvec.size() - 1));
+	it += 2;
+	real_it += 2;
+	ASSERT_EQ(*it, *real_it);
+	it -= 1;
+	real_it -= 1;
+	ASSERT_EQ(*it, *real_it);
+	ASSERT_EQ(*(2 + it), *(2 + real_it));
+	ASSERT_EQ(*(1 + it + 1), *(1 + real_it + 1));
+
+	typename ft::vector<TypeParam>::const_iterator	it2 = vec.begin() + 4;
+	typename std::vector<TypeParam>::const_iterator	real_it2 = realvec.begin() + 4;
+
+	ASSERT_EQ((it2 - it), (real_it2 - real_it));
+	it2 = it;
+	real_it2 = real_it;
+	ASSERT_EQ(*it2, *real_it);
+	ASSERT_EQ(*it, *real_it2);
+}
+
+TYPED_TEST(vector_tester, iterator_relational_operators_tests) {
+	ft::vector<TypeParam>	vec;
+	std::vector<TypeParam>	realvec;
+	initialise_default_vector(vec, realvec);
+
+	typename ft::vector<TypeParam>::const_iterator	it = vec.begin();
+	typename std::vector<TypeParam>::const_iterator	real_it = realvec.begin();
+
+	typename ft::vector<TypeParam>::const_iterator	it2 = it;
+	typename std::vector<TypeParam>::const_iterator	real_it2 = real_it;
+
+	ASSERT_EQ((it == it2), (real_it == real_it2));
+	it += 1;
+	real_it += 1;
+	ASSERT_EQ((it == it2), (real_it == real_it2));
+	ASSERT_EQ((it != it2), (real_it != real_it2));
+	ASSERT_EQ((it >= it2), (real_it >= real_it2));
+	ASSERT_EQ((it <= it2), (real_it <= real_it2));
+	ASSERT_EQ((it > it2), (real_it > real_it2));
+	ASSERT_EQ((it < it2), (real_it < real_it2));
+
+	typename ft::vector<TypeParam>::iterator	nc_it = vec.begin() + 1;
+	typename std::vector<TypeParam>::iterator	nc_real_it = realvec.begin() + 1;
+
+	ASSERT_EQ((it == nc_it), (real_it == nc_real_it));
+	ASSERT_EQ((it != nc_it), (real_it != nc_real_it));
+	ASSERT_EQ((it >= nc_it), (real_it >= nc_real_it));
+	ASSERT_EQ((it <= nc_it), (real_it <= nc_real_it));
+	ASSERT_EQ((it > nc_it), (real_it > nc_real_it));
+	ASSERT_EQ((it < nc_it), (real_it < nc_real_it));
 }
