@@ -6,7 +6,7 @@
 /*   By: rlucas <ryanl585codam@gmail.com>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/06 12:52:10 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/01/29 09:23:59 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/14 18:13:49 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -355,7 +355,8 @@ namespace ft {
 				void	insert(iterator position, size_type n, const value_type& val) {
 					pointer		new_data;
 					size_type	target = position - this->begin();
-					size_type	new_cap = std::max(_capacity * 2, _size + n);
+					// size_type	new_cap = std::max(_capacity * 2, _size + n);
+					size_type	new_cap = _size + n;
 
 					if (_size + n >= _capacity) {	
 						new_data = _a.allocate(sizeof(T) * new_cap);
@@ -392,6 +393,7 @@ namespace ft {
 						size_type	target = position - this->begin();
 						size_type	n = last - first;
 						size_type	new_cap = std::max(_capacity * 2, _size + n);
+						// size_type	new_cap = _size + n;
 
 						if (_size + n >= _capacity) {
 							new_data = _a.allocate(sizeof(T) * new_cap);
