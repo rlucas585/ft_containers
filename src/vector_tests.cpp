@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/20 10:43:05 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/13 15:32:09 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/14 22:36:30 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -674,12 +674,6 @@ static void	iterator_tests(ft::vector<T> &vec, std::vector<T> &realvec,
 	reverse_iteration_tests(vec, realvec, f1, f2, f3);
 
 	return ;
-}
-
-template <typename T>
-static void	algorithm_tests(ft::vector<T> &vec, std::vector<T> &realvec) {
-	print_info(RED, "Algorithm function tests");
-
 }
 
 static void	int_vector_tests(void (*f1)(int &n), void (*f2)(int &n), void (*f3)(int &n))

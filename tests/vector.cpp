@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/13 17:58:24 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/14 19:18:21 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/14 22:34:31 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,32 @@ void	initialise_scrap_vector(std::vector<std::string>& vec) {
 	}
 }
 
+void	addition_func(int &val) {
+	val += 2;
+}
+
+void	addition_func(std::string &s) {
+	s[0] += 2;
+}
+
+void	subtraction_func(int &val) {
+	val -= 1;
+}
+
+void	subtraction_func(std::string &s) {
+	s[0] -= 1;
+}
+
+void	multiplication_func(int &val) {
+	val *= 3;
+}
+
+void	multiplication_func(std::string &s) {
+	s[0] += 8;
+	if (s[0] > 125)
+		s[0] = 65;
+}
+
 void	addition_to_vector(ft::vector<int>& vec, std::vector<int>& realvec) {
 	vec.front() += 1;
 	realvec.front() += 1;
@@ -106,6 +132,10 @@ std::string	vec_to_str(Vec const& vec) {
 
 template <typename Vec>
 void	print_vec_info(Vec const& vec, const char *name) {
+	std::string		vecStr = vec_to_str(vec);
+	if (vecStr.size() >= 30)
+		vecStr.erase(vecStr.begin() + 30, vecStr.end());
+
 	std::cout << std::setw(10) << std::right << std::setfill(' ')
 		<< name;
 	std::cout << "|";
@@ -116,7 +146,7 @@ void	print_vec_info(Vec const& vec, const char *name) {
 		<< vec.capacity();
 	std::cout << "|";
 	std::cout << std::setw(30) << std::right << std::setfill(' ')
-		<< vec_to_str(vec);
+		<< vecStr;
 	std::cout << "|";
 	std::cout << std::endl;
 }
@@ -613,6 +643,7 @@ TYPED_TEST(vector_tester, iterator_relational_operators_tests) {
 	ASSERT_EQ((it > it2), (real_it > real_it2));
 	ASSERT_EQ((it < it2), (real_it < real_it2));
 
+	/* compare non-const to const iterators */
 	typename ft::vector<TypeParam>::iterator	nc_it = vec.begin() + 1;
 	typename std::vector<TypeParam>::iterator	nc_real_it = realvec.begin() + 1;
 
@@ -622,4 +653,195 @@ TYPED_TEST(vector_tester, iterator_relational_operators_tests) {
 	ASSERT_EQ((it <= nc_it), (real_it <= nc_real_it));
 	ASSERT_EQ((it > nc_it), (real_it > nc_real_it));
 	ASSERT_EQ((it < nc_it), (real_it < nc_real_it));
+	nc_it += 1;
+	nc_real_it += 1;
+	ASSERT_EQ((it == nc_it), (real_it == nc_real_it));
+	ASSERT_EQ((it != nc_it), (real_it != nc_real_it));
+	ASSERT_EQ((it >= nc_it), (real_it >= nc_real_it));
+	ASSERT_EQ((it <= nc_it), (real_it <= nc_real_it));
+	ASSERT_EQ((it > nc_it), (real_it > nc_real_it));
+	ASSERT_EQ((it < nc_it), (real_it < nc_real_it));
+}
+
+TYPED_TEST(vector_tester, iterator_modification_tests) {
+	ft::vector<TypeParam>	vec;
+	std::vector<TypeParam>	realvec;
+	initialise_default_vector(vec, realvec);
+
+	testSizeAndContent(vec, realvec);
+
+	typename ft::vector<TypeParam>::iterator	it = vec.begin();
+	typename std::vector<TypeParam>::iterator	real_it = realvec.begin();
+	for (; it != vec.end(); it++, real_it++) {
+		addition_func(*it);
+		addition_func(*real_it);
+	}
+	testSizeAndContent(vec, realvec);
+
+	it = vec.begin();
+	real_it = realvec.begin();
+	for (; it != vec.end(); it++, real_it++) {
+		subtraction_func(*it);
+		subtraction_func(*real_it);
+	}
+	testSizeAndContent(vec, realvec);
+
+	it = vec.begin();
+	real_it = realvec.begin();
+	for (; it != vec.end(); it++, real_it++) {
+		multiplication_func(*it);
+		multiplication_func(*real_it);
+	}
+	testSizeAndContent(vec, realvec);
+}
+
+TYPED_TEST(vector_tester, reverse_iterator_increment_tests) {
+	ft::vector<TypeParam>	vec;
+	std::vector<TypeParam>	realvec;
+	initialise_default_vector(vec, realvec);
+
+	typename ft::vector<TypeParam>::const_reverse_iterator	it = vec.rbegin();
+	typename std::vector<TypeParam>::const_reverse_iterator	real_it = realvec.rbegin();
+
+	for (; it != vec.rend(); it++, real_it++)
+		ASSERT_EQ(*it, *real_it);
+}
+
+TYPED_TEST(vector_tester, reverse_iterator_decrement_tests) {
+	ft::vector<TypeParam>	vec;
+	std::vector<TypeParam>	realvec;
+	initialise_default_vector(vec, realvec);
+
+	typename ft::vector<TypeParam>::const_reverse_iterator	it = vec.rend() - 1;
+	typename std::vector<TypeParam>::const_reverse_iterator	real_it = realvec.rend() - 1;
+
+	for (; it >= vec.rbegin(); it--, real_it--)
+		ASSERT_EQ(*it, *real_it);
+	it = vec.rbegin();
+	real_it = realvec.rbegin();
+	it += 3;
+	real_it += 3;
+	ASSERT_EQ(*it, *real_it);
+	it -= 2;
+	real_it -= 2;
+	ASSERT_EQ(*it, *real_it);
+	ASSERT_EQ(*(2 + it), *(2 + real_it));
+	ASSERT_EQ(*(1 + it + 1), *(1 + real_it + 1));
+
+	typename ft::vector<TypeParam>::const_reverse_iterator	it2 = vec.rbegin() + 4;
+	typename std::vector<TypeParam>::const_reverse_iterator	real_it2 = realvec.rbegin() + 4;
+
+	ASSERT_EQ((it2 - it), (real_it2 - real_it));
+	it2 = it;
+	real_it2 = real_it;
+	ASSERT_EQ(*it2, *real_it);
+	ASSERT_EQ(*it, *real_it2);
+}
+
+TYPED_TEST(vector_tester, iterator_reverse_relational_operators_tests) {
+	ft::vector<TypeParam>	vec;
+	std::vector<TypeParam>	realvec;
+	initialise_default_vector(vec, realvec);
+
+	typename ft::vector<TypeParam>::const_reverse_iterator	it = vec.rbegin();
+	typename std::vector<TypeParam>::const_reverse_iterator	real_it = realvec.rbegin();
+
+	typename ft::vector<TypeParam>::const_reverse_iterator	it2 = it;
+	typename std::vector<TypeParam>::const_reverse_iterator	real_it2 = real_it;
+
+	ASSERT_EQ((it == it2), (real_it == real_it2));
+	it += 1;
+	real_it += 1;
+	ASSERT_EQ((it == it2), (real_it == real_it2));
+	ASSERT_EQ((it != it2), (real_it != real_it2));
+	ASSERT_EQ((it >= it2), (real_it >= real_it2));
+	ASSERT_EQ((it <= it2), (real_it <= real_it2));
+	ASSERT_EQ((it > it2), (real_it > real_it2));
+	ASSERT_EQ((it < it2), (real_it < real_it2));
+
+	/* compare non-const to const iterators */
+	typename ft::vector<TypeParam>::reverse_iterator	nc_it = vec.rbegin() + 1;
+	typename std::vector<TypeParam>::reverse_iterator	nc_real_it = realvec.rbegin() + 1;
+
+	ASSERT_EQ((it == nc_it), (real_it == nc_real_it));
+	ASSERT_EQ((it != nc_it), (real_it != nc_real_it));
+	ASSERT_EQ((it >= nc_it), (real_it >= nc_real_it));
+	ASSERT_EQ((it <= nc_it), (real_it <= nc_real_it));
+	ASSERT_EQ((it > nc_it), (real_it > nc_real_it));
+	ASSERT_EQ((it < nc_it), (real_it < nc_real_it));
+	nc_it += 1;
+	nc_real_it += 1;
+	ASSERT_EQ((it == nc_it), (real_it == nc_real_it));
+	ASSERT_EQ((it != nc_it), (real_it != nc_real_it));
+	ASSERT_EQ((it >= nc_it), (real_it >= nc_real_it));
+	ASSERT_EQ((it <= nc_it), (real_it <= nc_real_it));
+	ASSERT_EQ((it > nc_it), (real_it > nc_real_it));
+	ASSERT_EQ((it < nc_it), (real_it < nc_real_it));
+}
+
+TYPED_TEST(vector_tester, iterator_reverse_construction_tests) {
+	ft::vector<TypeParam>	vec;
+	std::vector<TypeParam>	realvec;
+	initialise_default_vector(vec, realvec);
+
+	typename ft::vector<TypeParam>::const_iterator	it = vec.begin();
+	typename std::vector<TypeParam>::const_iterator	real_it = realvec.begin();
+	typename ft::vector<TypeParam>::const_reverse_iterator	rit = vec.rbegin();
+	typename std::vector<TypeParam>::const_reverse_iterator	real_rit = realvec.rbegin();
+
+	typename ft::vector<TypeParam>::reverse_iterator	nc_rit(vec.rbegin());
+	typename std::vector<TypeParam>::reverse_iterator	nc_real_rit(realvec.rbegin());
+	typename ft::vector<TypeParam>::const_reverse_iterator	rit2(nc_rit);
+	typename std::vector<TypeParam>::const_reverse_iterator	real_rit2(nc_real_rit);
+
+	ASSERT_EQ(*it, *real_it);
+	ASSERT_EQ(*rit, *real_rit);
+	ASSERT_EQ(*nc_rit, *nc_real_rit);
+	ASSERT_EQ(*rit2, *real_rit2);
+}
+
+TYPED_TEST(vector_tester, iterator_reverse_modification_tests) {
+	ft::vector<TypeParam>	vec;
+	std::vector<TypeParam>	realvec;
+	initialise_default_vector(vec, realvec);
+
+	testSizeAndContent(vec, realvec);
+
+	typename ft::vector<TypeParam>::reverse_iterator	it = vec.rbegin();
+	typename std::vector<TypeParam>::reverse_iterator	real_it = realvec.rbegin();
+	for (; it != vec.rend(); it++, real_it++) {
+		addition_func(*it);
+		addition_func(*real_it);
+	}
+	testSizeAndContent(vec, realvec);
+
+	it = vec.rbegin();
+	real_it = realvec.rbegin();
+	for (; it != vec.rend(); it++, real_it++) {
+		subtraction_func(*it);
+		subtraction_func(*real_it);
+	}
+	testSizeAndContent(vec, realvec);
+
+	it = vec.rbegin();
+	real_it = realvec.rbegin();
+	for (; it != vec.rend(); it++, real_it++) {
+		multiplication_func(*it);
+		multiplication_func(*real_it);
+	}
+	testSizeAndContent(vec, realvec);
+}
+
+TYPED_TEST(vector_tester, iterator_reverse_base_test) {
+	ft::vector<TypeParam>	vec;
+	std::vector<TypeParam>	realvec;
+	initialise_default_vector(vec, realvec);
+
+	typename ft::vector<TypeParam>::reverse_iterator	nc_rit(vec.rbegin() + 1);
+	typename std::vector<TypeParam>::reverse_iterator	nc_real_rit(realvec.rbegin() + 1);
+	typename ft::vector<TypeParam>::const_reverse_iterator	rit2(nc_rit + 3);
+	typename std::vector<TypeParam>::const_reverse_iterator	real_rit2(nc_real_rit + 3);
+
+	ASSERT_EQ(*(nc_rit.base()), *(nc_real_rit.base()));
+	ASSERT_EQ(*(rit2.base()), *(real_rit2.base()));
 }
