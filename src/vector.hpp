@@ -6,7 +6,7 @@
 /*   By: rlucas <ryanl585codam@gmail.com>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/06 12:52:10 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/14 18:13:49 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/20 13:45:02 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -442,11 +442,13 @@ namespace ft {
 					_size -= n;
 					for (size_type i = target; i < target + n; i++) {
 						_a.destroy(_data + i);
-						_a.construct(_data + i, *(_data + i + n));
+						if (i < _size)
+							_a.construct(_data + i, *(_data + i + n));
 					}
 					for (size_type i = target + n; i < _size; i++) {
 						_a.destroy(_data + i);
-						_a.construct(_data + i, *(_data + i + n));
+						if (i < _size)
+							_a.construct(_data + i, *(_data + i + n));
 					}
 					for (size_type i = _size; i < _size + n; i++)
 						_a.destroy(_data + i);

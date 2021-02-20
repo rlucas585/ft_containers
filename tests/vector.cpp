@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/13 17:58:24 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/14 22:34:31 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/20 13:45:29 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 
 #include "../src/vector.hpp"
 #include "test_fixture_classes.hpp"
+#include "Example.hpp"
 
 #define ON true
 #define OFF false
@@ -65,12 +66,41 @@ void	initialise_scrap_vector(std::vector<std::string>& vec) {
 	}
 }
 
+void	initialise_default_vector(ft::vector<Example>& vec, std::vector<Example>& realvec) {
+	std::vector<Example>		newvals;
+
+	newvals.push_back(Example::createWithNameAndValue("Jonathan", 20));
+	newvals.push_back(Example::createWithNameAndValue("Joseph", 12));
+	newvals.push_back(Example::createWithNameAndValue("Jotaro", 4));
+	newvals.push_back(Example::createWithNameAndValue("Jolyne", 27));
+	newvals.push_back(Example::createWithNameAndValue("Giorno", 3));
+	newvals.push_back(Example::createWithNameAndValue("Josuke", 18));
+	newvals.push_back(Example::createWithNameAndValue("Johnny", 5));
+	for (size_t i = 0; i != newvals.size(); i++) {
+		vec.push_back(newvals[i]);
+		realvec.push_back(newvals[i]);
+	}
+}
+
+void	initialise_scrap_vector(std::vector<Example>& vec) {
+	for (unsigned int i = 0; i <= 3; i++) {
+		vec.push_back(Example::createWithNameAndValue("Kakyoin", 8));
+		vec.push_back(Example::createWithNameAndValue("Polnareff", 2));
+		vec.push_back(Example::createWithNameAndValue("Avdol", 15));
+		vec.push_back(Example::createWithNameAndValue("Iggy", 11));
+	}
+}
+
 void	addition_func(int &val) {
 	val += 2;
 }
 
 void	addition_func(std::string &s) {
 	s[0] += 2;
+}
+
+void	addition_func(Example &e) {
+	e.addToName(2);
 }
 
 void	subtraction_func(int &val) {
@@ -81,6 +111,10 @@ void	subtraction_func(std::string &s) {
 	s[0] -= 1;
 }
 
+void	subtraction_func(Example &e) {
+	e.subName(2);
+}
+
 void	multiplication_func(int &val) {
 	val *= 3;
 }
@@ -89,6 +123,10 @@ void	multiplication_func(std::string &s) {
 	s[0] += 8;
 	if (s[0] > 125)
 		s[0] = 65;
+}
+
+void	multiplication_func(Example &e) {
+	e.multName(8);
 }
 
 void	addition_to_vector(ft::vector<int>& vec, std::vector<int>& realvec) {
@@ -103,6 +141,13 @@ void	addition_to_vector(ft::vector<std::string>& vec, std::vector<std::string>& 
 	reals[0] += 1;
 }
 
+void	addition_to_vector(ft::vector<Example>& vec, std::vector<Example>& realvec) {
+	Example&	e = vec.front();
+	Example&	real_e = realvec.front();
+	e.addToName(1);
+	real_e.addToName(1);
+}
+
 void	subtraction_to_vector(ft::vector<int>& vec, std::vector<int>& realvec) {
 	vec.front() -= 1;
 	realvec.front() -= 1;
@@ -113,6 +158,13 @@ void	subtraction_to_vector(ft::vector<std::string>& vec, std::vector<std::string
 	std::string&	reals = realvec.front();
 	s[0] -= 1;
 	reals[0] -= 1;
+}
+
+void	subtraction_to_vector(ft::vector<Example>& vec, std::vector<Example>& realvec) {
+	Example&	e = vec.front();
+	Example&	real_e = realvec.front();
+	e.subName(1);
+	real_e.subName(1);
 }
 
 template <typename Vec>
@@ -224,7 +276,9 @@ TYPED_TEST(vector_tester, max_size_test) {
 	std::vector<TypeParam>	realvec;
 	initialise_default_vector(vec, realvec);
 
-	ASSERT_EQ(vec.max_size(), realvec.max_size());
+	size_t			actual = (vec.max_size() + 50) / 100 * 100;
+	size_t			roundedReal = (realvec.max_size() + 50) / 100 * 100;
+	ASSERT_EQ(actual, roundedReal);
 }
 
 TYPED_TEST(vector_tester, element_access_test) {

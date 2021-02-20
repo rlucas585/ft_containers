@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/13 18:54:50 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/13 19:03:32 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/20 13:18:48 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,12 @@
 #define TEST_FIXTURE_CLASSES_HPP
 
 #include <gtest/gtest.h>
+#include "Example.hpp"
 
 template <typename T>
 class vector_tester : public ::testing::Test {
 };
 
-typedef testing::Types<int, std::string> Implementations;
+typedef testing::Types<int, std::string, Example> Implementations;
 
 #endif

@@ -6,7 +6,7 @@
 #    By: rlucas <marvin@codam.nl>                     +#+                      #
 #                                                    +#+                       #
 #    Created: 2020/07/27 14:22:41 by rlucas        #+#    #+#                  #
-#    Updated: 2021/02/14 13:36:30 by rlucas        ########   odam.nl          #
+#    Updated: 2021/02/20 13:35:49 by rlucas        ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,24 +23,39 @@ SRCDIR = src/
 OBJDIR = obj/
 INCLUDES = -Isrc/
 EXT = .cpp
+HEADEREXT = .hpp
 
 SRCLST = main \
 	  utils \
 	  vector_tests \
-	  list_tests \
-	  map_tests
+	  list_tests
+
+HEADERSLST = vector \
+		  sfinae \
+		  list \
+		  list_iterator \
+		  random_access_iterator \
+		  colors \
+		  utils \
+		  test
+
+TESTHEADERSLST = Example \
+				 test_fixture_classes
 
 TESTSRCLST = main \
-			 vector
+			 vector \
+			 Example
 
 TESTOBJDIR = testobj/
 TESTDIR = tests/
-TESTLIBS = -L/mnt/hard_drive/usr/local/lib/ -lgtest -lpthread
+TESTLIBS = -lgtest -lpthread
 
 # Configuration above, logic below
 
 SRC = $(addprefix $(SRCDIR)/, $(addsuffix $(EXT), $(SRCLST)))
 TESTSRC = $(addprefix $(TESTDIR)/, $(addsuffix $(EXT), $(TESTSRCLST)))
+HEADERS = $(addprefix $(SRCDIR)/, $(addsuffix $(HEADEREXT), $(HEADERSLST)))
+TESTHEADERS = $(addprefix $(TESTDIR)/, $(addsuffix $(HEADEREXT), $(TESTHEADERSLST)))
 
 FLAGS = -Wall -Wextra -Werror -std=c++98 -pedantic
 # FLAGS = -Wall -Wextra -Werror -std=c++11 -pedantic
@@ -50,7 +65,7 @@ TESTOBJ := $(addprefix $(TESTOBJDIR), $(TESTSRCLST:%=%.o))
 
 all: $(NAME)
 
-test: $(TESTOBJ)
+test: $(NAME) $(TESTOBJ)
 	@echo "Compiling test executable..."
 	@$(CC) $(FLAGS) $(TESTOBJ) -o $(TESTNAME) $(INCLUDES) $(TESTLIBS)
 
@@ -58,12 +73,12 @@ $(NAME): $(OBJ)
 	@echo "Compiling executable..."
 	@$(CC) $(FLAGS) $(OBJ) -o $(NAME) $(INCLUDES)
 
-$(OBJ):	$(SRC)
+$(OBJ):	$(SRC) $(HEADERS)
 	@mkdir -p $(OBJDIR)
 	@echo "Compiling $@"
 	@$(CC) -c $(FLAGS) -o $@ $(patsubst $(OBJDIR)%.o,$(SRCDIR)%.cpp, $@) $(INCLUDES)
 
-$(TESTOBJ): $(TESTSRC)
+$(TESTOBJ): $(TESTSRC) $(TESTHEADERS)
 	@mkdir -p $(TESTOBJDIR)
 	@echo "Compiling $@"
 	@$(CC) -c $(FLAGS) -o $@ $(patsubst $(TESTOBJDIR)%.o,$(TESTDIR)%.cpp, $@) $(INCLUDES)
