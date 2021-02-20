@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/20 16:31:39 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/01/22 10:18:15 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/20 14:47:16 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,11 @@ namespace ft {
 					_it--;
 				}
 				ReverseBiIterator(const ReverseBiIterator &src) : _it(src._it) {}
+				iterator_type	base(void) const {
+					iterator_type	tmp(_it);
+
+					return tmp;
+				}
 
 				this_type		&operator++() {
 					_it--;
@@ -73,18 +78,6 @@ namespace ft {
 				}
 				bool		operator!=(const this_type &rhs) const {
 					return _it != rhs._it;
-				}
-				bool		operator>(const this_type &rhs) const {
-					return _it < rhs._it;
-				}
-				bool		operator>=(const this_type &rhs) const {
-					return _it <= rhs._it;
-				}
-				bool		operator<(const this_type &rhs) const {
-					return _it > rhs._it;
-				}
-				bool		operator<=(const this_type &rhs) const {
-					return _it >= rhs._it;
 				}
 				operator	const_type() const {
 					typename iterator_type::const_type	c_it(_it);

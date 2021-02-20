@@ -6,7 +6,7 @@
 #    By: rlucas <marvin@codam.nl>                     +#+                      #
 #                                                    +#+                       #
 #    Created: 2020/07/27 14:22:41 by rlucas        #+#    #+#                  #
-#    Updated: 2021/02/20 13:35:49 by rlucas        ########   odam.nl          #
+#    Updated: 2021/02/20 14:05:02 by rlucas        ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -40,11 +40,14 @@ HEADERSLST = vector \
 		  test
 
 TESTHEADERSLST = Example \
-				 test_fixture_classes
+				 test_fixture_classes \
+				 test
 
 TESTSRCLST = main \
 			 vector \
-			 Example
+			 Example \
+			 test \
+			 list
 
 TESTOBJDIR = testobj/
 TESTDIR = tests/

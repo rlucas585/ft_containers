@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/13 18:54:50 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/20 13:18:48 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/20 14:03:04 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,10 @@
 
 template <typename T>
 class vector_tester : public ::testing::Test {
+};
+
+template <typename T>
+class list_tester : public ::testing::Test {
 };
 
 typedef testing::Types<int, std::string, Example> Implementations;

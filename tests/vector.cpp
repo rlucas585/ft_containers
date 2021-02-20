@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/13 17:58:24 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/20 13:45:29 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/20 14:50:13 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 #include "../src/vector.hpp"
 #include "test_fixture_classes.hpp"
 #include "Example.hpp"
+#include "test.hpp"
 
 #define ON true
 #define OFF false
@@ -32,12 +33,6 @@ void	initialise_default_vector(ft::vector<int>& vec, std::vector<int>& realvec) 
 	for (unsigned int i = 5; i <= 30; i += 5) {
 		vec.push_back(i);
 		realvec.push_back(i);
-	}
-}
-
-void	initialise_scrap_vector(std::vector<int>& vec) {
-	for (unsigned int i = 7; i <= 77; i += 6) {
-		vec.push_back(i);
 	}
 }
 
@@ -57,15 +52,6 @@ void	initialise_default_vector(ft::vector<std::string>& vec, std::vector<std::st
 	}
 }
 
-void	initialise_scrap_vector(std::vector<std::string>& vec) {
-	for (unsigned int i = 0; i <= 3; i++) {
-		vec.push_back("hello");
-		vec.push_back("there");
-		vec.push_back("vector");
-		vec.push_back("container");
-	}
-}
-
 void	initialise_default_vector(ft::vector<Example>& vec, std::vector<Example>& realvec) {
 	std::vector<Example>		newvals;
 
@@ -80,53 +66,6 @@ void	initialise_default_vector(ft::vector<Example>& vec, std::vector<Example>& r
 		vec.push_back(newvals[i]);
 		realvec.push_back(newvals[i]);
 	}
-}
-
-void	initialise_scrap_vector(std::vector<Example>& vec) {
-	for (unsigned int i = 0; i <= 3; i++) {
-		vec.push_back(Example::createWithNameAndValue("Kakyoin", 8));
-		vec.push_back(Example::createWithNameAndValue("Polnareff", 2));
-		vec.push_back(Example::createWithNameAndValue("Avdol", 15));
-		vec.push_back(Example::createWithNameAndValue("Iggy", 11));
-	}
-}
-
-void	addition_func(int &val) {
-	val += 2;
-}
-
-void	addition_func(std::string &s) {
-	s[0] += 2;
-}
-
-void	addition_func(Example &e) {
-	e.addToName(2);
-}
-
-void	subtraction_func(int &val) {
-	val -= 1;
-}
-
-void	subtraction_func(std::string &s) {
-	s[0] -= 1;
-}
-
-void	subtraction_func(Example &e) {
-	e.subName(2);
-}
-
-void	multiplication_func(int &val) {
-	val *= 3;
-}
-
-void	multiplication_func(std::string &s) {
-	s[0] += 8;
-	if (s[0] > 125)
-		s[0] = 65;
-}
-
-void	multiplication_func(Example &e) {
-	e.multName(8);
 }
 
 void	addition_to_vector(ft::vector<int>& vec, std::vector<int>& realvec) {
