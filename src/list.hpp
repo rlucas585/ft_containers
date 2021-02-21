@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/20 11:02:05 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/21 11:06:18 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/21 14:28:11 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -483,6 +483,8 @@ namespace ft {
 						iterator	thisListIt = this->begin();
 						iterator	it;
 
+						if (&x == this)
+							return ;
 						if (_size == 1) {
 							while (x.size() > 0) {
 								a_node = x._removeNode(x.begin());

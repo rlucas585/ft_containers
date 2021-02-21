@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/20 13:48:57 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/21 11:10:56 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/21 14:58:57 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,54 @@
 #include "Example.hpp"
 #include "test.hpp"
 
+void	initialise_sorted_list(ft::list<int>& list, std::list<int>& reallist) {
+	for (unsigned int i = 5; i <= 30; i += 5) {
+		list.push_back(i);
+		reallist.push_back(i);
+	}
+}
+
+void	initialise_sorted_list(ft::list<std::string>& list, std::list<std::string>& reallist) {
+	std::vector<std::string>		newvals;
+
+	newvals.push_back("Lorem");
+	newvals.push_back("adipiscing elit. Donec aliquam tempus orci. Pellentesque "
+			"bibendum consequat mauris, id pharetra urna molestie eget. Quisque a vulputate dolor.");
+	newvals.push_back("amet,");
+	newvals.push_back("dolor");
+	newvals.push_back("ipsum");
+	newvals.push_back("sit long long long long long long long long long long long long long long");
+	for (size_t i = 0; i != newvals.size(); i++) {
+		list.push_back(newvals[i]);
+		reallist.push_back(newvals[i]);
+	}
+}
+
+void	initialise_sorted_list(ft::list<Example>& list, std::list<Example>& reallist) {
+	std::vector<Example>		newvals;
+
+	newvals.push_back(Example::createWithNameAndValue("Jotaro", 4));
+	newvals.push_back(Example::createWithNameAndValue("Joseph", 12));
+	newvals.push_back(Example::createWithNameAndValue("Josuke", 18));
+	newvals.push_back(Example::createWithNameAndValue("Jonathan", 20));
+	newvals.push_back(Example::createWithNameAndValue("Jolyne", 27));
+	newvals.push_back(Example::createWithNameAndValue("Johnny", 5));
+	newvals.push_back(Example::createWithNameAndValue("Giorno", 3));
+	for (size_t i = 0; i != newvals.size(); i++) {
+		list.push_back(newvals[i]);
+		reallist.push_back(newvals[i]);
+	}
+}
+
 void	initialise_default_list(ft::list<int>& list, std::list<int>& reallist) {
 	for (unsigned int i = 5; i <= 30; i += 5) {
 		list.push_back(i);
 		reallist.push_back(i);
 	}
+	list.push_back(8);
+	reallist.push_back(8);
+	list.push_back(16);
+	reallist.push_back(16);
 }
 
 void	initialise_default_list(ft::list<std::string>& list, std::list<std::string>& reallist) {
@@ -38,10 +81,10 @@ void	initialise_default_list(ft::list<std::string>& list, std::list<std::string>
 	newvals.push_back("Lorem");
 	newvals.push_back("ipsum");
 	newvals.push_back("dolor");
-	newvals.push_back("amet,");
-	newvals.push_back("sit long long long long long long long long long long long long long long");
 	newvals.push_back("adipiscing elit. Donec aliquam tempus orci. Pellentesque "
 			"bibendum consequat mauris, id pharetra urna molestie eget. Quisque a vulputate dolor.");
+	newvals.push_back("sit long long long long long long long long long long long long long long");
+	newvals.push_back("amet,");
 	for (size_t i = 0; i != newvals.size(); i++) {
 		list.push_back(newvals[i]);
 		reallist.push_back(newvals[i]);
@@ -54,9 +97,9 @@ void	initialise_default_list(ft::list<Example>& list, std::list<Example>& realli
 	newvals.push_back(Example::createWithNameAndValue("Jonathan", 20));
 	newvals.push_back(Example::createWithNameAndValue("Joseph", 12));
 	newvals.push_back(Example::createWithNameAndValue("Jotaro", 4));
-	newvals.push_back(Example::createWithNameAndValue("Jolyne", 27));
-	newvals.push_back(Example::createWithNameAndValue("Giorno", 3));
 	newvals.push_back(Example::createWithNameAndValue("Josuke", 18));
+	newvals.push_back(Example::createWithNameAndValue("Giorno", 3));
+	newvals.push_back(Example::createWithNameAndValue("Jolyne", 27));
 	newvals.push_back(Example::createWithNameAndValue("Johnny", 5));
 	for (size_t i = 0; i != newvals.size(); i++) {
 		list.push_back(newvals[i]);
@@ -470,6 +513,31 @@ TYPED_TEST(list_tester, clear_test) {
 	ASSERT_TRUE(reallist.empty());
 }
 
+TYPED_TEST(list_tester, splice_test_whole_list) {
+	ft::list<TypeParam>	list;
+	std::list<TypeParam>	reallist;
+	initialise_default_list(list, reallist);
+	ft::list<TypeParam>	list2;
+	std::list<TypeParam>	reallist2;
+	initialise_default_list(list2, reallist2);
+	std::vector<TypeParam>	scrapVec;
+	initialise_scrap_vector(scrapVec);
+
+	typename ft::list<TypeParam>::iterator		it = incrementIterator(list.begin(), 3);
+	typename std::list<TypeParam>::iterator		realit = incrementIterator(reallist.begin(), 3);
+
+	for (typename std::vector<TypeParam>::iterator it = scrapVec.begin(); it != scrapVec.end(); it++) {
+		list2.push_back(*it);
+		reallist2.push_back(*it);
+	}
+
+	list.splice(it, list2);
+	reallist.splice(realit, reallist2);
+
+	testSizeAndContent(list, reallist);
+	testSizeAndContent(list2, reallist2);
+}
+
 TYPED_TEST(list_tester, splice_test_single_element) {
 	ft::list<TypeParam>	list;
 	std::list<TypeParam>	reallist;
@@ -511,6 +579,178 @@ TYPED_TEST(list_tester, splice_test_single_element) {
 
 	testSizeAndContent(list, reallist);
 	testSizeAndContent(list2, reallist2);
+}
+
+TYPED_TEST(list_tester, splice_test_range) {
+	ft::list<TypeParam>	list;
+	std::list<TypeParam>	reallist;
+	initialise_default_list(list, reallist);
+	ft::list<TypeParam>	list2;
+	std::list<TypeParam>	reallist2;
+	initialise_default_list(list2, reallist2);
+
+	std::vector<TypeParam>	scrapVec;
+	initialise_scrap_vector(scrapVec);
+
+	for (typename std::vector<TypeParam>::iterator it = scrapVec.begin(); it != scrapVec.end(); it++) {
+		list2.push_back(*it);
+		reallist2.push_back(*it);
+	}
+
+	list.splice(list.begin(), list2, incrementIterator(list2.begin(), 4), list2.end());
+	reallist.splice(reallist.begin(), reallist2,
+			incrementIterator(reallist2.begin(), 4), reallist2.end());
+
+	testSizeAndContent(list, reallist);
+	testSizeAndContent(list2, reallist2);
+}
+
+TYPED_TEST(list_tester, remove_test) {
+	ft::list<TypeParam>	list;
+	std::list<TypeParam>	reallist;
+	initialise_default_list(list, reallist);
+
+	std::vector<TypeParam>	scrapVec;
+	initialise_scrap_vector(scrapVec);
+
+	testSizeAndContent(list, reallist);
+
+	list.remove(scrapVec.back());
+	reallist.remove(scrapVec.back());
+
+	testSizeAndContent(list, reallist);
+}
+
+TYPED_TEST(list_tester, remove_if_test) {
+	ft::list<TypeParam>	list;
+	std::list<TypeParam>	reallist;
+	initialise_default_list(list, reallist);
+	bool		(*func)(TypeParam const&) = predicate_func;
+
+	list.remove_if(func);
+	reallist.remove_if(func);
+
+	testSizeAndContent(list, reallist);
+}
+
+TYPED_TEST(list_tester, unique_void_test) {
+	std::vector<TypeParam>	scrapVec;
+	initialise_scrap_vector(scrapVec);
+
+	ft::list<TypeParam>	list(20, scrapVec.front());
+	std::list<TypeParam>	reallist(20, scrapVec.front());
+
+	for (int i = 0; i < 3; i++) {
+		list.push_front(scrapVec.back());
+		reallist.push_front(scrapVec.back());
+	}
+	testSizeAndContent(list, reallist);
+
+	list.unique();
+	reallist.unique();
+
+	testSizeAndContent(list, reallist);
+}
+
+TYPED_TEST(list_tester, unique_predicate_test) {
+	std::vector<TypeParam>	scrapVec;
+	initialise_scrap_vector(scrapVec);
+	bool		(*func)(TypeParam const&, TypeParam const&) = binary_predicate_func;
+
+	ft::list<TypeParam>	list(20, scrapVec.front());
+	std::list<TypeParam>	reallist(20, scrapVec.front());
+
+	for (int i = 0; i < 3; i++) {
+		list.push_front(scrapVec.back());
+		reallist.push_front(scrapVec.back());
+	}
+	testSizeAndContent(list, reallist);
+
+	list.unique(func);
+	reallist.unique(func);
+
+	testSizeAndContent(list, reallist);
+}
+
+TYPED_TEST(list_tester, merge_standard_test) {
+	ft::list<TypeParam>	list;
+	std::list<TypeParam>	reallist;
+	initialise_sorted_list(list, reallist);
+	std::vector<TypeParam>	scrapVec;
+	initialise_scrap_vector(scrapVec);
+	ft::list<TypeParam>	list2;
+	std::list<TypeParam>	reallist2;
+
+	for (typename std::vector<TypeParam>::iterator it = scrapVec.begin(); it != scrapVec.end(); it++) {
+		list2.push_back(*it);
+		reallist2.push_back(*it);
+	}
+
+	list.merge(list2);
+	reallist.merge(reallist2);
+
+	testSizeAndContent(list, reallist);
+	testSizeAndContent(list2, reallist2);
+}
+
+TYPED_TEST(list_tester, merge_predicate_test) {
+	ft::list<TypeParam>	list;
+	std::list<TypeParam>	reallist;
+	initialise_sorted_list(list, reallist);
+	std::vector<TypeParam>	scrapVec;
+	initialise_scrap_vector(scrapVec);
+	ft::list<TypeParam>	list2;
+	std::list<TypeParam>	reallist2;
+	bool	(*func)(TypeParam const&, TypeParam const&) = moreThanFunc;
+
+	for (typename std::vector<TypeParam>::iterator it = scrapVec.begin(); it != scrapVec.end(); it++) {
+		list2.push_back(*it);
+		reallist2.push_back(*it);
+	}
+	list.reverse();
+	list2.reverse();
+	reallist.reverse();
+	reallist2.reverse();
+
+	list.merge(list2, func);
+	reallist.merge(reallist2, func);
+
+	testSizeAndContent(list, reallist);
+	testSizeAndContent(list2, reallist2);
+}
+
+TYPED_TEST(list_tester, sort_standard_test) {
+	ft::list<TypeParam>	list;
+	std::list<TypeParam>	reallist;
+	initialise_default_list(list, reallist);
+
+	list.sort();
+	reallist.sort();
+
+	testSizeAndContent(list, reallist);
+}
+
+TYPED_TEST(list_tester, sort_custom_test) {
+	ft::list<TypeParam>	list;
+	std::list<TypeParam>	reallist;
+	initialise_default_list(list, reallist);
+	bool	(*func)(TypeParam const&, TypeParam const&) = moreThanFunc;
+
+	list.sort(func);
+	reallist.sort(func);
+
+	testSizeAndContent(list, reallist);
+}
+
+TYPED_TEST(list_tester, reverse_test) {
+	ft::list<TypeParam>	list;
+	std::list<TypeParam>	reallist;
+	initialise_default_list(list, reallist);
+
+	list.reverse();
+	reallist.reverse();
+
+	testSizeAndContent(list, reallist);
 }
 
 TYPED_TEST(list_tester, fill_constructor_test) {

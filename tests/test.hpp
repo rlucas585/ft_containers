@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/20 13:51:08 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/21 11:11:34 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/21 14:32:09 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,5 +34,14 @@ void	multiplication_func(Example &e);
 void	initialise_scrap_vector(std::vector<int>& vec);
 void	initialise_scrap_vector(std::vector<std::string>& list);
 void	initialise_scrap_vector(std::vector<Example>& list);
+bool	predicate_func(int const& n);
+bool	predicate_func(std::string const& s);
+bool	predicate_func(Example const& e);
+bool	binary_predicate_func(int const& n, int const& n2);
+bool	binary_predicate_func(std::string const& s, std::string const& s2);
+bool	binary_predicate_func(Example const& e, Example const& e2);
+bool	moreThanFunc(int const& n, int const& n2);
+bool	moreThanFunc(std::string const& s, std::string const& s2);
+bool	moreThanFunc(Example const& e, Example const& e2);
 
 #endif
