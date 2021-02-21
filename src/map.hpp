@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/29 08:56:11 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/21 17:30:21 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/21 19:01:02 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,14 +114,59 @@ namespace ft {
 								 }
 
 								 // Rotations
-								 // void		rotateLeft(void) {
-								 //  node		*nnew = _right;
-								 //  node		*p = _parent;
-								 //  if (nnew == NULL)	// Do nothing if leaf is sibling
-								 // 	 return ;
-								 //
-								 //  _right = nnew->_left;
-								 // }
+								 void		rotateLeft(void) {
+									 node		*nnew = _right;
+									 node		*p = _parent;
+									 if (nnew == NULL)	// Leaf cannot become internal node
+										 return ;
+
+									 _right = nnew->_left;
+									 nnew->_left = this;
+									 _parent = nnew;
+									 if (_right != NULL)
+										 _right->_parent = this;
+
+									 if (p != NULL) {
+										 if (this == p->_left)
+											 p->_left = nnew;
+										 else if (this == p->_right)
+											 p->_right = nnew;
+									 }
+									 nnew->parent = p;
+								 }
+
+								 void		rotateRight(void) {
+									 node		*nnew = _left;
+									 node		*p = _parent;
+									 if (nnew == NULL)
+										 return ;
+
+									 _left = nnew->_right;
+									 nnew->_right = this;
+									 _parent = nnew;
+									 if (_left != NULL)
+										 _left->_parent = this;
+
+									 if (p != NULL) {
+										 if (this == p->_left)
+											 p->_left = nnew;
+										 else if (this == p->_right)
+											 p->_right = nnew;
+									 }
+									 nnew->_parent = p;
+								 }
+
+								 node		*insert(node *n) {
+									 node		*root;
+
+									 this->insertRecurse(n);
+
+									 insertRepairTree(n);
+									 root = n;
+									 while (root.getParent() != NULL)
+										 root = root.getParent();
+									 return root;
+								 }
 
 							 public:
 								 node		*_parent;
@@ -149,9 +194,7 @@ namespace ft {
 
 						 // TODO change from void to correct return type
 						 void	insert(const value_type& val) {
-							 if (_head == NULL) {
-
-							 }
+							 _insertInternal(_head, )
 						 }
 
 					 private:
@@ -170,6 +213,10 @@ namespace ft {
 							 new_node.left = NULL;
 							 new_node.right = NULL;
 							 return new_node;
+						 }
+
+						 node		*_insertInternal(node *root, node *n) {
+
 						 }
 				 };
 }
