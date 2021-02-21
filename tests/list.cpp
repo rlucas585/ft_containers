@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/20 13:48:57 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/21 10:28:25 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/21 11:10:56 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -468,6 +468,49 @@ TYPED_TEST(list_tester, clear_test) {
 	ASSERT_EQ(reallist.size(), 0);
 	ASSERT_TRUE(list.empty());
 	ASSERT_TRUE(reallist.empty());
+}
+
+TYPED_TEST(list_tester, splice_test_single_element) {
+	ft::list<TypeParam>	list;
+	std::list<TypeParam>	reallist;
+	initialise_default_list(list, reallist);
+	ft::list<TypeParam>	list2;
+	std::list<TypeParam>	reallist2;
+	initialise_default_list(list2, reallist2);
+
+	typename ft::list<TypeParam>::iterator		it = list.begin();
+	typename std::list<TypeParam>::iterator		realit = reallist.begin();
+	typename ft::list<TypeParam>::iterator		tmpit = list2.begin();
+	typename std::list<TypeParam>::iterator		tmprealit = reallist2.begin();
+
+	it = incrementIterator(it, list.size() / 2);
+	realit = incrementIterator(realit, reallist.size() / 2);
+	tmpit = incrementIterator(tmpit, list2.size() / 4);
+	tmprealit = incrementIterator(tmprealit, reallist2.size() / 4);
+
+	list.splice(it, list2, tmpit);
+	reallist.splice(realit, reallist2, tmprealit);
+
+	testSizeAndContent(list, reallist);
+	testSizeAndContent(list2, reallist2);
+
+	tmpit = list2.begin();
+	tmprealit = reallist2.begin();
+
+	list.splice(it, list2, tmpit);
+	reallist.splice(realit, reallist2, tmprealit);
+
+	testSizeAndContent(list, reallist);
+	testSizeAndContent(list2, reallist2);
+
+	tmpit = incrementIterator(tmpit, 3);
+	tmprealit = incrementIterator(tmprealit, 3);
+
+	list.splice(it, list2, tmpit);
+	reallist.splice(realit, reallist2, tmprealit);
+
+	testSizeAndContent(list, reallist);
+	testSizeAndContent(list2, reallist2);
 }
 
 TYPED_TEST(list_tester, fill_constructor_test) {

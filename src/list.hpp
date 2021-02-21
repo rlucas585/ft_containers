@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/20 11:02:05 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/13 15:31:08 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/21 11:06:18 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -356,11 +356,12 @@ namespace ft {
 					node		*cur = _head->getNext();
 					node		*next;
 
-					while (_size > 1) {
+					while (cur != _head) {
 						next = cur->getNext();
 						_destroyNode(cur);
 						cur = next;
-						_size -= 1;
+						if (_size > 1)
+							_size -= 1;
 					}
 					_head->setNext(_head);
 					_head->setPrev(_head);
