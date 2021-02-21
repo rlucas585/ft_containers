@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/20 16:31:39 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/20 14:47:16 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/21 10:30:31 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ namespace ft {
 				iterator_type	base(void) const {
 					iterator_type	tmp(_it);
 
+					tmp++;
 					return tmp;
 				}
 

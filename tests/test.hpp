@@ -6,12 +6,17 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/20 13:51:08 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/20 14:49:34 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/21 10:30:56 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef TEST_HPP
 #define TEST_HPP
+
+#define ON true
+#define OFF false
+
+#define PRINTED_OUTPUT OFF
 
 #include <string>
 #include <vector>

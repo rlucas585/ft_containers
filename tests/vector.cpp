@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/13 17:58:24 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/20 14:50:13 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/21 10:26:11 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,6 @@
 #include "test_fixture_classes.hpp"
 #include "Example.hpp"
 #include "test.hpp"
-
-#define ON true
-#define OFF false
-
-#define PRINTED_OUTPUT OFF
 
 void	initialise_default_vector(ft::vector<int>& vec, std::vector<int>& realvec) {
 	for (unsigned int i = 5; i <= 30; i += 5) {

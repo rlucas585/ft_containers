@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/20 13:48:57 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/20 14:50:10 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/21 10:28:25 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,6 @@
 #include "test_fixture_classes.hpp"
 #include "Example.hpp"
 #include "test.hpp"
-
-#define ON true
-#define OFF false
-
-#define PRINTED_OUTPUT OFF
 
 void	initialise_default_list(ft::list<int>& list, std::list<int>& reallist) {
 	for (unsigned int i = 5; i <= 30; i += 5) {
@@ -222,13 +217,14 @@ TYPED_TEST(list_tester, size_test) {
 }
 
 TYPED_TEST(list_tester, max_size_test) {
-	ft::list<TypeParam>	list;
+	ft::list<TypeParam>		list;
 	std::list<TypeParam>	reallist;
 	initialise_default_list(list, reallist);
+	size_t				diff;
 
-	size_t			actual = (list.max_size() + 50) / 100 * 100;
-	size_t			roundedReal = (reallist.max_size() + 50) / 100 * 100;
-	ASSERT_EQ(actual, roundedReal);
+	diff = std::max(list.max_size(), reallist.max_size()) -
+		std::min(list.max_size(), reallist.max_size());
+	ASSERT_TRUE(diff < 100);
 }
 
 TYPED_TEST(list_tester, resize_test) {
