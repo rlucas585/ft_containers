@@ -6,7 +6,7 @@
 #    By: rlucas <marvin@codam.nl>                     +#+                      #
 #                                                    +#+                       #
 #    Created: 2020/07/27 14:22:41 by rlucas        #+#    #+#                  #
-#    Updated: 2021/02/20 14:05:02 by rlucas        ########   odam.nl          #
+#    Updated: 2021/02/21 17:07:49 by rlucas        ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,7 +37,9 @@ HEADERSLST = vector \
 		  random_access_iterator \
 		  colors \
 		  utils \
-		  test
+		  test \
+		  map \
+		  pair
 
 TESTHEADERSLST = Example \
 				 test_fixture_classes \
@@ -47,7 +49,8 @@ TESTSRCLST = main \
 			 vector \
 			 Example \
 			 test \
-			 list
+			 list \
+			 map
 
 TESTOBJDIR = testobj/
 TESTDIR = tests/
