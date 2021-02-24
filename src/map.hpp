@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/29 08:56:11 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/21 19:01:02 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/24 14:12:32 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,12 @@
 # define MAP_HPP 
 
 #include <functional>
+
 #include "pair.hpp"
+#include "map_iterator.hpp"
+#include "reverse_bi_iterator.hpp"
+
+#include <iostream>		// TODO remove this
 
 # ifndef SYSTEM_BITS
 # ifdef __x86_64
@@ -37,8 +42,11 @@ namespace ft {
 	template <typename Key,
 			 typename T,
 			 typename Compare = std::less<Key>,
-			 typename A = std::allocator<T> >
+			 typename A = std::allocator<pair<const Key, T> > 
+				 >
 				 class map {
+					 public:
+						 class node;
 					 public:
 						 typedef Key								key_type;
 						 typedef T									mapped_type;
@@ -46,13 +54,18 @@ namespace ft {
 						 typedef A									allocator_type;
 						 typedef Compare							key_compare;
 						 // TODO typedef a value_compare at some point
-						 // TODO typedef a map iterator once created, and reverse iterator
 						 typedef typename allocator_type::reference			reference;
 						 typedef typename allocator_type::const_reference	const_reference;
 						 typedef typename allocator_type::pointer			pointer;
 						 typedef typename allocator_type::const_pointer		const_pointer;
 						 typedef typename allocator_type::size_type			size_type;
 						 typedef typename allocator_type::difference_type	difference_type;
+						 typedef MapIterator<T, difference_type, pointer,
+								 reference, node>							iterator;
+						 typedef MapIterator<T, difference_type, const_pointer,
+								 const_reference, const node>				const_iterator;
+						 typedef ReverseBiIterator<iterator>				reverse_iterator;
+						 typedef ReverseBiIterator<const_iterator>			const_reverse_iterator;
 
 					 public:
 						 class node {
@@ -66,7 +79,7 @@ namespace ft {
 								 }
 
 								 // Access functions
-								 Key		&getKey(void) {
+								 Key const	&getKey(void) {
 									 return _val.first;
 								 }
 								 void		setKey(Key key) {
@@ -78,7 +91,10 @@ namespace ft {
 								 const T	&getData(void) const {
 									 return _val.second;
 								 }
-								 value_type	&getVal(void) {
+								 reference	getVal(void) {
+									 return _val;
+								 }
+								 const_reference getVal(void) const {
 									 return _val;
 								 }
 
@@ -99,7 +115,7 @@ namespace ft {
 								 }
 								 node		*getSibling(void) {
 									 node		*p = _parent;
-									 if (p = NULL)
+									 if (p == NULL)
 										 return NULL;
 									 if (this == p->_left)
 										 return p->_right;
@@ -108,9 +124,19 @@ namespace ft {
 								 }
 								 node		*getUncle(void) {
 									 node		*p = _parent;
-									 if (p = NULL)
+									 if (p == NULL)
 										 return NULL;
 									 return p->getSibling();
+								 }
+								 node		*selectLeftMost(void) {
+									 if (_left == NULL)
+										 return this;
+									 return _left->selectLeftMost();
+								 }
+								 node		*selectRightMost(void) {
+									 if (_right == NULL)
+										 return this;
+									 return _right->selectRightMost();
 								 }
 
 								 // Rotations
@@ -132,7 +158,7 @@ namespace ft {
 										 else if (this == p->_right)
 											 p->_right = nnew;
 									 }
-									 nnew->parent = p;
+									 nnew->_parent = p;
 								 }
 
 								 void		rotateRight(void) {
@@ -156,18 +182,6 @@ namespace ft {
 									 nnew->_parent = p;
 								 }
 
-								 node		*insert(node *n) {
-									 node		*root;
-
-									 this->insertRecurse(n);
-
-									 insertRepairTree(n);
-									 root = n;
-									 while (root.getParent() != NULL)
-										 root = root.getParent();
-									 return root;
-								 }
-
 							 public:
 								 node		*_parent;
 								 node		*_left;
@@ -182,19 +196,62 @@ namespace ft {
 						 typedef	std::allocator<node>					node_allocator;
 
 					 public:
-						 map(const key_compare& comp = key_compare(),
+						 explicit map(const key_compare& comp = key_compare(),
 								 const allocator_type& alloc = allocator_type())
 							 : _head(NULL), _size(0), _comp(comp), _a(alloc), _node_alloc() {
+						 }
 
+						 ~map(void) {
+							 this->clear();
 						 }
 
 						 size_type	size(void) const {
 							 return _size;
 						 }
 
+						 iterator	begin(void) {
+							 iterator		it(_head->selectLeftMost());
+
+							 return it;
+						 }
+						 iterator	end(void) {
+							 return iterator(NULL);
+						 }
+
+						 // TODO remove this, it's just a development test function
+						 reference getHead(void) {
+							 return _head->getVal();
+						 }
+						 //TODO remove this, just development function
+						 bool	validateTree(void) const {
+							 return validateRecurse(_head);
+						 }
+
+						 bool	validateRecurse(node *target) const {
+							 if (target == NULL)
+								 return true;
+							 node	*left = target->_left;
+							 node	*right = target->_right;
+
+							 if (target->_color == RED) {
+								 if (left != NULL)
+									 if (left->_color == RED)
+										 return false;
+								 if (right != NULL)
+									 if (right->_color == RED)
+										 return false;
+							 }
+							 return validateRecurse(left) && validateRecurse(right);
+						 }
+
+						 void		clear(void) {
+							 _destroyNodeRecurse(_head);
+						 }
+
 						 // TODO change from void to correct return type
 						 void	insert(const value_type& val) {
-							 _insertInternal(_head, )
+							 node		*newNode = _createNewNode(val);
+							 _head = _insertInternal(_head, newNode);
 						 }
 
 					 private:
@@ -209,14 +266,116 @@ namespace ft {
 
 							 new_node = _node_alloc.allocate(1);
 							 _a.construct(&new_node->getVal(), val);
-							 new_node.parent = NULL;
-							 new_node.left = NULL;
-							 new_node.right = NULL;
+							 new_node->_parent = NULL;
+							 new_node->_left = NULL;
+							 new_node->_right = NULL;
 							 return new_node;
 						 }
 
-						 node		*_insertInternal(node *root, node *n) {
+						 void	_destroyNode(node *target) {
+							 _a.destroy(&target->getVal());
+							 _node_alloc.deallocate(target, 1);
+						 }
 
+						 void	_destroyNodeRecurse(node *target) {
+							 if (target == NULL)
+								 return ;
+							 node		*left = target->_left;
+							 node		*right = target->_right;
+							 _destroyNode(target);
+							 _destroyNodeRecurse(left);
+							 _destroyNodeRecurse(right);
+						 }
+
+						 node		*_insertInternal(node *root, node *n) {
+							 _insertRecurse(root, n);
+
+							 _insertRepairTree(n);
+							 
+							 root = n;
+							 while (root->_parent != NULL) {
+								 root = root->_parent;
+							 }
+							 return root;
+						 }
+
+						 // Recursively travel through tree to find correct
+						 // location for new node
+						 void		_insertRecurse(node *root, node *n) {
+							 if (root != NULL) {
+								 if (n->getKey() < root->getKey()) {
+									 if (root->_left != NULL) {
+										 this->_insertRecurse(root->_left, n);
+										 return ;
+									 } else
+										 root->_left = n;
+								 } else {
+									 if (root->_right != NULL) {
+										 this->_insertRecurse(root->_right, n);
+										 return ;
+									 } else
+										 root->_right = n;
+								 }
+							 }
+
+							 // Insert new node
+							 n->_parent = root;
+							 n->_left = NULL;
+							 n->_right = NULL;
+							 n->_color = RED;
+						 }
+
+						 void		_insertRepairTree(node *n) {
+							 if (n->_parent == NULL)
+								 _nIsNewRootNode(n);
+							 else if (n->_parent->_color == BLACK)
+								 _nParentIsBlack(n);
+							 else if (n->getUncle() != NULL && n->getUncle()->_color == RED)
+								 _nParentAndUncleAreRed(n);
+							 else
+								 _nParentIsRedAndUncleIsBlack(n);
+						 }
+
+						 void		_nIsNewRootNode(node *n) {
+							 n->_color = BLACK;
+						 }
+
+						 void		_nParentIsBlack(node *n) {
+							 (void)n;
+							 return ;
+						 }
+
+						 void		_nParentAndUncleAreRed(node *n) {
+							 n->_parent->_color = BLACK;
+							 n->getUncle()->_color = BLACK;
+							 n->getGrandParent()->_color = RED;
+							 _insertRepairTree(n->getGrandParent());
+						 }
+
+						 void		_nParentIsRedAndUncleIsBlack(node *n) {
+							 node	*p = n->_parent;
+							 node	*g = n->getGrandParent();
+
+							 if (n == p->_right && p == g->_left) {
+								 p->rotateLeft();
+								 n = n->_left;
+							 } else if (n == p->_left && p == g->_right) {
+								 p->rotateRight();
+								 n = n->_right;
+							 }
+							 _nParentIsBlackAndSiblingIsBlack(n);
+						 }
+
+						 void	_nParentIsBlackAndSiblingIsBlack(node *n) {
+							 node	*p = n->_parent;
+							 node	*g = n->getGrandParent();
+							 
+							 if (n == p->_left)
+								 g->rotateRight();
+							 else
+								 g->rotateLeft();
+							 p->_color = BLACK;
+							 g->_color = RED;
 						 }
 				 };
 }

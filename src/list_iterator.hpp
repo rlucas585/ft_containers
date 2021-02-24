@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   bidirectional_iterator.hpp                         :+:    :+:            */
+/*   list_iterator.hpp                                  :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2021/01/20 11:23:00 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/01/22 12:20:50 by rlucas        ########   odam.nl         */
+/*   Created: 2021/02/24 11:00:50 by rlucas        #+#    #+#                 */
+/*   Updated: 2021/02/24 11:01:14 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,6 @@
 # define LISTITERATOR_HPP
 
 # include <iterator>
-
-# include <iostream> /* remove this later! */
 
 namespace ft {
 	template <typename T, typename Diff, typename Point, typename Ref,

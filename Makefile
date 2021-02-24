@@ -6,12 +6,12 @@
 #    By: rlucas <marvin@codam.nl>                     +#+                      #
 #                                                    +#+                       #
 #    Created: 2020/07/27 14:22:41 by rlucas        #+#    #+#                  #
-#    Updated: 2021/02/21 17:07:49 by rlucas        ########   odam.nl          #
+#    Updated: 2021/02/24 13:04:51 by rlucas        ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = ft_containers
-TESTNAME = test
+TEST = container_tests
 
 ifeq ($(shell uname), Linux)
 	CC = g++
@@ -23,27 +23,11 @@ SRCDIR = src/
 OBJDIR = obj/
 INCLUDES = -Isrc/
 EXT = .cpp
-HEADEREXT = .hpp
 
 SRCLST = main \
 	  utils \
 	  vector_tests \
 	  list_tests
-
-HEADERSLST = vector \
-		  sfinae \
-		  list \
-		  list_iterator \
-		  random_access_iterator \
-		  colors \
-		  utils \
-		  test \
-		  map \
-		  pair
-
-TESTHEADERSLST = Example \
-				 test_fixture_classes \
-				 test
 
 TESTSRCLST = main \
 			 vector \
@@ -60,8 +44,6 @@ TESTLIBS = -lgtest -lpthread
 
 SRC = $(addprefix $(SRCDIR)/, $(addsuffix $(EXT), $(SRCLST)))
 TESTSRC = $(addprefix $(TESTDIR)/, $(addsuffix $(EXT), $(TESTSRCLST)))
-HEADERS = $(addprefix $(SRCDIR)/, $(addsuffix $(HEADEREXT), $(HEADERSLST)))
-TESTHEADERS = $(addprefix $(TESTDIR)/, $(addsuffix $(HEADEREXT), $(TESTHEADERSLST)))
 
 FLAGS = -Wall -Wextra -Werror -std=c++98 -pedantic
 # FLAGS = -Wall -Wextra -Werror -std=c++11 -pedantic
@@ -71,20 +53,22 @@ TESTOBJ := $(addprefix $(TESTOBJDIR), $(TESTSRCLST:%=%.o))
 
 all: $(NAME)
 
-test: $(NAME) $(TESTOBJ)
+test: $(TEST)
+
+$(TEST): $(NAME) $(TESTOBJ)
 	@echo "Compiling test executable..."
-	@$(CC) $(FLAGS) $(TESTOBJ) -o $(TESTNAME) $(INCLUDES) $(TESTLIBS)
+	@$(CC) $(FLAGS) $(TESTOBJ) -o $(TEST) $(INCLUDES) $(TESTLIBS)
 
 $(NAME): $(OBJ)
 	@echo "Compiling executable..."
 	@$(CC) $(FLAGS) $(OBJ) -o $(NAME) $(INCLUDES)
 
-$(OBJ):	$(SRC) $(HEADERS)
+$(OBJ):	$(SRC)
 	@mkdir -p $(OBJDIR)
 	@echo "Compiling $@"
 	@$(CC) -c $(FLAGS) -o $@ $(patsubst $(OBJDIR)%.o,$(SRCDIR)%.cpp, $@) $(INCLUDES)
 
-$(TESTOBJ): $(TESTSRC) $(TESTHEADERS)
+$(TESTOBJ): $(TESTSRC)
 	@mkdir -p $(TESTOBJDIR)
 	@echo "Compiling $@"
 	@$(CC) -c $(FLAGS) -o $@ $(patsubst $(TESTOBJDIR)%.o,$(TESTDIR)%.cpp, $@) $(INCLUDES)
@@ -97,7 +81,7 @@ clean:
 fclean: clean
 	@echo "Deleting executable..."
 	@rm -f $(NAME)
-	@rm -f $(TESTNAME)
+	@rm -f $(TEST)
 
 re: fclean all
 

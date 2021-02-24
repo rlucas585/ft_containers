@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/20 11:02:05 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/21 16:44:10 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/24 11:03:46 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,6 @@
 # endif
 # endif
 # endif
-
-template <typename T>
-static void	print_list(T &list);
 
 namespace ft {
 
