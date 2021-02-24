@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/29 08:56:11 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/24 14:12:32 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/24 14:35:06 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -218,15 +218,6 @@ namespace ft {
 							 return iterator(NULL);
 						 }
 
-						 // TODO remove this, it's just a development test function
-						 reference getHead(void) {
-							 return _head->getVal();
-						 }
-						 //TODO remove this, just development function
-						 bool	validateTree(void) const {
-							 return validateRecurse(_head);
-						 }
-
 						 bool	validateRecurse(node *target) const {
 							 if (target == NULL)
 								 return true;
@@ -249,9 +240,10 @@ namespace ft {
 						 }
 
 						 // TODO change from void to correct return type
-						 void	insert(const value_type& val) {
+						 ft::pair<iterator, bool>	insert(const value_type& val) {
 							 node		*newNode = _createNewNode(val);
 							 _head = _insertInternal(_head, newNode);
+							 return ft::pair<iterator, bool>(iterator(newNode), true);
 						 }
 
 					 private:
@@ -287,8 +279,8 @@ namespace ft {
 							 _destroyNodeRecurse(right);
 						 }
 
-						 node		*_insertInternal(node *root, node *n) {
-							 _insertRecurse(root, n);
+						 ft::pair<node *, bool>	_insertInternal(node *root, node *n) {
+							 ft::pair<node *, bool>	ret = _insertRecurse(root, n);
 
 							 _insertRepairTree(n);
 							 
@@ -301,18 +293,18 @@ namespace ft {
 
 						 // Recursively travel through tree to find correct
 						 // location for new node
-						 void		_insertRecurse(node *root, node *n) {
+						 ft::pair<node *, bool>	_insertRecurse(node *root, node *n) {
 							 if (root != NULL) {
 								 if (n->getKey() < root->getKey()) {
 									 if (root->_left != NULL) {
-										 this->_insertRecurse(root->_left, n);
-										 return ;
+										 return this->_insertRecurse(root->_left, n);
 									 } else
 										 root->_left = n;
+								 } else if (n->getKey() == root->getKey()) {
+									 return ft::pair<node *, bool>(root, false);
 								 } else {
 									 if (root->_right != NULL) {
-										 this->_insertRecurse(root->_right, n);
-										 return ;
+										 return this->_insertRecurse(root->_right, n);
 									 } else
 										 root->_right = n;
 								 }
@@ -323,6 +315,7 @@ namespace ft {
 							 n->_left = NULL;
 							 n->_right = NULL;
 							 n->_color = RED;
+							 return ft::pair<node *, bool>(n, true);
 						 }
 
 						 void		_insertRepairTree(node *n) {

@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/21 15:01:14 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/24 14:18:06 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/24 14:24:12 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,53 +41,22 @@ TEST(development_test, insert_test) {
 }
 
 TEST(development_test, basic_iterator_test) {
+	typedef typename ft::map<int, std::string>::iterator	mapIter;
 	ft::map<int, std::string>				aMap;
+	ft::pair<mapIter, bool>					ret;
 
-	aMap.insert(ft::pair<int, std::string>(5, "Leeds"));
-	ft::pair<int, std::string>				head = aMap.getHead();
-	std::cout << "Head: " << std::endl;
-	std::cout << "(" << head.first << ", " << head.second << ")" << std::endl;
-	std::cout << "------------" << std::endl;
+	ret = aMap.insert(ft::pair<int, std::string>(5, "Leeds"));
 	aMap.insert(ft::pair<int, std::string>(3, "Arsenal"));
-	head = aMap.getHead();
-	std::cout << "Head: " << std::endl;
-	std::cout << "(" << head.first << ", " << head.second << ")" << std::endl;
-	std::cout << "------------" << std::endl;
 	aMap.insert(ft::pair<int, std::string>(-1, "Man Utd"));
-	head = aMap.getHead();
-	std::cout << "Head: " << std::endl;
-	std::cout << "(" << head.first << ", " << head.second << ")" << std::endl;
-	std::cout << "------------" << std::endl;
 	aMap.insert(ft::pair<int, std::string>(15, "Newcastle"));
-	head = aMap.getHead();
-	std::cout << "Head: " << std::endl;
-	std::cout << "(" << head.first << ", " << head.second << ")" << std::endl;
-	std::cout << "------------" << std::endl;
 	aMap.insert(ft::pair<int, std::string>(12, "Everton"));
-	head = aMap.getHead();
-	std::cout << "Head: " << std::endl;
-	std::cout << "(" << head.first << ", " << head.second << ")" << std::endl;
-	std::cout << "------------" << std::endl;
 	aMap.insert(ft::pair<int, std::string>(4, "West Brom"));
-	ft::map<int, std::string>::iterator		it = aMap.begin();
 	aMap.insert(ft::pair<int, std::string>(50, "Netherlands"));
-	head = aMap.getHead();
-	std::cout << "Head: " << std::endl;
-	std::cout << "(" << head.first << ", " << head.second << ")" << std::endl;
-	std::cout << "------------" << std::endl;
 	aMap.insert(ft::pair<int, std::string>(55, "Germany"));
-	head = aMap.getHead();
-	std::cout << "Head: " << std::endl;
-	std::cout << "(" << head.first << ", " << head.second << ")" << std::endl;
-	std::cout << "------------" << std::endl;
 	aMap.insert(ft::pair<int, std::string>(45, "France"));
-	head = aMap.getHead();
-	std::cout << "Head: " << std::endl;
-	std::cout << "(" << head.first << ", " << head.second << ")" << std::endl;
-	std::cout << "------------" << std::endl;
+	aMap.insert(ft::pair<int, std::string>(4, "Another West Brom"));
 
-	ASSERT_TRUE(aMap.validateTree());
-
+	ft::map<int, std::string>::iterator		it = aMap.begin();
 	while (it != aMap.end()) {
 		std::cout << "(" << (*it).first << ", " << (*it).second << ")" << std::endl;
 		it++;
