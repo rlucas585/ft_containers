@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/21 15:01:14 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/26 16:34:43 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/26 18:15:47 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -243,7 +243,59 @@ TYPED_TEST(map_tester, insert_single_element_test) {
 	testMaps(map2, realmap2);
 }
 
-TYPED_TEST(map_tester, insert_hint_test) {
+TYPED_TEST(map_tester, insert_correct_hint_test) {
+	typedef typename ft::map<int, TypeParam>::iterator	mapIter1;
+	typedef typename std::map<int, TypeParam>::iterator	realMapIter1;
+	typedef typename ft::map<TypeParam, int>::iterator	mapIter2;
+	typedef typename std::map<TypeParam, int>::iterator	realMapIter2;
+	ft::map<int, TypeParam>		map1;
+	std::map<int, TypeParam>	realmap1;
+	ft::map<TypeParam, int>		map2;
+	std::map<TypeParam, int>	realmap2;
+	ft::vector<int>				i_vec;
+	std::vector<int>			i_vec_real;
+	ft::vector<TypeParam>		type_vec;
+	std::vector<TypeParam>		type_vec_real;
+	initialise_default_vector(i_vec, i_vec_real);
+	initialise_default_vector(type_vec, type_vec_real);
+	std::sort(i_vec.begin(), i_vec.end());
+	std::sort(i_vec_real.begin(), i_vec_real.end());
+	std::sort(type_vec.begin(), type_vec.end());
+	std::sort(type_vec_real.begin(), type_vec_real.end());
+	mapIter1	it1 = map1.end();
+	realMapIter1	realit1 = realmap1.end();
+	mapIter2	it2 = map2.end();
+	realMapIter2	realit2 = realmap2.end();
+
+	for (size_t i = 0; i != i_vec.size() && i != type_vec.size(); i++) {
+		ft::pair<int,TypeParam>			pair1(i_vec[i], type_vec[i]);
+		std::pair<int,TypeParam>		realpair1(i_vec[i], type_vec[i]);
+		ft::pair<TypeParam,int>			pair2(type_vec[i], i_vec[i]);
+		std::pair<TypeParam,int>		realpair2(type_vec[i], i_vec[i]);
+		if (it1 == map1.end())
+			it1 = map1.insert(pair1).first;
+		else
+			it1 = map1.insert(it1, pair1);
+		if (realit1 == realmap1.end())
+			realit1 = realmap1.insert(realpair1).first;
+		else
+			realit1 = realmap1.insert(realit1, realpair1);
+		ASSERT_EQ((*it1).first, (*realit1).first);
+		if (it2 == map2.end())
+			it2 = map2.insert(pair2).first;
+		else
+			it2 = map2.insert(it2, pair2);
+		if (realit2 != realmap2.end())
+			realit2 = realmap2.insert(realpair2).first;
+		else
+			realit2 = realmap2.insert(realit2, realpair2);
+	}
+
+	testMaps(map1, realmap1);
+	testMaps(map2, realmap2);
+}
+
+TYPED_TEST(map_tester, insert_incorrect_hint_test) {
 	typedef typename ft::map<int, TypeParam>::iterator	mapIter1;
 	typedef typename std::map<int, TypeParam>::iterator	realMapIter1;
 	typedef typename ft::map<TypeParam, int>::iterator	mapIter2;
@@ -268,25 +320,15 @@ TYPED_TEST(map_tester, insert_hint_test) {
 		std::pair<int,TypeParam>		realpair1(i_vec[i], type_vec[i]);
 		ft::pair<TypeParam,int>			pair2(type_vec[i], i_vec[i]);
 		std::pair<TypeParam,int>		realpair2(type_vec[i], i_vec[i]);
-		std::cout << "hello" << std::endl;
-		if (it1 == map1.end()) {
-			std::cout << "default insert called" << std::endl;
+		if (it1 == map1.end())
 			it1 = map1.insert(pair1).first;
-		}
-		else {
-			std::cout << "hint insert called" << std::endl;
+		else
 			it1 = map1.insert(it1, pair1);
-		}
-		std::cout << "hello" << std::endl;
-		if (realit1 == realmap1.end()) {
-			std::cout << "default insert called" << std::endl;
+		if (realit1 == realmap1.end())
 			realit1 = realmap1.insert(realpair1).first;
-		}
-		else {
-			std::cout << "hint insert called" << std::endl;
+		else
 			realit1 = realmap1.insert(realit1, realpair1);
-		}
-		std::cout << "hi" << std::endl;
+		ASSERT_EQ((*it1).first, (*realit1).first);
 		if (it2 == map2.end())
 			it2 = map2.insert(pair2).first;
 		else

@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/29 08:56:11 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/26 16:33:35 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/26 18:16:17 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -277,10 +277,35 @@ namespace ft {
 								 return this->end();
 							 node					*root;
 							 node					*newNode = _createNewNode(val);
-							 node					*nodeptr = _getPtrFromIterator(position);
+							 node					*curptr = NULL;
+							 node					*nextptr = NULL;
+							 iterator				next = position;
+							 ft::pair<node *, bool>	ret;
 
-							 std::cout << nodeptr->getData() << std::endl;
-							 ft::pair<node *, bool>	ret = _insertRecurse(nodeptr, newNode);
+							 if (position != this->end()) {
+								 next++;
+								 if (next != this->end()) {
+									 curptr = (nextptr) ? nextptr : _getPtrFromIterator(position);
+									 nextptr = _getPtrFromIterator(next);
+									 while (!(newNode->getKey() < nextptr->getKey()
+												 && newNode->getKey() > curptr->getKey())) {
+										 position++;
+										 next++;
+										 if (next == this->end())
+											 break ;
+									 }
+								 }
+							 }
+							 if (position == this->end()) {
+								 ret = _insertRecurse(_head, newNode);
+							 } else {
+								 node		*nodeptr = _getPtrFromIterator(position);
+								 if (newNode->getKey() < nodeptr->getKey()) {
+									 ret = _insertRecurse(_head, newNode);
+								 }
+								 else
+									 ret = _insertRecurse(nodeptr, newNode);
+							 }
 
 							 if (ret.second == false) // Key existed already
 								 return iterator(ret.first);
@@ -426,13 +451,6 @@ namespace ft {
 						 node		*_getPtrFromIterator(iterator& position) {
 							 char	*valptr = reinterpret_cast<char *>(&(*position));
 
-							 // position.printDataAddress();
-							 // std::cout << "About to do pointer arithmetic" << std::endl;
-							 // std::cout << (void *)valptr << std::endl;
-							 // valptr -= 3 * sizeof(node *);
-							 // valptr -= sizeof(t_color);
-							 // std::cout << (void *)valptr << std::endl;
-							 // std::cout << reinterpret_cast<node *>(valptr)->getVal() << std::endl;
 							 return reinterpret_cast<node *>(valptr);
 						 }
 				 };

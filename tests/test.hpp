@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/20 13:51:08 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/26 13:41:13 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/26 16:52:14 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,5 +47,8 @@ bool	moreThanFunc(Example const& e, Example const& e2);
 void	initialise_default_vector(ft::vector<int>& vec, std::vector<int>& realvec);
 void	initialise_default_vector(ft::vector<std::string>& vec, std::vector<std::string>& realvec);
 void	initialise_default_vector(ft::vector<Example>& vec, std::vector<Example>& realvec);
+void	addition_to_vector(ft::vector<int>& vec, std::vector<int>& realvec);
+void	addition_to_vector(ft::vector<std::string>& vec, std::vector<std::string>& realvec);
+void	addition_to_vector(ft::vector<Example>& vec, std::vector<Example>& realvec);
 
 #endif
