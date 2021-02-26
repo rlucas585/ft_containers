@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/21 15:01:14 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/24 14:24:12 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/26 11:52:10 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,21 +40,38 @@ TEST(development_test, insert_test) {
 	ASSERT_EQ(aMap.size(), 1);
 }
 
-TEST(development_test, basic_iterator_test) {
-	typedef typename ft::map<int, std::string>::iterator	mapIter;
-	ft::map<int, std::string>				aMap;
-	ft::pair<mapIter, bool>					ret;
+void	printHead(ft::pair<const int, std::string>const* head) {
+	if (head == 0)
+		std::cout << "Head: (null)" << std::endl;
+	else
+		std::cout << "Head: (" << head->first << ", " << head->second << ")" << std::endl;
+}
 
-	ret = aMap.insert(ft::pair<int, std::string>(5, "Leeds"));
+TEST(development_test, basic_iterator_test) {
+	// typedef typename ft::map<int, std::string>::iterator	mapIter;
+	ft::map<int, std::string>				aMap;
+	// ft::pair<mapIter, bool>					ret;
+
+	// ret = aMap.insert(ft::pair<int, std::string>(5, "Leeds"));
+	aMap.insert(ft::pair<int, std::string>(5, "Leeds"));
+	printHead(aMap.getHead());
 	aMap.insert(ft::pair<int, std::string>(3, "Arsenal"));
+	printHead(aMap.getHead());
 	aMap.insert(ft::pair<int, std::string>(-1, "Man Utd"));
+	printHead(aMap.getHead());
 	aMap.insert(ft::pair<int, std::string>(15, "Newcastle"));
+	printHead(aMap.getHead());
 	aMap.insert(ft::pair<int, std::string>(12, "Everton"));
+	printHead(aMap.getHead());
 	aMap.insert(ft::pair<int, std::string>(4, "West Brom"));
+	printHead(aMap.getHead());
 	aMap.insert(ft::pair<int, std::string>(50, "Netherlands"));
+	printHead(aMap.getHead());
 	aMap.insert(ft::pair<int, std::string>(55, "Germany"));
+	printHead(aMap.getHead());
 	aMap.insert(ft::pair<int, std::string>(45, "France"));
-	aMap.insert(ft::pair<int, std::string>(4, "Another West Brom"));
+	printHead(aMap.getHead());
+	// aMap.insert(ft::pair<int, std::string>(4, "Another West Brom"));
 
 	ft::map<int, std::string>::iterator		it = aMap.begin();
 	while (it != aMap.end()) {

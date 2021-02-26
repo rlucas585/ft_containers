@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/29 08:56:11 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/24 14:35:06 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/26 11:50:30 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -205,6 +205,14 @@ namespace ft {
 							 this->clear();
 						 }
 
+						 // TODO remove later
+						 value_type const*	getHead(void) const {
+							 if (_head)
+								 return &_head->getVal();
+							 else
+								 return 0;
+						 }
+
 						 size_type	size(void) const {
 							 return _size;
 						 }
@@ -241,8 +249,12 @@ namespace ft {
 
 						 // TODO change from void to correct return type
 						 ft::pair<iterator, bool>	insert(const value_type& val) {
+							 ft::pair<node *, bool>	ret;
 							 node		*newNode = _createNewNode(val);
-							 _head = _insertInternal(_head, newNode);
+							 ret = _insertInternal(_head, newNode);
+							 _head = ret.first;
+							 if (ret.second == false)
+								 _destroyNode(newNode);
 							 return ft::pair<iterator, bool>(iterator(newNode), true);
 						 }
 
@@ -282,13 +294,15 @@ namespace ft {
 						 ft::pair<node *, bool>	_insertInternal(node *root, node *n) {
 							 ft::pair<node *, bool>	ret = _insertRecurse(root, n);
 
+							 if (ret.second == false) // Key existed already
+								 return ft::pair<node *, bool>(ret.first, false);
 							 _insertRepairTree(n);
 							 
 							 root = n;
 							 while (root->_parent != NULL) {
 								 root = root->_parent;
 							 }
-							 return root;
+							 return ft::pair<node *, bool>(root, true);
 						 }
 
 						 // Recursively travel through tree to find correct
@@ -300,8 +314,8 @@ namespace ft {
 										 return this->_insertRecurse(root->_left, n);
 									 } else
 										 root->_left = n;
-								 } else if (n->getKey() == root->getKey()) {
-									 return ft::pair<node *, bool>(root, false);
+								 } else if (n->getKey() == root->getKey()) { // Key exists
+									 return ft::pair<node *, bool>(root, false); // existing iterator
 								 } else {
 									 if (root->_right != NULL) {
 										 return this->_insertRecurse(root->_right, n);

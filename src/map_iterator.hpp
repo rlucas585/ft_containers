@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/24 11:00:47 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/24 13:07:26 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/26 11:47:31 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,42 +40,38 @@ namespace ft {
 
 		private:
 			node_pointer		_p;
-			node_pointer		_previous;
 
 		public:
-			MapIterator(void) : _p(0), _previous(0) {}
-			explicit MapIterator(node_pointer x) : _p(x), _previous(0) {}
-			MapIterator(const this_type &it) : _p(it._p), _previous(it._previous) {}
+			MapIterator(void) : _p(0) {}
+			explicit MapIterator(node_pointer x) : _p(x) {}
+			MapIterator(const this_type &it) : _p(it._p) {}
 			this_type	&operator=(this_type const &rhs) {
 				if (this == &rhs) { return *this; }
 				_p = rhs._p;
-				_previous = rhs._previous;
 				return *this;
 			}
 			this_type	&operator++() {
-				if (_previous == _p->_left) { // Select leftmost of _p->_right
-					_previous = _p;
-					if (_p->_right == NULL) // No _p->_right, select parent
+				if (_p == 0)
+					return *this;
+				if (_p->_parent == 0) { // Root node
+					_p = _p->_right;
+					if (_p == 0)
+						return *this;
+					while (_p->_left != 0)
+						_p = _p->_left;
+				} else if (_p->_right != 0) { // Right node exists - select leftmost of right
+					_p = _p->_right;
+					while (_p->_left != 0)
+						_p = _p->_left;
+				} else if (_p == _p->_parent->_left) { // No right node, _p is left of parent
+					_p = _p->_parent;
+				} else if (_p == _p->_parent->_right) { // No right node, _p is right of parent
+					while (_p->_parent != 0 && _p == _p->_parent->_right)
 						_p = _p->_parent;
+					if (_p->_parent == 0)
+						_p = 0;
 					else
-						_p = _p->_right->selectLeftMost();
-				} else if (_p->_parent == NULL) {
-						_previous = _p;
-						_p = NULL;
-				} else if (_p == _p->_parent->_left) {
-					_previous = _p;
-					_p = _p->_parent;
-					
-				} else if (_p->_right != NULL) {
-					_previous = _p;
-					_p = _p->_right->selectLeftMost();
-				} else if (_p == _p->_parent->_right) {
-					_previous = _p;
-					while (_p->_parent != NULL && _p == _p->_parent->_right) {
-						_previous = _p;
 						_p = _p->_parent;
-					}
-					_p = _p->_parent;
 				}
 				return *this;
 			}
