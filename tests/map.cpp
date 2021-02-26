@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/21 15:01:14 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/26 19:25:35 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/26 19:32:13 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,8 @@ ft::vector<ft::pair<T, U> >		zip(ft::vector<T>const& vec, ft::vector<U>const& ve
 	typename ft::vector<U>::const_iterator it2 = vec2.begin(); 
 	ft::vector<ft::pair<T, U> >		pairs;
 
-	for (; it1 != vec.end() && it2 != vec2.end(); it1++, it2++) {
-		std::cout << *it1 << " " << *it2 << std::endl;
+	for (; it1 != vec.end() && it2 != vec2.end(); it1++, it2++)
 		pairs.push_back(ft::pair<T, U>(*it1, *it2));
-	}
 	return pairs;
 }
 
@@ -56,10 +54,8 @@ std::vector<std::pair<T, U> >		zip(std::vector<T>const& vec, std::vector<U>const
 	typename std::vector<U>::const_iterator it2 = vec2.begin(); 
 	std::vector<std::pair<T, U> >		pairs;
 
-	for (; it1 != vec.end() && it2 != vec2.end(); it1++, it2++) {
-		std::cout << *it1 << " " << *it2 << std::endl;
+	for (; it1 != vec.end() && it2 != vec2.end(); it1++, it2++)
 		pairs.push_back(std::pair<T, U>(*it1, *it2));
-	}
 	return pairs;
 }
 
@@ -348,4 +344,20 @@ TYPED_TEST(map_tester, insert_range_test) {
 
 	testMaps(map1, realmap1);
 	testMaps(map2, realmap2);
+}
+
+TYPED_TEST(map_tester, max_size_test) {
+	ft::map<int, TypeParam>		map1;
+	std::map<int, TypeParam>	realmap1;
+	ft::map<TypeParam, int>		map2;
+	std::map<TypeParam, int>	realmap2;
+
+	size_t						diff;
+
+	diff = std::max(map1.max_size(), realmap1.max_size()) -
+		std::min(map1.max_size(), realmap1.max_size());
+	ASSERT_TRUE(diff < 100);
+	diff = std::max(map2.max_size(), realmap2.max_size()) -
+		std::min(map2.max_size(), realmap2.max_size());
+	ASSERT_TRUE(diff < 100);
 }

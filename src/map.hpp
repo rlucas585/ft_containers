@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/29 08:56:11 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/26 19:07:24 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/26 19:28:53 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define MAP_HPP 
 
 #include <functional>
+# include <cmath>
 
 #include "pair.hpp"
 #include "map_iterator.hpp"
@@ -207,6 +208,12 @@ namespace ft {
 
 						 size_type	size(void) const {
 							 return _size;
+						 }
+
+						 size_type	max_size(void) const {
+							 size_type	ans = std::floor(std::pow(2, SYSTEM_BITS) / sizeof(node));
+
+							 return (ans - 1);
 						 }
 
 						 bool		empty(void) const {
