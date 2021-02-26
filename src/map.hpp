@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/29 08:56:11 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/26 18:16:17 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/26 19:07:24 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -268,7 +268,8 @@ namespace ft {
 							 if (ret.second == false) { // Key existed
 								 _destroyNode(newNode);
 							 }
-							 _size += 1;
+							 if (ret.second) // new element added
+								 _size += 1;
 							 return ft::pair<iterator, bool>(iterator(ret.first), ret.second);
 						 }
 
@@ -282,6 +283,7 @@ namespace ft {
 							 iterator				next = position;
 							 ft::pair<node *, bool>	ret;
 
+							 // Validate position
 							 if (position != this->end()) {
 								 next++;
 								 if (next != this->end()) {
@@ -296,6 +298,7 @@ namespace ft {
 									 }
 								 }
 							 }
+							 // Default insert if hint invalid
 							 if (position == this->end()) {
 								 ret = _insertRecurse(_head, newNode);
 							 } else {
@@ -319,6 +322,12 @@ namespace ft {
 							 _size += 1;
 							 return iterator(ret.first);
 						 }
+
+						 template <typename InputIterator>
+							 void	insert(InputIterator first, InputIterator last) {
+								 for (; first != last; first++)
+									 this->insert(*first);
+							 }
 
 					 private:
 						 node			*_head;

@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/21 15:01:14 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/26 18:15:47 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/26 19:25:35 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,78 +25,6 @@
 #include "Example.hpp"
 #include "test.hpp"
 
-TEST(development_test, initialisation_test) {
-	ft::map<int, std::string>		aMap;
-
-	(void)aMap;
-	std::cout << aMap.size() << std::endl;
-	ASSERT_EQ(aMap.size(), 0);
-}
-
-TEST(development_test, insert_test) {
-	ft::map<int, std::string>		aMap;
-
-	aMap.insert(ft::pair<int, std::string>(3, "hello"));
-	ASSERT_EQ(aMap.size(), 1);
-}
-
-TEST(development_test, basic_iterator_test) {
-	typedef typename ft::map<int, std::string>::iterator	mapIter;
-	ft::map<int, std::string>				aMap;
-	ft::pair<mapIter, bool>					ret;
-
-	ret = aMap.insert(ft::pair<int, std::string>(5, "Leeds"));
-	ASSERT_TRUE(ret.second);
-	ASSERT_EQ((*ret.first).second, "Leeds");
-	ret = aMap.insert(ft::pair<int, std::string>(3, "Arsenal"));
-	ASSERT_TRUE(ret.second);
-	ASSERT_EQ((*ret.first).second, "Arsenal");
-	ret = aMap.insert(ft::pair<int, std::string>(-1, "Man Utd"));
-	ASSERT_TRUE(ret.second);
-	ASSERT_EQ((*ret.first).second, "Man Utd");
-	ret = aMap.insert(ft::pair<int, std::string>(15, "Newcastle"));
-	ASSERT_TRUE(ret.second);
-	ASSERT_EQ((*ret.first).second, "Newcastle");
-	ret = aMap.insert(ft::pair<int, std::string>(12, "Everton"));
-	ASSERT_TRUE(ret.second);
-	ASSERT_EQ((*ret.first).second, "Everton");
-	ret = aMap.insert(ft::pair<int, std::string>(4, "West Brom"));
-	ASSERT_TRUE(ret.second);
-	ASSERT_EQ((*ret.first).second, "West Brom");
-	ret = aMap.insert(ft::pair<int, std::string>(50, "Netherlands"));
-	ASSERT_TRUE(ret.second);
-	ASSERT_EQ((*ret.first).second, "Netherlands");
-	ret = aMap.insert(ft::pair<int, std::string>(55, "Germany"));
-	ASSERT_TRUE(ret.second);
-	ASSERT_EQ((*ret.first).second, "Germany");
-	ret = aMap.insert(ft::pair<int, std::string>(45, "France"));
-	ASSERT_TRUE(ret.second);
-	ASSERT_EQ((*ret.first).second, "France");
-
-	// Existing key
-	ret = aMap.insert(ft::pair<int, std::string>(4, "Another West Brom"));
-	ASSERT_FALSE(ret.second);
-	ASSERT_EQ((*ret.first).second, "West Brom");
-
-	mapIter		it = aMap.begin();
-	while (it != aMap.end()) {
-		std::cout << "(" << (*it).first << ", " << (*it).second << ")" << std::endl;
-		it++;
-	}
-}
-
-TEST(development_test, pair_test) {
-	ft::pair<int, int>		example;
-
-	ASSERT_EQ(example.first, 0);
-	ASSERT_EQ(example.second, 0);
-
-	ft::pair<int, std::string>	example2 = ft::make_pair(5, "Devon");
-
-	ASSERT_EQ(example2.first, 5);
-	ASSERT_EQ(example2.second, "Devon");
-}
-
 template <typename Map>
 std::string	map_to_str(Map const& map) {
 	std::stringstream	ss;
@@ -107,6 +35,32 @@ std::string	map_to_str(Map const& map) {
 	}
 	ss << "]";
 	return ss.str();
+}
+
+template <typename T, typename U>
+ft::vector<ft::pair<T, U> >		zip(ft::vector<T>const& vec, ft::vector<U>const& vec2) {
+	typename ft::vector<T>::const_iterator it1 = vec.begin();
+	typename ft::vector<U>::const_iterator it2 = vec2.begin(); 
+	ft::vector<ft::pair<T, U> >		pairs;
+
+	for (; it1 != vec.end() && it2 != vec2.end(); it1++, it2++) {
+		std::cout << *it1 << " " << *it2 << std::endl;
+		pairs.push_back(ft::pair<T, U>(*it1, *it2));
+	}
+	return pairs;
+}
+
+template <typename T, typename U>
+std::vector<std::pair<T, U> >		zip(std::vector<T>const& vec, std::vector<U>const& vec2) {
+	typename std::vector<T>::const_iterator it1 = vec.begin();
+	typename std::vector<U>::const_iterator it2 = vec2.begin(); 
+	std::vector<std::pair<T, U> >		pairs;
+
+	for (; it1 != vec.end() && it2 != vec2.end(); it1++, it2++) {
+		std::cout << *it1 << " " << *it2 << std::endl;
+		pairs.push_back(std::pair<T, U>(*it1, *it2));
+	}
+	return pairs;
 }
 
 template <typename Map>
@@ -217,6 +171,10 @@ TYPED_TEST(map_tester, empty_test) {
 }
 
 TYPED_TEST(map_tester, insert_single_element_test) {
+	typedef typename ft::map<int, TypeParam>::iterator	mapIter1;
+	typedef typename std::map<int, TypeParam>::iterator	realMapIter1;
+	typedef typename ft::map<TypeParam, int>::iterator	mapIter2;
+	typedef typename std::map<TypeParam, int>::iterator	realMapIter2;
 	ft::map<int, TypeParam>		map1;
 	std::map<int, TypeParam>	realmap1;
 	ft::map<TypeParam, int>		map2;
@@ -227,17 +185,37 @@ TYPED_TEST(map_tester, insert_single_element_test) {
 	std::vector<TypeParam>		type_vec_real;
 	initialise_default_vector(i_vec, i_vec_real);
 	initialise_default_vector(type_vec, type_vec_real);
+	ft::pair<mapIter1,bool>			returnpair1;
+	std::pair<realMapIter1,bool>	returnrealpair1;
+	ft::pair<mapIter2,bool>			returnpair2;
+	std::pair<realMapIter2,bool>	returnrealpair2;
 
 	for (size_t i = 0; i != i_vec.size() && i != type_vec.size(); i++) {
 		ft::pair<int,TypeParam>			pair1(i_vec[i], type_vec[i]);
 		std::pair<int,TypeParam>		realpair1(i_vec[i], type_vec[i]);
 		ft::pair<TypeParam,int>			pair2(type_vec[i], i_vec[i]);
 		std::pair<TypeParam,int>		realpair2(type_vec[i], i_vec[i]);
-		map1.insert(pair1);
-		realmap1.insert(realpair1);
-		map2.insert(pair2);
-		realmap2.insert(realpair2);
+		returnpair1 = map1.insert(pair1);
+		returnrealpair1 = realmap1.insert(realpair1);
+		returnpair2 = map2.insert(pair2);
+		returnrealpair2 = realmap2.insert(realpair2);
+		ASSERT_EQ((*(returnpair1.first)).first, (*(returnrealpair1.first)).first);
+		ASSERT_EQ((*(returnpair1.first)).second, (*(returnrealpair1.first)).second);
+		ASSERT_EQ(returnpair1.second, returnrealpair1.second);
+		ASSERT_EQ((*(returnpair2.first)).first, (*(returnrealpair2.first)).first);
+		ASSERT_EQ((*(returnpair2.first)).second, (*(returnrealpair2.first)).second);
+		ASSERT_EQ(returnpair2.second, returnrealpair2.second);
 	}
+
+	// Attempt to insert duplicate element
+	ft::pair<int,TypeParam>			pair1(i_vec[3], type_vec[3]);
+	std::pair<int,TypeParam>		realpair1(i_vec[3], type_vec[3]);
+	ft::pair<TypeParam,int>			pair2(type_vec[3], i_vec[3]);
+	std::pair<TypeParam,int>		realpair2(type_vec[3], i_vec[3]);
+	map1.insert(pair1);
+	realmap1.insert(realpair1);
+	map2.insert(pair2);
+	realmap2.insert(realpair2);
 
 	testMaps(map1, realmap1);
 	testMaps(map2, realmap2);
@@ -338,6 +316,35 @@ TYPED_TEST(map_tester, insert_incorrect_hint_test) {
 		else
 			realit2 = realmap2.insert(realit2, realpair2);
 	}
+
+	testMaps(map1, realmap1);
+	testMaps(map2, realmap2);
+}
+
+TYPED_TEST(map_tester, insert_range_test) {
+	typedef typename ft::pair<int, TypeParam>			pairType1;
+	typedef typename std::pair<int, TypeParam>			realPairType1;
+	typedef typename ft::pair<TypeParam, int>			pairType2;
+	typedef typename std::pair<TypeParam, int>			realPairType2;
+	ft::map<int, TypeParam>		map1;
+	std::map<int, TypeParam>	realmap1;
+	ft::map<TypeParam, int>		map2;
+	std::map<TypeParam, int>	realmap2;
+	ft::vector<int>				i_vec;
+	std::vector<int>			i_vec_real;
+	ft::vector<TypeParam>		type_vec;
+	std::vector<TypeParam>		type_vec_real;
+	initialise_default_vector(i_vec, i_vec_real);
+	initialise_default_vector(type_vec, type_vec_real);
+	ft::vector<pairType1>		pairsvec1 = zip(i_vec, type_vec);
+	std::vector<realPairType1>	realpairsvec1 = zip(i_vec_real, type_vec_real);
+	ft::vector<pairType2>		pairsvec2 = zip(type_vec, i_vec);
+	std::vector<realPairType2>	realpairsvec2 = zip(type_vec_real, i_vec_real);
+
+	map1.insert(pairsvec1.begin(), pairsvec1.end());
+	realmap1.insert(realpairsvec1.begin(), realpairsvec1.end());
+	map2.insert(pairsvec2.begin(), pairsvec2.end());
+	realmap2.insert(realpairsvec2.begin(), realpairsvec2.end());
 
 	testMaps(map1, realmap1);
 	testMaps(map2, realmap2);
