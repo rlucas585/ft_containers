@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/29 08:56:11 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/26 11:50:30 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/26 16:33:35 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,11 +183,11 @@ namespace ft {
 								 }
 
 							 public:
+								 value_type	_val;
 								 node		*_parent;
 								 node		*_left;
 								 node		*_right;
 								 t_color	_color;
-								 value_type	_val;
 
 								 node(void) {}
 						 };
@@ -205,25 +205,39 @@ namespace ft {
 							 this->clear();
 						 }
 
-						 // TODO remove later
-						 value_type const*	getHead(void) const {
-							 if (_head)
-								 return &_head->getVal();
-							 else
-								 return 0;
-						 }
-
 						 size_type	size(void) const {
 							 return _size;
 						 }
 
+						 bool		empty(void) const {
+							 return _size == 0;
+						 }
+
 						 iterator	begin(void) {
-							 iterator		it(_head->selectLeftMost());
+							 iterator		it;
+
+							 if (_head)
+								 it = iterator(_head->selectLeftMost());
+							 else
+								 it = iterator(NULL);
+							 return it;
+						 }
+						 const_iterator	begin(void) const {
+							 const_iterator		it;
+
+							 if (_head)
+								 it = const_iterator(_head->selectLeftMost());
+							 else
+								 it = const_iterator(NULL);
 
 							 return it;
 						 }
+
 						 iterator	end(void) {
 							 return iterator(NULL);
+						 }
+						 const_iterator	end(void) const {
+							 return const_iterator(NULL);
 						 }
 
 						 bool	validateRecurse(node *target) const {
@@ -247,15 +261,38 @@ namespace ft {
 							 _destroyNodeRecurse(_head);
 						 }
 
-						 // TODO change from void to correct return type
 						 ft::pair<iterator, bool>	insert(const value_type& val) {
 							 ft::pair<node *, bool>	ret;
 							 node		*newNode = _createNewNode(val);
 							 ret = _insertInternal(_head, newNode);
-							 _head = ret.first;
-							 if (ret.second == false)
+							 if (ret.second == false) { // Key existed
 								 _destroyNode(newNode);
-							 return ft::pair<iterator, bool>(iterator(newNode), true);
+							 }
+							 _size += 1;
+							 return ft::pair<iterator, bool>(iterator(ret.first), ret.second);
+						 }
+
+						 iterator	insert(iterator position, const value_type& val) {
+							 if (position == this->end())
+								 return this->end();
+							 node					*root;
+							 node					*newNode = _createNewNode(val);
+							 node					*nodeptr = _getPtrFromIterator(position);
+
+							 std::cout << nodeptr->getData() << std::endl;
+							 ft::pair<node *, bool>	ret = _insertRecurse(nodeptr, newNode);
+
+							 if (ret.second == false) // Key existed already
+								 return iterator(ret.first);
+							 _insertRepairTree(newNode);
+
+							 root = _head;
+							 while (root->_parent != NULL) {
+								 root = root->_parent;
+							 }
+							 _head = root;
+							 _size += 1;
+							 return iterator(ret.first);
 						 }
 
 					 private:
@@ -302,7 +339,8 @@ namespace ft {
 							 while (root->_parent != NULL) {
 								 root = root->_parent;
 							 }
-							 return ft::pair<node *, bool>(root, true);
+							 _head = root;
+							 return ft::pair<node *, bool>(n, true);
 						 }
 
 						 // Recursively travel through tree to find correct
@@ -383,6 +421,19 @@ namespace ft {
 								 g->rotateLeft();
 							 p->_color = BLACK;
 							 g->_color = RED;
+						 }
+
+						 node		*_getPtrFromIterator(iterator& position) {
+							 char	*valptr = reinterpret_cast<char *>(&(*position));
+
+							 // position.printDataAddress();
+							 // std::cout << "About to do pointer arithmetic" << std::endl;
+							 // std::cout << (void *)valptr << std::endl;
+							 // valptr -= 3 * sizeof(node *);
+							 // valptr -= sizeof(t_color);
+							 // std::cout << (void *)valptr << std::endl;
+							 // std::cout << reinterpret_cast<node *>(valptr)->getVal() << std::endl;
+							 return reinterpret_cast<node *>(valptr);
 						 }
 				 };
 }

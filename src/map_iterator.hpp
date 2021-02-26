@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/24 11:00:47 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/26 11:47:31 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/26 16:31:06 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define MAPITERATOR_HPP
 
 # include <iterator>
+# include <iostream>
 
 namespace ft {
 	template <typename T, typename Diff, typename Point, typename Ref,
@@ -84,7 +85,7 @@ namespace ft {
 				return _p->getVal();
 			}
 			pointer		operator->() {
-				return &(_p->getData());
+				return &(_p->getVal());
 			}
 
 			bool		operator==(const this_type &rhs) const {
@@ -92,6 +93,11 @@ namespace ft {
 			}
 			bool		operator!=(const this_type &rhs) const {
 				return _p != rhs._p;
+			}
+
+			// Enable implicit casting of non-const iterator to const iterator
+			operator	const_type() const {
+				return const_type(_p);
 			}
 	};
 }

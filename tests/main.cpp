@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/13 17:58:20 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/21 10:28:22 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/26 12:43:43 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,6 @@
 
 int	main(int argc, char** argv) {
 	::testing::InitGoogleTest(&argc, argv);
-
-	TYPED_TEST_CASE(vector_tester, Implementations);
 
 	return RUN_ALL_TESTS();
 }

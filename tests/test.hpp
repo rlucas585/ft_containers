@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/20 13:51:08 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/21 14:32:09 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/26 13:41:13 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 #include <string>
 #include <vector>
 #include "Example.hpp"
+#include "../src/vector.hpp"
 
 void	addition_func(int &val);
 void	addition_func(std::string &s);
@@ -43,5 +44,8 @@ bool	binary_predicate_func(Example const& e, Example const& e2);
 bool	moreThanFunc(int const& n, int const& n2);
 bool	moreThanFunc(std::string const& s, std::string const& s2);
 bool	moreThanFunc(Example const& e, Example const& e2);
+void	initialise_default_vector(ft::vector<int>& vec, std::vector<int>& realvec);
+void	initialise_default_vector(ft::vector<std::string>& vec, std::vector<std::string>& realvec);
+void	initialise_default_vector(ft::vector<Example>& vec, std::vector<Example>& realvec);
 
 #endif

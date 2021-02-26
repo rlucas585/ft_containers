@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/20 11:02:05 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/24 11:03:46 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/26 16:34:40 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,9 +76,9 @@ namespace ft {
 						}
 
 					private:
+						T			_val;
 						node		*_prev;
 						node		*_next;
-						T			_val;
 
 						node(void) { }
 				};
@@ -645,7 +645,6 @@ namespace ft {
 				node		*_getPtrFromIterator(iterator& position) {
 					char	*valptr = reinterpret_cast<char *>(&(*position));
 
-					valptr -= 2 * sizeof (node *);
 					return reinterpret_cast<node *>(valptr);
 				}
 		};
