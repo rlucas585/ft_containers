@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/29 08:56:11 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/26 19:28:53 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/26 21:38:35 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,6 +197,7 @@ namespace ft {
 						 typedef	std::allocator<node>					node_allocator;
 
 					 public:
+						 // Constructors
 						 explicit map(const key_compare& comp = key_compare(),
 								 const allocator_type& alloc = allocator_type())
 							 : _head(NULL), _size(0), _comp(comp), _a(alloc), _node_alloc() {
@@ -206,20 +207,7 @@ namespace ft {
 							 this->clear();
 						 }
 
-						 size_type	size(void) const {
-							 return _size;
-						 }
-
-						 size_type	max_size(void) const {
-							 size_type	ans = std::floor(std::pow(2, SYSTEM_BITS) / sizeof(node));
-
-							 return (ans - 1);
-						 }
-
-						 bool		empty(void) const {
-							 return _size == 0;
-						 }
-
+						 // Iterators
 						 iterator	begin(void) {
 							 iterator		it;
 
@@ -247,27 +235,26 @@ namespace ft {
 							 return const_iterator(NULL);
 						 }
 
-						 bool	validateRecurse(node *target) const {
-							 if (target == NULL)
-								 return true;
-							 node	*left = target->_left;
-							 node	*right = target->_right;
+						 // TODO Add the reverse iterators
 
-							 if (target->_color == RED) {
-								 if (left != NULL)
-									 if (left->_color == RED)
-										 return false;
-								 if (right != NULL)
-									 if (right->_color == RED)
-										 return false;
-							 }
-							 return validateRecurse(left) && validateRecurse(right);
+						 // Capacity
+						 bool		empty(void) const {
+							 return _size == 0;
 						 }
 
-						 void		clear(void) {
-							 _destroyNodeRecurse(_head);
+						 size_type	size(void) const {
+							 return _size;
 						 }
 
+						 size_type	max_size(void) const {
+							 size_type	ans = std::floor(std::pow(2, SYSTEM_BITS) / sizeof(node));
+
+							 return (ans - 1);
+						 }
+
+						 // Element access
+
+						 // Modifiers
 						 ft::pair<iterator, bool>	insert(const value_type& val) {
 							 ft::pair<node *, bool>	ret;
 							 node		*newNode = _createNewNode(val);
@@ -296,8 +283,8 @@ namespace ft {
 								 if (next != this->end()) {
 									 curptr = (nextptr) ? nextptr : _getPtrFromIterator(position);
 									 nextptr = _getPtrFromIterator(next);
-									 while (!(newNode->getKey() < nextptr->getKey()
-												 && newNode->getKey() > curptr->getKey())) {
+									 while (!(_comp(newNode->getKey(),nextptr->getKey())
+												 && _comp(newNode->getKey(), curptr->getKey()))) {
 										 position++;
 										 next++;
 										 if (next == this->end())
@@ -310,7 +297,8 @@ namespace ft {
 								 ret = _insertRecurse(_head, newNode);
 							 } else {
 								 node		*nodeptr = _getPtrFromIterator(position);
-								 if (newNode->getKey() < nodeptr->getKey()) {
+								 // Default insert as hint was incorrect
+								 if (_comp(newNode->getKey(),nodeptr->getKey())) {
 									 ret = _insertRecurse(_head, newNode);
 								 }
 								 else
@@ -335,6 +323,15 @@ namespace ft {
 								 for (; first != last; first++)
 									 this->insert(*first);
 							 }
+
+						 void		clear(void) {
+							 _destroyNodeRecurse(_head);
+						 }
+
+						 // Observers
+						 key_compare	key_comp(void) const {
+							 return _comp;
+						 }
 
 					 private:
 						 node			*_head;
@@ -388,7 +385,7 @@ namespace ft {
 						 // location for new node
 						 ft::pair<node *, bool>	_insertRecurse(node *root, node *n) {
 							 if (root != NULL) {
-								 if (n->getKey() < root->getKey()) {
+								 if (_comp(n->getKey(), root->getKey())) {
 									 if (root->_left != NULL) {
 										 return this->_insertRecurse(root->_left, n);
 									 } else
