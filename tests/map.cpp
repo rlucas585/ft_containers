@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/21 15:01:14 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/26 21:38:59 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/26 22:05:46 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -360,4 +360,106 @@ TYPED_TEST(map_tester, max_size_test) {
 	diff = std::max(map2.max_size(), realmap2.max_size()) -
 		std::min(map2.max_size(), realmap2.max_size());
 	ASSERT_TRUE(diff < 100);
+}
+
+// TYPED_TEST(map_tester, default_key_compare_test) {
+// 	typedef typename ft::map<int, TypeParam>::iterator	mapIter1;
+// 	typedef typename std::map<int, TypeParam>::iterator	realMapIter1;
+// 	typedef typename ft::map<TypeParam, int>::iterator	mapIter2;
+// 	typedef typename std::map<TypeParam, int>::iterator	realMapIter2;
+// 	ft::map<int, TypeParam>		map1;
+// 	std::map<int, TypeParam>	realmap1;
+// 	ft::map<TypeParam, int>		map2;
+// 	std::map<TypeParam, int>	realmap2;
+//
+// 	typename ft::map<int, TypeParam>::key_compare	comp1 = realmap1.key_comp();
+// 	typename std::map<int, TypeParam>::key_compare	realcomp1 = realmap1.key_comp();
+// 	typename ft::map<TypeParam, int>::key_compare	comp2 = realmap2.key_comp();
+// 	typename std::map<TypeParam, int>::key_compare	realcomp2 = realmap2.key_comp();
+//
+// 	initialise_default_map(map1, realmap1);
+// 	initialise_default_map(map2, realmap2);
+//
+// 	mapIter1 it1 = map1.begin();
+// 	realMapIter1 realit1 = realmap1.begin();
+// 	mapIter2 it2 = map2.begin();
+// 	realMapIter1 realit2 = realmap1.begin();
+// }
+
+TYPED_TEST(map_tester, custom_key_compare_test) {
+	// TODO fill in this test
+}
+
+TYPED_TEST(map_tester, iteration_test) {
+	typedef typename ft::map<int, TypeParam>::iterator	mapIter1;
+	typedef typename std::map<int, TypeParam>::iterator	realMapIter1;
+	typedef typename ft::map<TypeParam, int>::iterator	mapIter2;
+	typedef typename std::map<TypeParam, int>::iterator	realMapIter2;
+	ft::map<int, TypeParam>		map1;
+	std::map<int, TypeParam>	realmap1;
+	ft::map<TypeParam, int>		map2;
+	std::map<TypeParam, int>	realmap2;
+
+	initialise_default_map(map1, realmap1);
+	initialise_default_map(map2, realmap2);
+
+	mapIter1 		it1 = map1.begin();
+	realMapIter1 	realit1 = realmap1.begin();
+	mapIter2 		it2 = map2.begin();
+	realMapIter2 	realit2 = realmap2.begin();
+	for (; it1 != map1.end() && realit1 != realmap1.end(); it1++, realit1++) {
+		ASSERT_EQ((*it1).first, (*realit1).first);
+		ASSERT_EQ((*it1).second, (*realit1).second);
+	}
+	for (; it2 != map2.end() && realit2 != realmap2.end(); it2++, realit2++) {
+		ASSERT_EQ((*it2).first, (*realit2).first);
+		ASSERT_EQ((*it2).second, (*realit2).second);
+	}
+}
+
+TYPED_TEST(map_tester, decremental_iteration_test) {
+	typedef typename ft::map<int, TypeParam>::iterator	mapIter1;
+	typedef typename std::map<int, TypeParam>::iterator	realMapIter1;
+	typedef typename ft::map<TypeParam, int>::iterator	mapIter2;
+	typedef typename std::map<TypeParam, int>::iterator	realMapIter2;
+	ft::map<int, TypeParam>		map1;
+	std::map<int, TypeParam>	realmap1;
+	ft::map<TypeParam, int>		map2;
+	std::map<TypeParam, int>	realmap2;
+
+	initialise_default_map(map1, realmap1);
+	initialise_default_map(map2, realmap2);
+
+	mapIter1		it1 = map1.begin();
+	realMapIter1	realit1 = realmap1.begin();
+	mapIter2		it2 = map2.begin();
+	realMapIter2	realit2 = realmap2.begin();
+	mapIter1		tmp1;
+	realMapIter1	realtmp1;
+	mapIter2		tmp2;
+	realMapIter2	realtmp2;
+	while (it1 != map1.end()) {
+		tmp1 = it1;
+		realtmp1 = realit1;
+		it1++;
+		realit1++;
+	}
+	it1 = tmp1;
+	realit1 = realtmp1;
+	while (it2 != map2.end()) {
+		tmp2 = it2;
+		realtmp2 = realit2;
+		it2++;
+		realit2++;
+	}
+	it2 = tmp2;
+	realit2 = realtmp2;
+	for (; it1 != map1.end() && realit1 != realmap1.end(); it1--, realit1--) {
+		ASSERT_EQ((*it1).first, (*realit1).first);
+		ASSERT_EQ((*it1).second, (*realit1).second);
+	}
+	for (; it2 != map2.end() && realit2 != realmap2.end(); it2--, realit2--) {
+		ASSERT_EQ((*it2).first, (*realit2).first);
+		ASSERT_EQ((*it2).second, (*realit2).second);
+	}
 }

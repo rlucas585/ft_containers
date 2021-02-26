@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/24 11:00:47 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/26 16:31:06 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/26 22:00:59 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,36 @@ namespace ft {
 			this_type	operator++(int) {
 				this_type	tmp(*this);
 				operator++();
+				return tmp;
+			}
+			this_type	&operator--() {
+				if (_p == 0)
+					return *this;
+				if (_p->_parent == 0) { // Root node
+					_p = _p->_left;
+					if (_p == 0)
+						return *this;
+					while (_p->_right != 0)
+						_p = _p->_right;
+				} else if (_p->_left != 0) { // Left node exists - select rightmost of left
+					_p = _p->_left;
+					while (_p->_right != 0)
+						_p = _p->_right;
+				} else if (_p == _p->_parent->_right) { // No left node, _p is right of parent
+					_p = _p->_parent;
+				} else if (_p == _p->_parent->_left) { // No left node, _p is left of parent
+					while (_p->_parent != 0 && _p == _p->_parent->_left)
+						_p = _p->_parent;
+					if (_p->_parent == 0)
+						_p = 0;
+					else
+						_p = _p->_parent;
+				}
+				return *this;
+			}
+			this_type	operator--(int) {
+				this_type	tmp(*this);
+				operator--();
 				return tmp;
 			}
 			reference	operator*() {

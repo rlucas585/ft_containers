@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/20 11:02:05 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/26 16:34:40 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/26 21:51:19 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,10 +117,10 @@ namespace ft {
 						_head = dummy;
 						_size = 1;
 						this->assign(n, val);
-				}
+					}
 				template <typename InputIterator>
-				list(InputIterator first, InputIterator last,
-						const allocator_type &a = allocator_type())
+					list(InputIterator first, InputIterator last,
+							const allocator_type &a = allocator_type())
 					: _head(0), _size(0), _a(a), _node_alloc() {
 
 						node		*dummy = _createDummyNode();
