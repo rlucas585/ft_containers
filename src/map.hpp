@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/29 08:56:11 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/27 10:01:06 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/27 11:19:36 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ namespace ft {
 			 typename A = std::allocator<pair<const Key, T> > 
 				 >
 				 class map {
-					 public:
+					 private:
 						 class node;
 					 public:
 						 typedef Key								key_type;
@@ -68,7 +68,7 @@ namespace ft {
 						 typedef ReverseBiIterator<iterator>				reverse_iterator;
 						 typedef ReverseBiIterator<const_iterator>			const_reverse_iterator;
 
-					 public:
+					 private:
 						 class node {
 							 public:
 								 node(node const &src) {
@@ -191,6 +191,21 @@ namespace ft {
 								 t_color	_color;
 
 								 node(void) {}
+						 };
+
+					 private:
+						 class value_compare {
+							 friend class map;
+							 public:
+								 typedef bool				result_type;
+								 typedef value_type			first_argument_type;
+								 typedef value_type			second_argument_type;
+								 bool operator() (const value_type& x, const value_type& y) const {
+									 return _comp(x.first, y.first);
+								 }
+							 private:
+								 Compare _comp;
+								 value_compare(Compare c) : _comp(c) {}
 						 };
 
 					 public:
@@ -346,6 +361,9 @@ namespace ft {
 						 // Observers
 						 key_compare	key_comp(void) const {
 							 return _comp;
+						 }
+						 value_compare	value_comp(void) const {
+							 return value_compare(_comp);
 						 }
 
 					 private:

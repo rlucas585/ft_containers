@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/21 15:01:14 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/27 10:22:26 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/27 11:21:31 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -404,6 +404,63 @@ TYPED_TEST(map_tester, custom_key_compare_test) {
 	for (size_t i = i_vec.size() - 1; i > 1; i--) {
 		ASSERT_TRUE(comp1(i_vec[i], i_vec[i - 1]));
 		ASSERT_TRUE(realcomp1(i_vec_real[i], i_vec_real[i - 1]));
+	}
+}
+
+TYPED_TEST(map_tester, value_compare_test) {
+	typedef typename ft::map<int, TypeParam, std::greater<int> >::iterator			mapIter1;
+	typedef typename std::map<int, TypeParam, std::greater<int> >::iterator			realMapIter1;
+	typedef typename ft::map<TypeParam, int, std::greater<TypeParam> >::iterator	mapIter2;
+	typedef typename std::map<TypeParam, int, std::greater<TypeParam> >::iterator	realMapIter2;
+	ft::map<int, TypeParam, std::greater<int> >			map1;
+	std::map<int, TypeParam, std::greater<int> >		realmap1;
+	ft::map<TypeParam, int, std::greater<TypeParam> >	map2;
+	std::map<TypeParam, int, std::greater<TypeParam> >	realmap2;
+	mapIter1 		it1 = map1.begin();
+	realMapIter1 	realit1 = realmap1.begin();
+	mapIter2 		it2 = map2.begin();
+	realMapIter2 	realit2 = realmap2.begin();
+	mapIter1		tmp1;
+	realMapIter1	realtmp1;
+	mapIter2		tmp2;
+	realMapIter2	realtmp2;
+	mapIter1		tmp3;
+	realMapIter1	realtmp3;
+	mapIter2		tmp4;
+	realMapIter2	realtmp4;
+	while (it1 != map1.end()) {
+		tmp1 = it1;
+		realtmp1 = realit1;
+		it1++;
+		realit1++;
+	}
+	it1 = tmp1;
+	realit1 = realtmp1;
+	while (it2 != map2.end()) {
+		tmp2 = it2;
+		realtmp2 = realit2;
+		it2++;
+		realit2++;
+	}
+	it2 = tmp2;
+	realit2 = realtmp2;
+
+	initialise_default_map(map1, realmap1);
+	initialise_default_map(map2, realmap2);
+
+	for (; it1 != tmp1 && realit1 != realtmp1; it1++, realit1++) {
+		tmp3 = it1;
+		tmp3++;
+		realtmp3 = realit1;
+		realtmp3++;
+		ASSERT_EQ(map1.value_comp()(*it1, *tmp3), realmap1.value_comp()(*realit1, *realtmp3));
+	}
+	for (; it2 != tmp2 && realit2 != realtmp2; it2++, realit2++) {
+		tmp4 = it2;
+		tmp4++;
+		realtmp4 = realit2;
+		realtmp4++;
+		ASSERT_EQ(map2.value_comp()(*it2, *tmp4), realmap2.value_comp()(*realit2, *realtmp4));
 	}
 }
 
