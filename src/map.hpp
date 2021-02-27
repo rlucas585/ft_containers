@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/29 08:56:11 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/27 11:36:56 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/27 14:35:38 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -225,6 +225,21 @@ namespace ft {
 							 : _head(NULL), _size(0), _comp(comp), _a(alloc), _node_alloc() {
 								 this->insert(first, last);
 							 }
+						 
+						 map(const map& other)
+							 : _head(NULL), _size(0), _comp(other._comp),
+							 _a(other._a), _node_alloc(other._node_alloc) {
+							 *this = other;
+						 }
+						 map	&operator=(const map& rhs) {
+							 if (this == &rhs) { return *this; }
+							 const_iterator	start = rhs.begin();
+							 const_iterator	end = rhs.end();
+
+							 this->clear();
+							 this->insert(start, end);
+							 return *this;
+						 }
 
 						 ~map(void) {
 							 this->clear();
