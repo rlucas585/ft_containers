@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/20 13:51:08 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/27 10:17:03 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/27 11:32:15 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #define ON true
 #define OFF false
 
-#define PRINTED_OUTPUT ON
+#define PRINTED_OUTPUT OFF
 
 #include <string>
 #include <vector>

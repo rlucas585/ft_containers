@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/20 11:02:05 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/26 21:51:19 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/27 11:32:09 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ namespace ft {
 						const_reference, const node>				const_iterator;
 				typedef ReverseBiIterator<iterator>					reverse_iterator;
 				typedef ReverseBiIterator<const_iterator>			const_reverse_iterator;
-				typedef	std::allocator<node>						node_allocator;
+				typedef typename A::template rebind<node>::other	node_allocator;
 
 				explicit list(const allocator_type &a = allocator_type())
 					: _head(0), _size(0), _a(a), _node_alloc() {

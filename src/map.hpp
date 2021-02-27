@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/29 08:56:11 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/27 11:19:36 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/27 11:32:10 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -209,7 +209,7 @@ namespace ft {
 						 };
 
 					 public:
-						 typedef	std::allocator<node>					node_allocator;
+						 typedef typename A::template rebind<node>::other	node_allocator;
 
 					 public:
 						 // Constructors
@@ -217,6 +217,14 @@ namespace ft {
 								 const allocator_type& alloc = allocator_type())
 							 : _head(NULL), _size(0), _comp(comp), _a(alloc), _node_alloc() {
 						 }
+
+						 template <class InputIterator>
+							 map (InputIterator first, InputIterator last,
+									 const key_compare& comp = key_compare(),
+									 const allocator_type& alloc = allocator_type()) 
+							 : _head(NULL), _size(0), _comp(comp), _a(alloc), _node_alloc() {
+
+							 }
 
 						 ~map(void) {
 							 this->clear();
