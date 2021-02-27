@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/21 15:01:14 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/27 11:32:17 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/27 11:40:01 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,6 +164,40 @@ TYPED_TEST(map_tester, empty_test) {
 	ASSERT_FALSE(realmap2.empty());
 	ASSERT_EQ(map1.empty(), realmap1.empty());
 	ASSERT_EQ(map2.empty(), realmap2.empty());
+}
+
+TYPED_TEST(map_tester, range_constructor_test) {
+	typedef typename ft::pair<int, TypeParam>			pairType1;
+	typedef typename std::pair<int, TypeParam>			realPairType1;
+	typedef typename ft::pair<TypeParam, int>			pairType2;
+	typedef typename std::pair<TypeParam, int>			realPairType2;
+	ft::vector<int>				i_vec;
+	std::vector<int>			i_vec_real;
+	ft::vector<TypeParam>		type_vec;
+	std::vector<TypeParam>		type_vec_real;
+	initialise_default_vector(i_vec, i_vec_real);
+	initialise_default_vector(type_vec, type_vec_real);
+	ft::vector<pairType1>		pairsvec1 = zip(i_vec, type_vec);
+	std::vector<realPairType1>	realpairsvec1 = zip(i_vec_real, type_vec_real);
+	ft::vector<pairType2>		pairsvec2 = zip(type_vec, i_vec);
+	std::vector<realPairType2>	realpairsvec2 = zip(type_vec_real, i_vec_real);
+
+	ft::map<int, TypeParam>		map1(pairsvec1.begin(), pairsvec1.end());
+	std::map<int, TypeParam>	realmap1(realpairsvec1.begin(), realpairsvec1.end());
+	ft::map<TypeParam, int>		map2(pairsvec2.begin(), pairsvec2.end());
+	std::map<TypeParam, int>	realmap2(realpairsvec2.begin(), realpairsvec2.end());
+
+	testMaps(map1, realmap1);
+	testMaps(map2, realmap2);
+
+	// Attempts to insert duplicate values, all should be ignored
+	map1.insert(pairsvec1.begin(), pairsvec1.end());
+	realmap1.insert(realpairsvec1.begin(), realpairsvec1.end());
+	map2.insert(pairsvec2.begin(), pairsvec2.end());
+	realmap2.insert(realpairsvec2.begin(), realpairsvec2.end());
+
+	testMaps(map1, realmap1);
+	testMaps(map2, realmap2);
 }
 
 TYPED_TEST(map_tester, insert_single_element_test) {

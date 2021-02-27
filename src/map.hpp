@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/29 08:56:11 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/27 11:32:10 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/27 11:36:56 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -223,7 +223,7 @@ namespace ft {
 									 const key_compare& comp = key_compare(),
 									 const allocator_type& alloc = allocator_type()) 
 							 : _head(NULL), _size(0), _comp(comp), _a(alloc), _node_alloc() {
-
+								 this->insert(first, last);
 							 }
 
 						 ~map(void) {
