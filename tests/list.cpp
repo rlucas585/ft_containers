@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/20 13:48:57 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/27 17:20:34 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/27 17:28:43 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -958,6 +958,8 @@ TYPED_TEST(list_tester, iterator_reverse_relational_operators_tests) {
 	nc_real_it++;
 	ASSERT_EQ((it == nc_it), (real_it == nc_real_it));
 	ASSERT_EQ((it != nc_it), (real_it != nc_real_it));
+	ASSERT_EQ((nc_it == it), (nc_real_it == real_it));
+	ASSERT_EQ((nc_it != it), (nc_real_it != real_it));
 }
 
 TYPED_TEST(list_tester, iterator_reverse_construction_tests) {
