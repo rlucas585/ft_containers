@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/21 15:01:14 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/26 22:05:46 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/27 10:22:26 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,8 +77,8 @@ void	print_map_info(Map const& map, const char *name) {
 	std::cout << std::endl;
 }
 
-template <typename T, typename U>
-void	print_table(ft::map<T,U> const& map, std::map<T,U> const& realmap) {
+template <typename T, typename U, typename Comp>
+void	print_table(ft::map<T,U,Comp> const& map, std::map<T,U,Comp> const& realmap) {
 	for (size_t i = 0; i < 10 + 10 + 60 + 3; i++)
 		std::cout << "-";
 	std::cout << std::endl;
@@ -102,8 +102,8 @@ void	print_table(ft::map<T,U> const& map, std::map<T,U> const& realmap) {
 	std::cout << std::endl;
 }
 
-template <typename T, typename U>
-void	initialise_default_map(ft::map<T, U>& map, std::map<T, U>& realmap) {
+template <typename T, typename U, typename Comp>
+void	initialise_default_map(ft::map<T, U, Comp>& map, std::map<T, U, Comp>& realmap) {
 	ft::vector<T>		t_vec1;
 	std::vector<T>		t_vec2;
 	ft::vector<U>		u_vec1;
@@ -119,10 +119,10 @@ void	initialise_default_map(ft::map<T, U>& map, std::map<T, U>& realmap) {
 	}
 }
 
-template <typename T, typename U>
-void	testMaps(ft::map<T,U>const& map, std::map<T,U>const& realmap) {
-	typedef typename ft::map<T, U>::const_iterator	mapIter;
-	typedef typename std::map<T, U>::const_iterator	realMapIter;
+template <typename T, typename U, typename Comp>
+void	testMaps(ft::map<T,U,Comp>const& map, std::map<T,U,Comp>const& realmap) {
+	typedef typename ft::map<T, U,Comp>::const_iterator	mapIter;
+	typedef typename std::map<T, U,Comp>::const_iterator	realMapIter;
 	if (PRINTED_OUTPUT)
 		print_table(map, realmap);
 	ASSERT_EQ(map.size(), realmap.size());
@@ -362,32 +362,49 @@ TYPED_TEST(map_tester, max_size_test) {
 	ASSERT_TRUE(diff < 100);
 }
 
-// TYPED_TEST(map_tester, default_key_compare_test) {
-// 	typedef typename ft::map<int, TypeParam>::iterator	mapIter1;
-// 	typedef typename std::map<int, TypeParam>::iterator	realMapIter1;
-// 	typedef typename ft::map<TypeParam, int>::iterator	mapIter2;
-// 	typedef typename std::map<TypeParam, int>::iterator	realMapIter2;
-// 	ft::map<int, TypeParam>		map1;
-// 	std::map<int, TypeParam>	realmap1;
-// 	ft::map<TypeParam, int>		map2;
-// 	std::map<TypeParam, int>	realmap2;
-//
-// 	typename ft::map<int, TypeParam>::key_compare	comp1 = realmap1.key_comp();
-// 	typename std::map<int, TypeParam>::key_compare	realcomp1 = realmap1.key_comp();
-// 	typename ft::map<TypeParam, int>::key_compare	comp2 = realmap2.key_comp();
-// 	typename std::map<TypeParam, int>::key_compare	realcomp2 = realmap2.key_comp();
-//
-// 	initialise_default_map(map1, realmap1);
-// 	initialise_default_map(map2, realmap2);
-//
-// 	mapIter1 it1 = map1.begin();
-// 	realMapIter1 realit1 = realmap1.begin();
-// 	mapIter2 it2 = map2.begin();
-// 	realMapIter1 realit2 = realmap1.begin();
-// }
+TYPED_TEST(map_tester, default_key_compare_test) {
+	ft::map<int, TypeParam>		map1;
+	std::map<int, TypeParam>	realmap1;
+	ft::map<TypeParam, int>		map2;
+	std::map<TypeParam, int>	realmap2;
+	ft::vector<int>				i_vec;
+	std::vector<int>			i_vec_real;
+	initialise_default_vector(i_vec, i_vec_real);
+
+	initialise_default_map(map1, realmap1);
+	initialise_default_map(map2, realmap2);
+
+	typename ft::map<int, TypeParam>::key_compare	comp1 = realmap1.key_comp();
+	typename std::map<int, TypeParam>::key_compare	realcomp1 = realmap1.key_comp();
+
+	for (size_t i = 0; i < i_vec.size() - 1; i++) {
+		ASSERT_TRUE(comp1(i_vec[i], i_vec[i + 1]));
+		ASSERT_TRUE(realcomp1(i_vec_real[i], i_vec_real[i + 1]));
+	}
+}
 
 TYPED_TEST(map_tester, custom_key_compare_test) {
-	// TODO fill in this test
+	ft::map<int, TypeParam, std::greater<int> >		map1;
+	std::map<int, TypeParam, std::greater<int> >	realmap1;
+	ft::map<TypeParam, int, std::greater<TypeParam> >		map2;
+	std::map<TypeParam, int, std::greater<TypeParam> >	realmap2;
+	ft::vector<int>				i_vec;
+	std::vector<int>			i_vec_real;
+	initialise_default_vector(i_vec, i_vec_real);
+
+	initialise_default_map(map1, realmap1);
+	initialise_default_map(map2, realmap2);
+
+	testMaps(map1, realmap1);
+	testMaps(map2, realmap2);
+
+	typename ft::map<int, TypeParam, std::greater<int> >::key_compare	comp1 = realmap1.key_comp();
+	typename std::map<int, TypeParam, std::greater<int> >::key_compare	realcomp1 = realmap1.key_comp();
+
+	for (size_t i = i_vec.size() - 1; i > 1; i--) {
+		ASSERT_TRUE(comp1(i_vec[i], i_vec[i - 1]));
+		ASSERT_TRUE(realcomp1(i_vec_real[i], i_vec_real[i - 1]));
+	}
 }
 
 TYPED_TEST(map_tester, iteration_test) {
@@ -459,6 +476,80 @@ TYPED_TEST(map_tester, decremental_iteration_test) {
 		ASSERT_EQ((*it1).second, (*realit1).second);
 	}
 	for (; it2 != map2.end() && realit2 != realmap2.end(); it2--, realit2--) {
+		ASSERT_EQ((*it2).first, (*realit2).first);
+		ASSERT_EQ((*it2).second, (*realit2).second);
+	}
+}
+
+TYPED_TEST(map_tester, reverse_iteration_test) {
+	typedef typename ft::map<int, TypeParam>::reverse_iterator	mapIter1;
+	typedef typename std::map<int, TypeParam>::reverse_iterator	realMapIter1;
+	typedef typename ft::map<TypeParam, int>::reverse_iterator	mapIter2;
+	typedef typename std::map<TypeParam, int>::reverse_iterator	realMapIter2;
+	ft::map<int, TypeParam>		map1;
+	std::map<int, TypeParam>	realmap1;
+	ft::map<TypeParam, int>		map2;
+	std::map<TypeParam, int>	realmap2;
+
+	initialise_default_map(map1, realmap1);
+	initialise_default_map(map2, realmap2);
+
+	mapIter1		it1 = map1.rbegin();
+	realMapIter1	realit1 = realmap1.rbegin();
+	mapIter2		it2 = map2.rbegin();
+	realMapIter2	realit2 = realmap2.rbegin();
+	for (; it1 != map1.rend() && realit1 != realmap1.rend(); it1++, realit1++) {
+		ASSERT_EQ((*it1).first, (*realit1).first);
+		ASSERT_EQ((*it1).second, (*realit1).second);
+	}
+	for (; it2 != map2.rend() && realit2 != realmap2.rend(); it2++, realit2++) {
+		ASSERT_EQ((*it2).first, (*realit2).first);
+		ASSERT_EQ((*it2).second, (*realit2).second);
+	}
+}
+
+TYPED_TEST(map_tester, reverse_decremental_iteration_test) {
+	typedef typename ft::map<int, TypeParam>::reverse_iterator	mapIter1;
+	typedef typename std::map<int, TypeParam>::reverse_iterator	realMapIter1;
+	typedef typename ft::map<TypeParam, int>::reverse_iterator	mapIter2;
+	typedef typename std::map<TypeParam, int>::reverse_iterator	realMapIter2;
+	ft::map<int, TypeParam>		map1;
+	std::map<int, TypeParam>	realmap1;
+	ft::map<TypeParam, int>		map2;
+	std::map<TypeParam, int>	realmap2;
+
+	initialise_default_map(map1, realmap1);
+	initialise_default_map(map2, realmap2);
+
+	mapIter1		it1 = map1.rbegin();
+	realMapIter1	realit1 = realmap1.rbegin();
+	mapIter2		it2 = map2.rbegin();
+	realMapIter2	realit2 = realmap2.rbegin();
+	mapIter1		tmp1;
+	realMapIter1	realtmp1;
+	mapIter2		tmp2;
+	realMapIter2	realtmp2;
+	while (it1 != map1.rend()) {
+		tmp1 = it1;
+		realtmp1 = realit1;
+		it1++;
+		realit1++;
+	}
+	it1 = tmp1;
+	realit1 = realtmp1;
+	while (it2 != map2.rend()) {
+		tmp2 = it2;
+		realtmp2 = realit2;
+		it2++;
+		realit2++;
+	}
+	it2 = tmp2;
+	realit2 = realtmp2;
+	for (; it1 != map1.rend() && realit1 != realmap1.rend(); it1--, realit1--) {
+		ASSERT_EQ((*it1).first, (*realit1).first);
+		ASSERT_EQ((*it1).second, (*realit1).second);
+	}
+	for (; it2 != map2.rend() && realit2 != realmap2.rend(); it2--, realit2--) {
 		ASSERT_EQ((*it2).first, (*realit2).first);
 		ASSERT_EQ((*it2).second, (*realit2).second);
 	}
