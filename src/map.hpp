@@ -6,40 +6,36 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/29 08:56:11 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/27 17:42:40 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/27 19:14:30 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MAP_HPP
-# define MAP_HPP 
+#define MAP_HPP 
 
 #include <functional>
-# include <cmath>
+#include <cmath>
 
 #include "pair.hpp"
+#include "e_color.hpp"
 #include "map_iterator.hpp"
 #include "reverse_bi_iterator.hpp"
 
 #include <iostream>		// TODO remove this
 
-# ifndef SYSTEM_BITS
-# ifdef __x86_64
-# define SYSTEM_BITS 64
-# else
-# ifdef _M_AMD64
-# define SYSTEM_BITS 64
-# else
-# define SYSTEM_BITS 32
-# endif
-# endif
-# endif
+#ifndef SYSTEM_BITS
+#ifdef __x86_64
+#define SYSTEM_BITS 64
+#else
+#ifdef _M_AMD64
+#define SYSTEM_BITS 64
+#else
+#define SYSTEM_BITS 32
+#endif
+#endif
+#endif
 
 namespace ft {
-	typedef enum 	e_color {
-		BLACK,
-		RED
-	}				t_color;
-
 	template <typename Key,
 			 typename T,
 			 typename Compare = std::less<Key>,
@@ -54,7 +50,6 @@ namespace ft {
 						 typedef pair<const key_type, mapped_type>	value_type;
 						 typedef A									allocator_type;
 						 typedef Compare							key_compare;
-						 // TODO typedef a value_compare at some point
 						 typedef typename allocator_type::reference			reference;
 						 typedef typename allocator_type::const_reference	const_reference;
 						 typedef typename allocator_type::pointer			pointer;
@@ -190,7 +185,7 @@ namespace ft {
 								 node		*_parent;
 								 node		*_left;
 								 node		*_right;
-								 t_color	_color;
+								 e_color	_color;
 
 								 node(void) {}
 						 };
@@ -218,6 +213,7 @@ namespace ft {
 						 explicit map(const key_compare& comp = key_compare(),
 								 const allocator_type& alloc = allocator_type())
 							 : _head(NULL), _size(0), _comp(comp), _a(alloc), _node_alloc() {
+								 _dummy = _createDummyNode();
 						 }
 
 						 template <class InputIterator>
@@ -225,12 +221,13 @@ namespace ft {
 									 const key_compare& comp = key_compare(),
 									 const allocator_type& alloc = allocator_type()) 
 							 : _head(NULL), _size(0), _comp(comp), _a(alloc), _node_alloc() {
+								 _dummy = _createDummyNode();
 								 this->insert(first, last);
 							 }
 						 
 						 map(const map& other)
 							 : _head(NULL), _size(0), _comp(other._comp),
-							 _a(other._a), _node_alloc(other._node_alloc) {
+							 _a(other._a), _node_alloc(other._node_alloc), _dummy(_createDummyNode()) {
 							 *this = other;
 						 }
 						 map	&operator=(const map& rhs) {
@@ -245,6 +242,7 @@ namespace ft {
 
 						 ~map(void) {
 							 this->clear();
+							 _destroyDummy(_dummy);
 						 }
 
 						 // Iterators
@@ -252,26 +250,26 @@ namespace ft {
 							 iterator		it;
 
 							 if (_head)
-								 it = iterator(_head->selectLeftMost());
+								 it = iterator(_dummy->_right);
 							 else
-								 it = iterator(NULL);
+								 it = iterator(_dummy);
 							 return it;
 						 }
 						 const_iterator	begin(void) const {
 							 const_iterator		it;
 
 							 if (_head)
-								 it = const_iterator(_head->selectLeftMost());
+								 it = iterator(_dummy->_right);
 							 else
-								 it = const_iterator(NULL);
+								 it = iterator(_dummy);
 
 							 return it;
 						 }
 						 iterator	end(void) {
-							 return iterator(NULL);
+							 return iterator(_dummy);
 						 }
 						 const_iterator	end(void) const {
-							 return const_iterator(NULL);
+							 return const_iterator(_dummy);
 						 }
 						 reverse_iterator	rbegin(void) {
 							 reverse_iterator	ri(_head->selectRightMost());
@@ -311,12 +309,15 @@ namespace ft {
 						 ft::pair<iterator, bool>	insert(const value_type& val) {
 							 ft::pair<node *, bool>	ret;
 							 node		*newNode = _createNewNode(val);
+
+							 _disconnectDummy();
 							 ret = _insertInternal(_head, newNode);
 							 if (ret.second == false) { // Key existed
 								 _destroyNode(newNode);
 							 }
 							 if (ret.second) // new element added
 								 _size += 1;
+							 _reconnectDummy();
 							 return ft::pair<iterator, bool>(iterator(ret.first), ret.second);
 						 }
 
@@ -346,6 +347,7 @@ namespace ft {
 								 }
 							 }
 							 // Default insert if hint invalid
+							 _disconnectDummy();
 							 if (position == this->end()) {
 								 ret = _insertRecurse(_head, newNode);
 							 } else {
@@ -358,9 +360,13 @@ namespace ft {
 									 ret = _insertRecurse(nodeptr, newNode);
 							 }
 
-							 if (ret.second == false) // Key existed already
+							 if (ret.second == false) { // Key existed already
+								 _destroyNode(newNode);
+								 _reconnectDummy();
 								 return iterator(ret.first);
+							 }
 							 _insertRepairTree(newNode);
+							 _reconnectDummy();
 
 							 root = _head;
 							 while (root->_parent != NULL) {
@@ -378,7 +384,9 @@ namespace ft {
 							 }
 
 						 void		clear(void) {
+							 _disconnectDummy();
 							 _destroyNodeRecurse(_head);
+							 _reinitializeDummy();
 						 }
 
 						 // Observers
@@ -395,6 +403,7 @@ namespace ft {
 						 key_compare	_comp;
 						 allocator_type	_a;
 						 node_allocator	_node_alloc;
+						 node			*_dummy;
 
 						 node	*_createNewNode(const value_type& val) {
 							 node		*new_node;
@@ -521,6 +530,48 @@ namespace ft {
 							 char	*valptr = reinterpret_cast<char *>(&(*position));
 
 							 return reinterpret_cast<node *>(valptr);
+						 }
+
+						 node		*_createDummyNode(void) {
+							 node	*new_dummy;
+
+							 new_dummy = _node_alloc.allocate(1);
+							 new_dummy->_parent = 0;
+							 new_dummy->_left = new_dummy;
+							 new_dummy->_right = new_dummy;
+							 new_dummy->_color = DUMMY;
+							 return new_dummy;
+						 }
+
+						 void		_destroyDummy(node *target) {
+							 _node_alloc.deallocate(target, 1);
+						 }
+
+						 void		_reinitializeDummy(void) {
+							 _dummy->_left = _dummy;
+							 _dummy->_right = _dummy;
+						 }
+
+						 void		_disconnectDummy(void) {
+							 if (_dummy->_right == _dummy && _dummy->_left == _dummy)
+								 return ;
+							 _dummy->_right->_left = NULL;
+							 _dummy->_left->_right = NULL;
+						 }
+
+						 void		_reconnectDummy(void) {
+							 if (_size == 1) {
+								 _dummy->_left = _head;
+								 _dummy->_right = _head;
+							 }
+							 if (_dummy->_right->_left != NULL) {
+								 _dummy->_right = _dummy->_right->_left; // Connect dummy to new leftmost
+							 }
+							 _dummy->_right->_left = _dummy;
+							 if (_dummy->_left->_right != NULL) {
+								 _dummy->_left = _dummy->_left->_right; // Connect dummy to new rightmost
+							 }
+							 _dummy->_left->_right = _dummy;
 						 }
 				 };
 }

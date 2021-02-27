@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/21 15:01:14 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/27 17:33:21 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/27 19:14:59 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -335,6 +335,7 @@ TYPED_TEST(map_tester, insert_correct_hint_test) {
 		std::pair<int,TypeParam>		realpair1(i_vec[i], type_vec[i]);
 		ft::pair<TypeParam,int>			pair2(type_vec[i], i_vec[i]);
 		std::pair<TypeParam,int>		realpair2(type_vec[i], i_vec[i]);
+		std::cout << "hello" << std::endl;
 		if (it1 == map1.end())
 			it1 = map1.insert(pair1).first;
 		else
@@ -773,7 +774,7 @@ TYPED_TEST(map_tester, reverse_iterator_relational_operators_tests) {
 	nc_realMapIter1	nc_realit1(realmap1.rbegin());
 	realMapIter1	realit1(nc_realit1);
 
-	// ASSERT_EQ((nc_it1 == it1), (nc_realit1 == realit1));
+	ASSERT_EQ((nc_it1 == it1), (nc_realit1 == realit1));
 	ASSERT_EQ((nc_it1 != it1), (nc_realit1 != realit1));
 	ASSERT_EQ((it1 == nc_it1), (realit1 == nc_realit1));
 	ASSERT_EQ((it1 != nc_it1), (realit1 != nc_realit1));

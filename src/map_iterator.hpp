@@ -6,14 +6,15 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/24 11:00:47 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/27 17:42:35 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/27 19:09:59 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MAPITERATOR_HPP
-# define MAPITERATOR_HPP
+#define MAPITERATOR_HPP
 
-# include <iterator>
+#include <iterator>
+#include "e_color.hpp"
 
 namespace ft {
 	template <typename T, typename Diff, typename Point, typename Ref,
@@ -62,7 +63,7 @@ namespace ft {
 						_p = _p->_left;
 				} else if (_p->_right != 0) { // Right node exists - select leftmost of right
 					_p = _p->_right;
-					while (_p->_left != 0)
+					while (_p->_left != 0 && _p->_color != DUMMY) // If dummy, return
 						_p = _p->_left;
 				} else if (_p == _p->_parent->_left) { // No right node, _p is left of parent
 					_p = _p->_parent;
@@ -92,7 +93,7 @@ namespace ft {
 						_p = _p->_right;
 				} else if (_p->_left != 0) { // Left node exists - select rightmost of left
 					_p = _p->_left;
-					while (_p->_right != 0)
+					while (_p->_right != 0 && _p->_color != DUMMY) // If dummy, return
 						_p = _p->_right;
 				} else if (_p == _p->_parent->_right) { // No left node, _p is right of parent
 					_p = _p->_parent;
