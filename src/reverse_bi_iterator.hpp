@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/20 16:31:39 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/27 15:26:49 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/27 17:25:18 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,12 +74,16 @@ namespace ft {
 				pointer			operator->() {
 					return &(operator*());
 				}
-				bool			operator==(const this_type &rhs) const {
-					return _it == rhs._it;
-				}
-				bool		operator!=(const this_type &rhs) const {
-					return _it != rhs._it;
-				}
+				template <typename Iter1, typename Iter2>
+				friend bool operator==(const ReverseBiIterator<Iter1>&, const ReverseBiIterator<Iter2>&);
+				template <typename Iter1, typename Iter2>
+				friend bool operator!=(const ReverseBiIterator<Iter1>&, const ReverseBiIterator<Iter2>&);
+				// bool			operator==(const this_type &rhs) const {
+				// 	return _it == rhs._it;
+				// }
+				// bool		operator!=(const this_type &rhs) const {
+				// 	return _it != rhs._it;
+				// }
 				operator	const_type() const {
 					typename iterator_type::const_type	c_it(_it);
 					c_it++;
@@ -87,6 +91,19 @@ namespace ft {
 					return (ReverseBiIterator<typename iterator_type::const_type>(c_it));
 				}
 		};
+
+	template <typename Iter1, typename Iter2>
+		inline bool operator==(const ReverseBiIterator<Iter1> &it1,
+				const ReverseBiIterator<Iter2> &it2) {
+			return it1._it == it2._it;
+			// return it1.base() == it2.base();
+		}
+	template <typename Iter1, typename Iter2>
+		inline bool operator!=(const ReverseBiIterator<Iter1> &it1,
+				const ReverseBiIterator<Iter2> &it2) {
+			return it1._it != it2._it;
+			// return it1.base() == it2.base();
+		}
 }
 
 #endif

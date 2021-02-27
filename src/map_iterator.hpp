@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/24 11:00:47 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/27 17:00:05 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/27 17:09:52 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,10 +125,6 @@ namespace ft {
 				return _p != rhs._p;
 			}
 
-			const_type	test(void) const {
-				return const_type(_p);
-			}
-
 			// Enable implicit casting of non-const iterator to const iterator
 			operator	const_type() const {
 				return const_type(_p);
@@ -139,8 +135,10 @@ namespace ft {
 			 typename R2, typename N1, typename N2>
 				 inline bool operator==(const MapIterator<T, Diff, P1, R1, N1> &it1,
 						 const MapIterator<T, Diff, P2, R2, N2> &it2) {
-					 MapIterator<T, Diff, const T*, const T&, const N1>	const1 = it1;
-					 MapIterator<T, Diff, const T*, const T&, const N2>	const2 = it2;
+					 MapIterator<T, Diff, const typename N1::val_type*,
+					 const typename N1::val_type&, const N1>	const1 = it1;
+					 MapIterator<T, Diff, const typename N2::val_type*,
+					 const typename N2::val_type&, const N2>	const2 = it2;
 
 					 return (const1 == const2);
 				 }
@@ -148,8 +146,10 @@ namespace ft {
 			 typename R2, typename N1, typename N2>
 				 inline bool operator!=(const MapIterator<T, Diff, P1, R1, N1> &it1,
 						 const MapIterator<T, Diff, P2, R2, N2> &it2) {
-					 MapIterator<T, Diff, const T*, const T&, const N1>	const1 = it1;
-					 MapIterator<T, Diff, const T*, const T&, const N2>	const2 = it2;
+					 MapIterator<T, Diff, const typename N1::val_type*,
+					 const typename N1::val_type&, const N1>	const1 = it1;
+					 MapIterator<T, Diff, const typename N2::val_type*,
+					 const typename N2::val_type&, const N2>	const2 = it2;
 
 					 return (const1 != const2);
 				 }

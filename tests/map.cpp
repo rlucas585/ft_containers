@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/21 15:01:14 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/27 17:01:54 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/27 17:22:06 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,13 +150,6 @@ void	testMaps(ft::map<T,U,Comp>const& map, std::map<T,U,Comp>const& realmap) {
 		ASSERT_EQ((*it).first, (*realit).first);
 		ASSERT_EQ((*it).second, (*realit).second);
 	}
-}
-
-TEST(pair_tester, const_test) {
-	ft::pair<int, int>			nc_pair(5, 15);
-	ft::pair<const int, int>	c1_pair(nc_pair);
-	ft::pair<int, const int>	c2_pair(nc_pair);
-	ft::pair<const int, const int>	c3_pair(nc_pair);
 }
 
 TYPED_TEST_CASE(map_tester, Implementations);
@@ -710,13 +703,13 @@ TYPED_TEST(map_tester, reverse_decremental_iteration_test) {
 
 TYPED_TEST(map_tester, iterator_relational_operators_tests) {
 	typedef typename ft::map<int, TypeParam>::const_iterator	mapIter1;
-	// typedef typename std::map<int, TypeParam>::const_iterator	realMapIter1;
-	// typedef typename ft::map<TypeParam, int>::const_iterator	mapIter2;
-	// typedef typename std::map<TypeParam, int>::const_iterator	realMapIter2;
+	typedef typename std::map<int, TypeParam>::const_iterator	realMapIter1;
+	typedef typename ft::map<TypeParam, int>::const_iterator	mapIter2;
+	typedef typename std::map<TypeParam, int>::const_iterator	realMapIter2;
 	typedef typename ft::map<int, TypeParam>::iterator	nc_mapIter1;
-	// typedef typename std::map<int, TypeParam>::iterator	nc_realMapIter1;
-	// typedef typename ft::map<TypeParam, int>::iterator	nc_mapIter2;
-	// typedef typename std::map<TypeParam, int>::iterator	nc_realMapIter2;
+	typedef typename std::map<int, TypeParam>::iterator	nc_realMapIter1;
+	typedef typename ft::map<TypeParam, int>::iterator	nc_mapIter2;
+	typedef typename std::map<TypeParam, int>::iterator	nc_realMapIter2;
 	ft::map<int, TypeParam>		map1;
 	std::map<int, TypeParam>	realmap1;
 	ft::map<TypeParam, int>		map2;
@@ -726,36 +719,68 @@ TYPED_TEST(map_tester, iterator_relational_operators_tests) {
 	initialise_default_map(map2, realmap2);
 
 	nc_mapIter1		nc_it1(map1.begin());
-	// mapIter1		it1(map1.begin());
-	mapIter1		it1 = nc_it1;
-	// realMapIter1	realit1 = realmap1.begin();
+	mapIter1		it1(nc_it1);
+	nc_realMapIter1	nc_realit1(realmap1.begin());
+	realMapIter1	realit1(nc_realit1);
+
+	ASSERT_EQ((nc_it1 == it1), (nc_realit1 == realit1));
+	ASSERT_EQ((nc_it1 != it1), (nc_realit1 != realit1));
+	nc_it1++;
+	nc_realit1++;
+	ASSERT_EQ((nc_it1 == it1), (nc_realit1 == realit1));
+	ASSERT_EQ((nc_it1 != it1), (nc_realit1 != realit1));
+
+	nc_mapIter2		nc_it2(map2.begin());
+	mapIter2		it2(nc_it2);
+	nc_realMapIter2	nc_realit2(realmap2.begin());
+	realMapIter2	realit2(nc_realit2);
+
+	ASSERT_EQ((nc_it2 == it2), (nc_realit2 == realit2));
+	ASSERT_EQ((nc_it2 != it2), (nc_realit2 != realit2));
+	nc_it2++;
+	nc_realit2++;
+	ASSERT_EQ((nc_it2 == it2), (nc_realit2 == realit2));
+	ASSERT_EQ((nc_it2 != it2), (nc_realit2 != realit2));
 }
 
-// ‘nc_mapIter1 {aka ft::MapIterator<int, long int, ft::pair<const int, int>*, ft::pair<const int, int>&, ft::map<int, int, std::less<int>, std::allocator<ft::pair<const int, int> > >::node>}’
-// to ‘mapIter1 {aka ft::MapIterator<int, long int, const ft::pair<const int, int>*, const ft::pair<const int, int>&, const ft::map<int, int, std::less<int>, std::allocator<ft::pair<const int, int > > >::node>}’
-// T1: int
-// T2: int
-//
-// Diff1: long int
-// Diff2: long int
-//
-// Point1: ft::pair<const int, int>*
-// Point2: const ft::pair<const int, int>*
-//
-// Ref1: ft::pair<const int, int>&
-// Ref2: const ft::pair<const int, int>&
-//
-// Node1: ft::map<int, int, std::less<int>, std::allocator<ft::pair<const int, int> > >::node>
-// Node2: const ft::map<int, int, std::less<int>, std::allocator<ft::pair<const int, int > > >::node>
+TYPED_TEST(map_tester, reverse_iterator_relational_operators_tests) {
+	typedef typename ft::map<int, TypeParam>::const_reverse_iterator	mapIter1;
+	typedef typename std::map<int, TypeParam>::const_reverse_iterator	realMapIter1;
+	// typedef typename ft::map<TypeParam, int>::const_reverse_iterator	mapIter2;
+	// typedef typename std::map<TypeParam, int>::const_reverse_iterator	realMapIter2;
+	typedef typename ft::map<int, TypeParam>::reverse_iterator	nc_mapIter1;
+	typedef typename std::map<int, TypeParam>::reverse_iterator	nc_realMapIter1;
+	// typedef typename ft::map<TypeParam, int>::reverse_iterator	nc_mapIter2;
+	// typedef typename std::map<TypeParam, int>::reverse_iterator	nc_realMapIter2;
+	ft::map<int, TypeParam>		map1;
+	std::map<int, TypeParam>	realmap1;
+	ft::map<TypeParam, int>		map2;
+	std::map<TypeParam, int>	realmap2;
 
+	initialise_default_map(map1, realmap1);
+	initialise_default_map(map2, realmap2);
 
-// Expected:
-// ‘mapIter1 {aka ft::MapIterator<int, long int, const ft::pair<const int, int>*, const ft::pair<const int, int>&, const ft::map<int, int, std::less<int>, std::allocator<ft::pair<const int, int > > >::node>}’
-// Actual:
-// {aka ft::MapIterator<int, long int, const int*, const int&, const ft::map<int, int, std::less<int>, std::allocator<ft::pair<const int, in t> > >::node>}
-// Actual2:
-// {aka ft::MapIterator<int, long int, ft::pair<const int, int>* const, ft::pair<const int, int>&, const ft::map<int, int, std::less<int>, s td::allocator<ft::pair<const int, int> > >::node>}
-// Actual3:
-// {aka ft::MapIterator<int, long int, ft::pair<const int, int>* const, ft::pair<const int, int>&, const ft::map<int, int, std::less<int>, s td::allocator<ft::pair<const int, int> > >::node>}
-// Actual4:
-// {aka ft::MapIterator<int, long int, const ft::pair<int, int>*, const ft::pair<int, int>&, const ft::map<int, int, std::less<int>, std::al locator<ft::pair<const int, int> > >::node>}
+	nc_mapIter1		nc_it1(map1.rbegin());
+	mapIter1		it1(nc_it1);
+	nc_realMapIter1	nc_realit1(realmap1.rbegin());
+	realMapIter1	realit1(nc_realit1);
+
+	// ASSERT_EQ((nc_it1 == it1), (nc_realit1 == realit1));
+	// ASSERT_EQ((nc_it1 != it1), (nc_realit1 != realit1));
+	// nc_it1++;
+	// nc_realit1++;
+	// ASSERT_EQ((nc_it1 == it1), (nc_realit1 == realit1));
+	// ASSERT_EQ((nc_it1 != it1), (nc_realit1 != realit1));
+    //
+	// nc_mapIter2		nc_it2(map2.rbegin());
+	// mapIter2		it2(nc_it2);
+	// nc_realMapIter2	nc_realit2(realmap2.rbegin());
+	// realMapIter2	realit2(nc_realit2);
+    //
+	// ASSERT_EQ((nc_it2 == it2), (nc_realit2 == realit2));
+	// ASSERT_EQ((nc_it2 != it2), (nc_realit2 != realit2));
+	// nc_it2++;
+	// nc_realit2++;
+	// ASSERT_EQ((nc_it2 == it2), (nc_realit2 == realit2));
+	// ASSERT_EQ((nc_it2 != it2), (nc_realit2 != realit2));
+}
