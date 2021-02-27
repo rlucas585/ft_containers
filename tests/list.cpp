@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/20 13:48:57 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/21 16:59:08 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/27 15:03:31 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -198,7 +198,7 @@ void	print_table(ft::list<T> const& list, std::list<T> const& reallist) {
 }
 
 template <typename Iterator>
-Iterator		incrementIterator(Iterator it, size_t n) {
+static Iterator		incrementIterator(Iterator it, size_t n) {
 	while (n > 0) {
 		it++;
 		n -= 1;
@@ -207,7 +207,7 @@ Iterator		incrementIterator(Iterator it, size_t n) {
 }
 
 template <typename Iterator>
-Iterator		decrementIterator(Iterator it, size_t n) {
+static Iterator		decrementIterator(Iterator it, size_t n) {
 	while (n > 0) {
 		it--;
 		n -= 1;

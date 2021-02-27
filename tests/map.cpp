@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/21 15:01:14 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/27 14:36:39 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/27 17:01:54 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,24 @@ std::vector<std::pair<T, U> >		zip(std::vector<T>const& vec, std::vector<U>const
 	for (; it1 != vec.end() && it2 != vec2.end(); it1++, it2++)
 		pairs.push_back(std::pair<T, U>(*it1, *it2));
 	return pairs;
+}
+
+template <typename Iterator>
+static Iterator		incrementIterator(Iterator it, size_t n) {
+	while (n > 0) {
+		it++;
+		n -= 1;
+	}
+	return it;
+}
+
+template <typename Iterator>
+static Iterator		decrementIterator(Iterator it, size_t n) {
+	while (n > 0) {
+		it--;
+		n -= 1;
+	}
+	return it;
 }
 
 template <typename Map>
@@ -132,6 +150,13 @@ void	testMaps(ft::map<T,U,Comp>const& map, std::map<T,U,Comp>const& realmap) {
 		ASSERT_EQ((*it).first, (*realit).first);
 		ASSERT_EQ((*it).second, (*realit).second);
 	}
+}
+
+TEST(pair_tester, const_test) {
+	ft::pair<int, int>			nc_pair(5, 15);
+	ft::pair<const int, int>	c1_pair(nc_pair);
+	ft::pair<int, const int>	c2_pair(nc_pair);
+	ft::pair<const int, const int>	c3_pair(nc_pair);
 }
 
 TYPED_TEST_CASE(map_tester, Implementations);
@@ -682,3 +707,55 @@ TYPED_TEST(map_tester, reverse_decremental_iteration_test) {
 		ASSERT_EQ((*it2).second, (*realit2).second);
 	}
 }
+
+TYPED_TEST(map_tester, iterator_relational_operators_tests) {
+	typedef typename ft::map<int, TypeParam>::const_iterator	mapIter1;
+	// typedef typename std::map<int, TypeParam>::const_iterator	realMapIter1;
+	// typedef typename ft::map<TypeParam, int>::const_iterator	mapIter2;
+	// typedef typename std::map<TypeParam, int>::const_iterator	realMapIter2;
+	typedef typename ft::map<int, TypeParam>::iterator	nc_mapIter1;
+	// typedef typename std::map<int, TypeParam>::iterator	nc_realMapIter1;
+	// typedef typename ft::map<TypeParam, int>::iterator	nc_mapIter2;
+	// typedef typename std::map<TypeParam, int>::iterator	nc_realMapIter2;
+	ft::map<int, TypeParam>		map1;
+	std::map<int, TypeParam>	realmap1;
+	ft::map<TypeParam, int>		map2;
+	std::map<TypeParam, int>	realmap2;
+
+	initialise_default_map(map1, realmap1);
+	initialise_default_map(map2, realmap2);
+
+	nc_mapIter1		nc_it1(map1.begin());
+	// mapIter1		it1(map1.begin());
+	mapIter1		it1 = nc_it1;
+	// realMapIter1	realit1 = realmap1.begin();
+}
+
+// ‘nc_mapIter1 {aka ft::MapIterator<int, long int, ft::pair<const int, int>*, ft::pair<const int, int>&, ft::map<int, int, std::less<int>, std::allocator<ft::pair<const int, int> > >::node>}’
+// to ‘mapIter1 {aka ft::MapIterator<int, long int, const ft::pair<const int, int>*, const ft::pair<const int, int>&, const ft::map<int, int, std::less<int>, std::allocator<ft::pair<const int, int > > >::node>}’
+// T1: int
+// T2: int
+//
+// Diff1: long int
+// Diff2: long int
+//
+// Point1: ft::pair<const int, int>*
+// Point2: const ft::pair<const int, int>*
+//
+// Ref1: ft::pair<const int, int>&
+// Ref2: const ft::pair<const int, int>&
+//
+// Node1: ft::map<int, int, std::less<int>, std::allocator<ft::pair<const int, int> > >::node>
+// Node2: const ft::map<int, int, std::less<int>, std::allocator<ft::pair<const int, int > > >::node>
+
+
+// Expected:
+// ‘mapIter1 {aka ft::MapIterator<int, long int, const ft::pair<const int, int>*, const ft::pair<const int, int>&, const ft::map<int, int, std::less<int>, std::allocator<ft::pair<const int, int > > >::node>}’
+// Actual:
+// {aka ft::MapIterator<int, long int, const int*, const int&, const ft::map<int, int, std::less<int>, std::allocator<ft::pair<const int, in t> > >::node>}
+// Actual2:
+// {aka ft::MapIterator<int, long int, ft::pair<const int, int>* const, ft::pair<const int, int>&, const ft::map<int, int, std::less<int>, s td::allocator<ft::pair<const int, int> > >::node>}
+// Actual3:
+// {aka ft::MapIterator<int, long int, ft::pair<const int, int>* const, ft::pair<const int, int>&, const ft::map<int, int, std::less<int>, s td::allocator<ft::pair<const int, int> > >::node>}
+// Actual4:
+// {aka ft::MapIterator<int, long int, const ft::pair<int, int>*, const ft::pair<int, int>&, const ft::map<int, int, std::less<int>, std::al locator<ft::pair<const int, int> > >::node>}

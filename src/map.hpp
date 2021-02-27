@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/29 08:56:11 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/27 14:35:38 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/27 17:01:50 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,8 @@ namespace ft {
 
 					 private:
 						 class node {
+							 public:
+								 typedef pair<const Key, T>					val_type;
 							 public:
 								 node(node const &src) {
 									 *this = src;
@@ -193,7 +195,7 @@ namespace ft {
 								 node(void) {}
 						 };
 
-					 private:
+					 public:
 						 class value_compare {
 							 friend class map;
 							 public:
@@ -287,8 +289,6 @@ namespace ft {
 						 const_reverse_iterator	rend(void) const {
 							 return const_reverse_iterator(NULL);
 						 }
-
-						 // TODO Add the reverse iterators
 
 						 // Capacity
 						 bool		empty(void) const {

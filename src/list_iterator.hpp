@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/24 11:00:50 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/24 11:01:14 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/27 16:46:56 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,15 +27,15 @@ namespace ft {
 			Ref>
 	{
 		private:
-			typedef ListIterator<T, Diff, Point, Ref, Node>	this_type;
+			typedef ListIterator<T, Diff, Point, Ref, Node>			this_type;
 		public:
 			typedef std::bidirectional_iterator_tag					iterator_category;
 			typedef T												value_type;
-			typedef ListIterator<T, Diff, const T*, const T&,
-					const Node>										const_type;
 			typedef Point											pointer;
 			typedef Ref												reference;
 			typedef Diff											difference_type;
+			typedef ListIterator<T, Diff, const T*, const T&,
+					const Node>										const_type;
 			typedef Node*											node_pointer;
 
 		private:
