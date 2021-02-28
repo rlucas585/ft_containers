@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/29 08:56:11 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/28 17:20:21 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/28 23:18:17 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,6 +125,45 @@ namespace ft {
 									 if (p == NULL)
 										 return NULL;
 									 return p->getSibling();
+								 }
+								 void		swap(node *other) {
+									 node		*tmpParent = other->_parent;
+									 node		*tmpLeft = other->_left;
+									 node		*tmpRight = other->_right;
+
+									 other->_left = _left;
+									 other->_right = _right;
+									 other->_parent = _parent;
+									 if (tmpParent) {
+										 if (other == tmpParent->_left)
+											 tmpParent->_left = this;
+										 else
+											 tmpParent->_right = this;
+									 }
+									 if (tmpLeft)
+										 tmpLeft->_parent = this;
+									 if (tmpRight)
+										 tmpRight->_parent = this;
+									 if (_parent) {
+										 if (this == _parent->_left)
+											 _parent->_left = other;
+										 else
+											 _parent->_right = other;
+									 }
+									 if (_right)
+										 _right->_parent = other;
+									 if (_left)
+										 _left->_parent = other;
+									 _parent = tmpParent;
+									 _left = tmpLeft;
+									 _right = tmpRight;
+								 }
+								 bool		hasRedChild(void) {
+									 if (_left != NULL && _left->_color == RED)
+										 return true;
+									 if (_right != NULL && _right->_color == RED)
+										 return true;
+									 return false;
 								 }
 								 node		*selectLeftMost(void) {
 									 if (_left == NULL)
@@ -623,66 +662,205 @@ namespace ft {
 							 g->_color = RED;
 						 }
 
-						 node		*_getPtrFromIterator(iterator const& position) {
+						 node		*_getPtrFromIterator(iterator& position) {
 							 char	*valptr = reinterpret_cast<char *>(&(*position));
 
 							 return reinterpret_cast<node *>(valptr);
 						 }
 
+						 node		*_findReplacementNode(node *nodeToDelete) {
+							 // node has 2 children
+							 if (nodeToDelete->_left != NULL && nodeToDelete->_right != NULL)
+								 return nodeToDelete->_right->selectLeftMost();
+
+							 // node is leaf
+							 if (nodeToDelete->_left == NULL && nodeToDelete->_right == NULL)
+								 return NULL;
+
+							 // node has single child
+							 if (nodeToDelete->_left != NULL)
+								 return nodeToDelete->_left;
+							 else
+								 return nodeToDelete->_right;
+						 }
+
 						 node		*_deleteInternal(iterator position) {
-							 node		*n = _getPtrFromIterator(position);
+							 node		*nodeToDelete = _getPtrFromIterator(position);
+							 node		*replacementNode = _findReplacementNode(nodeToDelete);
+							 node		*parent = nodeToDelete->_parent;
+
+							 bool		bothNodesBlack =
+								 (replacementNode == NULL || replacementNode->_color == BLACK) &&
+								 nodeToDelete->_color == BLACK;
 
 							 _modifyDummy(position);
-							 return _deleteTargetNode(n);
+
+							 if (replacementNode == NULL)
+								 return _targetNodeIsLeaf(nodeToDelete, parent, bothNodesBlack);
+							 if (nodeToDelete->_left == NULL || nodeToDelete->_right == NULL)
+								 return _targetNodeHasOneChild(nodeToDelete, replacementNode, parent, bothNodesBlack);
+
+							 // nodeToDelete has two children, take value with successor and recurse
+							 nodeToDelete->swap(replacementNode);
+							 return _deleteInternal(iterator(replacementNode));
 						 }
 
-						 node		*_deleteTargetNode(node *n) {
-							 if (n->_left == NULL && n->_right == NULL)
-								 return _targetNodeIsLeaf(n);
-							 else if (n->_left == NULL)
-								 return _targetNodeHasRightChild(n);
-							 else if (n->_right == NULL)
-								 return _targetNodeHasLeftChild(n);
+						 node			*_targetNodeHasOneChild(node *nodeToDelete, node *replacementNode,
+								 node *parent, bool bothNodesBlack) {
+							 if (nodeToDelete == _head) {
+								 // if target node is root, assign value of replacementNode to
+								 // root, delete replacementNode instead.
+								 nodeToDelete->swap(replacementNode);
+								 nodeToDelete->_right = NULL;
+								 nodeToDelete->_left = NULL;
+								 return replacementNode;
+							 } else {
+								 if (nodeToDelete == parent->_left)
+									 parent->_left = replacementNode;
+								 else
+									 parent->_right = replacementNode;
+								 replacementNode->_parent = parent;
+								 if (bothNodesBlack)
+									 _fixDoubleBlack(replacementNode);
+								 else
+									 replacementNode->_color = BLACK;
+								 return nodeToDelete;
+							 }
+						 }
+
+						 node			*_targetNodeIsLeaf(node *nodeToDelete, node *parent, bool bothNodesBlack) {
+							 if (nodeToDelete == _head) {
+								 _head = NULL;
+								 return nodeToDelete;
+							 }
+							 if (bothNodesBlack)
+								 _fixDoubleBlack(nodeToDelete);
+							 else {
+								 // if nodeToDelete is red, make sibling red
+								 if (nodeToDelete->getSibling() != NULL)
+									 nodeToDelete->getSibling()->_color = RED;
+							 }
+							 if (nodeToDelete == parent->_left)
+								 parent->_left = NULL;
 							 else
-								 return _targetNodeHasTwoChildren(n);
+								 parent->_right = NULL;
+							 return nodeToDelete;
 						 }
 
-						 node		*_targetNodeIsLeaf(node *n) {
-							 if (n->_parent == NULL)
-								 return n;
-							 if (n == n->_parent->_left)
-								 n->_parent->_left = NULL;
-							 else if (n == n->_parent->_right)
-								 n->_parent->_right = NULL;
-							 return n;
-						 }
-
-						 node		*_targetNodeHasLeftChild(node *n) {
-							 if (n->_parent != NULL) {
-								 if (n->_parent->_right == n)
-									 n->_parent->_right = n->_left;
-								 else if (n->_parent->_left == n)
-									 n->_parent->_left = n->_left;
+						 void			_fixDoubleBlack(node *n) {
+							 if (n == _head)
+								 return ;
+							 node		*sibling = n->getSibling();
+							 node		*parent = n->_parent;
+							 if (sibling == NULL)
+								 _fixDoubleBlack(parent);
+							 else {
+								 if (sibling->_color == RED)
+									 _siblingIsRed(sibling, parent);
+								 else if (sibling->_color == BLACK)
+									 _siblingIsBlack(sibling, parent);
 							 }
-							 return n;
 						 }
 
-						 node		*_targetNodeHasRightChild(node *n) {
-							 if (n->_parent != NULL) {
-								 if (n->_parent->_right == n)
-									 n->_parent->_right = n->_right;
-								 else if (n->_parent->_left == n)
-									 n->_parent->_left = n->_right;
+						 void			_siblingIsRed(node *sibling, node *parent) {
+							 parent->_color = RED;
+							 sibling->_color = BLACK;
+							 if (sibling == parent->_left)
+								 parent->rotateRight();
+							 else
+								 parent->rotateLeft();
+							 _fixDoubleBlack(parent);
+						 }
+
+						 void			_siblingIsBlack(node *sibling, node *parent) {
+							 if (sibling->hasRedChild())
+								 _blackSiblingWithRedChild(sibling, parent);
+							 else
+								 _blackSiblingWithTwoBlackChildren(sibling, parent);
+						 }
+
+						 void		_blackSiblingWithRedChild(node *sibling, node *parent) {
+							 if (sibling->_left != NULL && sibling->_left->_color == RED) {
+								 // left child is red
+								 if (sibling == parent->_left) {
+									 sibling->_left->_color = sibling->_color;
+									 sibling->_color = parent->_color;
+									 parent->rotateRight();
+								 } else {
+									 sibling->_left->_color = parent->_color;
+									 sibling->rotateRight();
+									 parent->rotateLeft();
+								 }
+							 } else {
+								 // right child is red
+								 if (sibling == parent->_left) {
+									 sibling->_right->_color = parent->_color;
+									 sibling->rotateLeft();
+									 parent->rotateRight();
+								 } else {
+									 sibling->_right->_color = sibling->_color;
+									 sibling->_color = parent->_color;
+									 parent->rotateLeft();
+								 }
 							 }
-							 return n;
+							 parent->_color = BLACK;
 						 }
 
-						 node		*_targetNodeHasTwoChildren(node *n) {
-							 node		*successor = n->_right->selectLeftMost();
-
-							 n->getVal() = successor->getVal();
-							 return _deleteTargetNode(successor);
+						 void		_blackSiblingWithTwoBlackChildren(node *sibling, node *parent) {
+							 sibling->_color = RED;
+							 if (parent->_color == BLACK)
+								 _fixDoubleBlack(parent);
+							 else
+								 parent->_color = BLACK;
 						 }
+
+						 // node		*_deleteTargetNode(node *n) {
+							//  if (n->_left == NULL && n->_right == NULL)
+							// 	 return _targetNodeIsLeaf(n);
+							//  else if (n->_left == NULL)
+							// 	 return _targetNodeHasRightChild(n);
+							//  else if (n->_right == NULL)
+							// 	 return _targetNodeHasLeftChild(n);
+							//  else
+							// 	 return _targetNodeHasTwoChildren(n);
+						 // }
+                         //
+						 // node		*_targetNodeIsLeaf(node *n) {
+							//  if (n->_parent == NULL)
+							// 	 return n;
+							//  if (n == n->_parent->_left)
+							// 	 n->_parent->_left = NULL;
+							//  else if (n == n->_parent->_right)
+							// 	 n->_parent->_right = NULL;
+							//  return n;
+						 // }
+                         //
+						 // node		*_targetNodeHasLeftChild(node *n) {
+							//  if (n->_parent != NULL) {
+							// 	 if (n->_parent->_right == n)
+							// 		 n->_parent->_right = n->_left;
+							// 	 else if (n->_parent->_left == n)
+							// 		 n->_parent->_left = n->_left;
+							//  }
+							//  return n;
+						 // }
+                         //
+						 // node		*_targetNodeHasRightChild(node *n) {
+							//  if (n->_parent != NULL) {
+							// 	 if (n->_parent->_right == n)
+							// 		 n->_parent->_right = n->_right;
+							// 	 else if (n->_parent->_left == n)
+							// 		 n->_parent->_left = n->_right;
+							//  }
+							//  return n;
+						 // }
+
+						 // node		*_targetNodeHasTwoChildren(node *n) {
+							//  node		*successor = n->_right->selectLeftMost();
+                         //
+							//  n->getVal() = successor->getVal();
+							//  return _deleteTargetNode(successor);
+						 // }
 
 						 // If the node to be deleted is leftmost or rightmost, we
 						 // have to modify the dummy so that it doesn't point at a

@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/21 15:01:14 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/28 12:20:37 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/28 23:22:10 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -454,6 +454,27 @@ TYPED_TEST(map_tester, insert_range_test) {
 
 	testMaps(map1, realmap1);
 	testMaps(map2, realmap2);
+}
+
+TYPED_TEST(map_tester, erase_by_iterator_test) {
+	typedef typename ft::map<int, TypeParam>::iterator			mapIter1;
+	ft::map<int, TypeParam>		map1;
+	std::map<int, TypeParam>	realmap1;
+	ft::map<TypeParam, int>		map2;
+	std::map<TypeParam, int>	realmap2;
+
+	initialise_default_map(map1, realmap1);
+	initialise_default_map(map2, realmap2);
+
+	map1.erase(map1.begin());
+	map1.erase(map1.begin());
+	realmap1.erase(realmap1.begin());
+	map2.erase(map2.begin());
+	realmap2.erase(realmap2.begin());
+	for (mapIter1 it = map1.begin(); it != map1.end(); it++)
+		std::cout << "(" << (*it).first << ", " << (*it).second << ")" << std::endl;
+	// testMaps(map1, realmap1);
+	// testMaps(map2, realmap2);
 }
 
 TYPED_TEST(map_tester, max_size_test) {
