@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/21 15:01:14 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/27 19:14:59 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/28 11:14:42 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -306,6 +306,25 @@ TYPED_TEST(map_tester, insert_single_element_test) {
 	testMaps(map2, realmap2);
 }
 
+// TYPED_TEST(map_tester, single_element_iteration_test) {
+// 	typedef typename ft::map<int, TypeParam>::iterator	mapIter1;
+// 	// typedef typename std::map<int, TypeParam>::iterator	realMapIter1;
+// 	ft::map<int, TypeParam>		map1;
+// 	std::map<int, TypeParam>	realmap1;
+// 	ft::vector<int>				i_vec;
+// 	std::vector<int>			i_vec_real;
+// 	ft::vector<TypeParam>		type_vec;
+// 	std::vector<TypeParam>		type_vec_real;
+// 	initialise_default_vector(i_vec, i_vec_real);
+// 	initialise_default_vector(type_vec, type_vec_real);
+// 	ft::pair<int,TypeParam>			pair1(i_vec[0], type_vec[0]);
+// 	std::pair<int,TypeParam>		realpair1(i_vec[0], type_vec[0]);
+//
+// 	map1.insert(pair1);
+// 	realmap1.insert(realpair1);
+// 	mapIter1	it1 = map1.begin();
+// }
+//
 TYPED_TEST(map_tester, insert_correct_hint_test) {
 	typedef typename ft::map<int, TypeParam>::iterator	mapIter1;
 	typedef typename std::map<int, TypeParam>::iterator	realMapIter1;
@@ -335,11 +354,12 @@ TYPED_TEST(map_tester, insert_correct_hint_test) {
 		std::pair<int,TypeParam>		realpair1(i_vec[i], type_vec[i]);
 		ft::pair<TypeParam,int>			pair2(type_vec[i], i_vec[i]);
 		std::pair<TypeParam,int>		realpair2(type_vec[i], i_vec[i]);
-		std::cout << "hello" << std::endl;
-		if (it1 == map1.end())
+		if (it1 == map1.end()) {
 			it1 = map1.insert(pair1).first;
-		else
+		}
+		else {
 			it1 = map1.insert(it1, pair1);
+		}
 		if (realit1 == realmap1.end())
 			realit1 = realmap1.insert(realpair1).first;
 		else
@@ -618,14 +638,26 @@ TYPED_TEST(map_tester, decremental_iteration_test) {
 	}
 	it2 = tmp2;
 	realit2 = realtmp2;
-	for (; it1 != map1.end() && realit1 != realmap1.end(); it1--, realit1--) {
+	for (; it1 != map1.begin() && realit1 != realmap1.begin(); it1--, realit1--) {
 		ASSERT_EQ((*it1).first, (*realit1).first);
 		ASSERT_EQ((*it1).second, (*realit1).second);
 	}
-	for (; it2 != map2.end() && realit2 != realmap2.end(); it2--, realit2--) {
+	for (; it2 != map2.begin() && realit2 != realmap2.begin(); it2--, realit2--) {
 		ASSERT_EQ((*it2).first, (*realit2).first);
 		ASSERT_EQ((*it2).second, (*realit2).second);
 	}
+	it1 = map1.end();
+	realit1 = realmap1.end();
+	it2 = map2.end();
+	realit2 = realmap2.end();
+	it1--;
+	realit1--;
+	it2--;
+	realit2--;
+	ASSERT_TRUE(it1 == tmp1);
+	ASSERT_TRUE(realit1 == realtmp1);
+	ASSERT_TRUE(it2 == tmp2);
+	ASSERT_TRUE(realit2 == realtmp2);
 }
 
 TYPED_TEST(map_tester, reverse_iteration_test) {
@@ -692,11 +724,11 @@ TYPED_TEST(map_tester, reverse_decremental_iteration_test) {
 	}
 	it2 = tmp2;
 	realit2 = realtmp2;
-	for (; it1 != map1.rend() && realit1 != realmap1.rend(); it1--, realit1--) {
+	for (; it1 != map1.rbegin() && realit1 != realmap1.rbegin(); it1--, realit1--) {
 		ASSERT_EQ((*it1).first, (*realit1).first);
 		ASSERT_EQ((*it1).second, (*realit1).second);
 	}
-	for (; it2 != map2.rend() && realit2 != realmap2.rend(); it2--, realit2--) {
+	for (; it2 != map2.rbegin() && realit2 != realmap2.rbegin(); it2--, realit2--) {
 		ASSERT_EQ((*it2).first, (*realit2).first);
 		ASSERT_EQ((*it2).second, (*realit2).second);
 	}

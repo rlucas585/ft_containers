@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/29 08:56:11 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/27 19:14:30 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/28 11:14:55 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -272,20 +272,21 @@ namespace ft {
 							 return const_iterator(_dummy);
 						 }
 						 reverse_iterator	rbegin(void) {
-							 reverse_iterator	ri(_head->selectRightMost());
+							 // reverse_iterator	ri(_head->selectRightMost());
+							 reverse_iterator	ri(_dummy->_left);
 
 							 return ri;
 						 }
 						 const_reverse_iterator	rbegin(void) const {
-							 const_reverse_iterator	ri(_head->selectRightMost());
+							 const_reverse_iterator	ri(_dummy->_left);
 
 							 return ri;
 						 }
 						 reverse_iterator	rend(void) {
-							 return reverse_iterator(NULL);
+							 return reverse_iterator(_dummy);
 						 }
 						 const_reverse_iterator	rend(void) const {
-							 return const_reverse_iterator(NULL);
+							 return const_reverse_iterator(_dummy);
 						 }
 
 						 // Capacity

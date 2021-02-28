@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/24 11:00:47 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/27 19:09:59 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/28 11:14:24 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 
 #include <iterator>
 #include "e_color.hpp"
+
+#include <iostream>
 
 namespace ft {
 	template <typename T, typename Diff, typename Point, typename Ref,
@@ -55,19 +57,27 @@ namespace ft {
 			this_type	&operator++() {
 				if (_p == 0)
 					return *this;
-				if (_p->_parent == 0) { // Root node
+				if (_p->_color == DUMMY) {
 					_p = _p->_right;
-					if (_p == 0)
+					return *this;
+				}
+				if (_p->_parent == 0) { // Root node or Dummy
+					// std::cout << "Case 1" << std::endl;
+					_p = _p->_right;
+					if (_p == 0 || _p->_color == DUMMY)
 						return *this;
-					while (_p->_left != 0)
+					while (_p->_left != 0 && _p->_color != DUMMY)
 						_p = _p->_left;
 				} else if (_p->_right != 0) { // Right node exists - select leftmost of right
+					// std::cout << "Case 2" << std::endl;
 					_p = _p->_right;
 					while (_p->_left != 0 && _p->_color != DUMMY) // If dummy, return
 						_p = _p->_left;
 				} else if (_p == _p->_parent->_left) { // No right node, _p is left of parent
+					// std::cout << "Case 3" << std::endl;
 					_p = _p->_parent;
 				} else if (_p == _p->_parent->_right) { // No right node, _p is right of parent
+					// std::cout << "Case 4" << std::endl;
 					while (_p->_parent != 0 && _p == _p->_parent->_right)
 						_p = _p->_parent;
 					if (_p->_parent == 0)
@@ -85,19 +95,27 @@ namespace ft {
 			this_type	&operator--() {
 				if (_p == 0)
 					return *this;
-				if (_p->_parent == 0) { // Root node
+				if (_p->_color == DUMMY) {
 					_p = _p->_left;
-					if (_p == 0)
+					return *this;
+				}
+				if (_p->_parent == 0) { // Root node or dummy
+					// std::cout << "Case 1" << std::endl;
+					_p = _p->_left;
+					if (_p == 0 || _p->_color == DUMMY)
 						return *this;
-					while (_p->_right != 0)
+					while (_p->_right != 0 && _p->_color != DUMMY)
 						_p = _p->_right;
 				} else if (_p->_left != 0) { // Left node exists - select rightmost of left
+					// std::cout << "Case 2" << std::endl;
 					_p = _p->_left;
 					while (_p->_right != 0 && _p->_color != DUMMY) // If dummy, return
 						_p = _p->_right;
 				} else if (_p == _p->_parent->_right) { // No left node, _p is right of parent
+					// std::cout << "Case 3" << std::endl;
 					_p = _p->_parent;
 				} else if (_p == _p->_parent->_left) { // No left node, _p is left of parent
+					// std::cout << "Case 4" << std::endl;
 					while (_p->_parent != 0 && _p == _p->_parent->_left)
 						_p = _p->_parent;
 					if (_p->_parent == 0)
