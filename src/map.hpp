@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/29 08:56:11 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/28 12:16:56 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/28 17:20:21 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -390,6 +390,17 @@ namespace ft {
 									 this->insert(*first);
 							 }
 
+						 void		erase(iterator position) {
+							 if (_size == 0)
+								 return ;
+							 _disconnectDummy();
+							 node		*deleted = _deleteInternal(position);
+							 _destroyNode(deleted);
+							 _reconnectDummy();
+
+							 _size -= 1;
+						 }
+
 						 void		clear(void) {
 							 _disconnectDummy();
 							 _destroyNodeRecurse(_head);
@@ -612,10 +623,85 @@ namespace ft {
 							 g->_color = RED;
 						 }
 
-						 node		*_getPtrFromIterator(iterator& position) {
+						 node		*_getPtrFromIterator(iterator const& position) {
 							 char	*valptr = reinterpret_cast<char *>(&(*position));
 
 							 return reinterpret_cast<node *>(valptr);
+						 }
+
+						 node		*_deleteInternal(iterator position) {
+							 node		*n = _getPtrFromIterator(position);
+
+							 _modifyDummy(position);
+							 return _deleteTargetNode(n);
+						 }
+
+						 node		*_deleteTargetNode(node *n) {
+							 if (n->_left == NULL && n->_right == NULL)
+								 return _targetNodeIsLeaf(n);
+							 else if (n->_left == NULL)
+								 return _targetNodeHasRightChild(n);
+							 else if (n->_right == NULL)
+								 return _targetNodeHasLeftChild(n);
+							 else
+								 return _targetNodeHasTwoChildren(n);
+						 }
+
+						 node		*_targetNodeIsLeaf(node *n) {
+							 if (n->_parent == NULL)
+								 return n;
+							 if (n == n->_parent->_left)
+								 n->_parent->_left = NULL;
+							 else if (n == n->_parent->_right)
+								 n->_parent->_right = NULL;
+							 return n;
+						 }
+
+						 node		*_targetNodeHasLeftChild(node *n) {
+							 if (n->_parent != NULL) {
+								 if (n->_parent->_right == n)
+									 n->_parent->_right = n->_left;
+								 else if (n->_parent->_left == n)
+									 n->_parent->_left = n->_left;
+							 }
+							 return n;
+						 }
+
+						 node		*_targetNodeHasRightChild(node *n) {
+							 if (n->_parent != NULL) {
+								 if (n->_parent->_right == n)
+									 n->_parent->_right = n->_right;
+								 else if (n->_parent->_left == n)
+									 n->_parent->_left = n->_right;
+							 }
+							 return n;
+						 }
+
+						 node		*_targetNodeHasTwoChildren(node *n) {
+							 node		*successor = n->_right->selectLeftMost();
+
+							 n->getVal() = successor->getVal();
+							 return _deleteTargetNode(successor);
+						 }
+
+						 // If the node to be deleted is leftmost or rightmost, we
+						 // have to modify the dummy so that it doesn't point at a
+						 // node that's about to freed
+						 void		_modifyDummy(iterator position) {
+							 node		*n = _getPtrFromIterator(position);
+
+							 if (n == _dummy->_right) {
+								 iterator 	tmp = position;
+								 tmp++;
+								 node		*nextNodeRight = _getPtrFromIterator(tmp);
+								 _dummy->_right = nextNodeRight;
+							 }
+							 if (n == _dummy->_left) {
+								 iterator	tmp = position;
+								 tmp--;
+								 node		*nextNodeLeft = _getPtrFromIterator(tmp);
+								 _dummy->_left = nextNodeLeft;
+							 }
 						 }
 
 						 node		*_createDummyNode(void) {
