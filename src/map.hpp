@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/29 08:56:11 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/28 11:14:55 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/28 12:16:56 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -305,6 +305,12 @@ namespace ft {
 						 }
 
 						 // Element access
+						 mapped_type&	operator[] (const key_type& k) {
+							 _disconnectDummy();
+							 mapped_type&		ret = _atRecurse(_head, k);
+							 _reconnectDummy();
+							 return ret;
+						 }
 
 						 // Modifiers
 						 ft::pair<iterator, bool>	insert(const value_type& val) {
@@ -417,6 +423,18 @@ namespace ft {
 							 return new_node;
 						 }
 
+						 node	*_createDefaultNode(const key_type& k) {
+							 node		*new_node;
+							 value_type	defaultVal(k, mapped_type());
+
+							 new_node = _node_alloc.allocate(1);
+							 _a.construct(&new_node->getVal(), defaultVal);
+							 new_node->_parent = NULL;
+							 new_node->_left = NULL;
+							 new_node->_right = NULL;
+							 return new_node;
+						 }
+
 						 void	_destroyNode(node *target) {
 							 _a.destroy(&target->getVal());
 							 _node_alloc.deallocate(target, 1);
@@ -472,6 +490,73 @@ namespace ft {
 							 n->_right = NULL;
 							 n->_color = RED;
 							 return ft::pair<node *, bool>(n, true);
+						 }
+
+						 mapped_type&	_atRecurse(node *root, const key_type& k) {
+							 if (root != NULL) {
+								 if (k == root->getKey())
+									 return root->getData();
+								 else if (_comp(k, root->getKey())) {
+									 if (root->_left != NULL) {
+										 return this->_atRecurse(root->_left, k);
+									 } else {
+										 return _insertNewDefaultNodeLeft(root, k);
+									 }
+								 } else {
+									 if (root->_right != NULL) {
+										 return this->_atRecurse(root->_right, k);
+									 } else {
+										 return _insertNewDefaultNodeRight(root, k);
+									 }
+								 }
+							 }
+
+							 node		*newNode = _createDefaultNode(k);
+							 newNode->_parent = root;
+							 newNode->_left = NULL;
+							 newNode->_right = NULL;
+							 newNode->_color = RED;
+							 _size += 1;
+							 _head = newNode;
+							 return newNode->getData();
+						 }
+
+						 mapped_type&	_insertNewDefaultNodeLeft(node *root, const key_type& k) {
+							 node	*newNode = _createDefaultNode(k);
+
+							 root->_left = newNode;
+
+							 newNode->_parent = root;
+							 newNode->_left = NULL;
+							 newNode->_right = NULL;
+							 newNode->_color = RED;
+							 _insertRepairTree(newNode);
+							 _size += 1;
+
+							 _head = newNode;
+							 while (_head->_parent != NULL) {
+								 _head = _head->_parent;
+							 }
+							 return newNode->getData();
+						 }
+
+						 mapped_type&	_insertNewDefaultNodeRight(node *root, const key_type& k) {
+							 node	*newNode = _createDefaultNode(k);
+
+							 root->_right = newNode;
+
+							 newNode->_parent = root;
+							 newNode->_left = NULL;
+							 newNode->_right = NULL;
+							 newNode->_color = RED;
+							 _insertRepairTree(newNode);
+							 _size += 1;
+
+							 _head = newNode;
+							 while (_head->_parent != NULL) {
+								 _head = _head->_parent;
+							 }
+							 return newNode->getData();
 						 }
 
 						 void		_insertRepairTree(node *n) {

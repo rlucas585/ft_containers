@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/21 15:01:14 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/28 11:14:42 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/02/28 12:20:37 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -572,6 +572,46 @@ TYPED_TEST(map_tester, value_compare_test) {
 		realtmp4++;
 		ASSERT_EQ(map2.value_comp()(*it2, *tmp4), realmap2.value_comp()(*realit2, *realtmp4));
 	}
+}
+
+TYPED_TEST(map_tester, element_access_test) {
+	ft::map<int, TypeParam, std::greater<int> >			map1;
+	std::map<int, TypeParam, std::greater<int> >		realmap1;
+	ft::map<TypeParam, int, std::greater<TypeParam> >	map2;
+	std::map<TypeParam, int, std::greater<TypeParam> >	realmap2;
+	ft::vector<int>				i_vec;
+	std::vector<int>			i_vec_real;
+	initialise_default_vector(i_vec, i_vec_real);
+	ft::vector<TypeParam>		type_vec;
+	std::vector<TypeParam>		type_vec_real;
+	initialise_default_vector(type_vec, type_vec_real);
+
+	for (size_t i = 0; i < i_vec.size() / 2; i++) {
+		ft::pair<int,TypeParam>			pair1(i_vec[i], type_vec[i]);
+		std::pair<int,TypeParam>		realpair1(i_vec[i], type_vec[i]);
+		ft::pair<TypeParam,int>			pair2(type_vec[i], i_vec[i]);
+		std::pair<TypeParam,int>		realpair2(type_vec[i], i_vec[i]);
+
+		map1.insert(pair1);
+		realmap1.insert(realpair1);
+		map2.insert(pair2);
+		realmap2.insert(realpair2);
+	}
+	// Accessing existing elements
+	for (size_t i = 0; i < i_vec.size() / 2; i++) {
+		ASSERT_EQ(map1[i_vec[i]], realmap1[i_vec[i]]);
+		ASSERT_EQ(map2[type_vec[i]], realmap2[type_vec[i]]);
+	}
+	ASSERT_EQ(map1.size(), realmap1.size());
+	ASSERT_EQ(map2.size(), realmap2.size());
+
+	// Accessing newly created elements
+	for (size_t i = i_vec.size() / 2; i < i_vec.size(); i++) {
+		ASSERT_EQ(map1[i_vec[i]], realmap1[i_vec[i]]);
+		ASSERT_EQ(map2[type_vec[i]], realmap2[type_vec[i]]);
+	}
+	ASSERT_EQ(map1.size(), realmap1.size());
+	ASSERT_EQ(map2.size(), realmap2.size());
 }
 
 TYPED_TEST(map_tester, iteration_test) {
