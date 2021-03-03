@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/29 08:56:11 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/28 23:18:17 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/03/03 14:45:12 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,56 @@
 #endif
 #endif
 
+std::string		color_converter(ft::e_color color) {
+	switch (color) {
+		case ft::RED: 
+			return "RED";
+		case ft::BLACK:
+			return "BLACK";
+		case ft::DUMMY:
+			return "DUMMY";
+	}
+	return "RED";
+}
+
+template <typename Node>
+void			print_node(Node *n) {
+	if (n->_color == ft::DUMMY) {
+		std::cout << "Dummy node: ";
+		if (n->getLeft() != n) {
+			std::cout << "Left: " << n->getLeft()->getKey() << ", ";
+		} else {
+			std::cout << "No Left node.";
+		}
+		if (n->getRight() != n)
+			std::cout << "Right: " << n->getRight()->getKey() << ", ";
+		else
+			std::cout << "No Right node.";
+		std::cout << std::endl;
+		return ;
+	}
+	if (n->_parent == NULL)
+		std::cout << "Head node: ";
+	else
+		std::cout << "node: ";
+	std::cout << "Key: " << n->getKey(); std::cout << ", Value: " << n->getData();
+	std::cout << ", Color: " << color_converter(n->_color);
+	std::cout << std::endl;
+}
+
+template <typename Node>
+void		print_map(Node *root, size_t depth) {
+	if (root->_color == ft::DUMMY)
+		return ;
+	for (size_t i = 0; i < depth; i++)
+		std::cout << "-";
+	print_node(root);
+	if (root->getLeft())
+		print_map(root->getLeft(), depth + 1);
+	if (root->getRight())
+		print_map(root->getRight(), depth + 1);
+}
+
 namespace ft {
 	template <typename Key,
 			 typename T,
@@ -42,7 +92,7 @@ namespace ft {
 			 typename A = std::allocator<pair<const Key, T> > 
 				 >
 				 class map {
-					 private:
+					 public:
 						 class node;
 					 public:
 						 typedef Key								key_type;
@@ -63,7 +113,7 @@ namespace ft {
 						 typedef ReverseBiIterator<iterator>				reverse_iterator;
 						 typedef ReverseBiIterator<const_iterator>			const_reverse_iterator;
 
-					 private:
+					 public:
 						 class node {
 							 public:
 								 typedef pair<const Key, T>					val_type;
@@ -281,7 +331,9 @@ namespace ft {
 
 						 ~map(void) {
 							 this->clear();
+							 std::cout << "Clear successful" << std::endl;
 							 _destroyDummy(_dummy);
+							 std::cout << "dummy destruction successful" << std::endl;
 						 }
 
 						 // Iterators
@@ -429,21 +481,34 @@ namespace ft {
 									 this->insert(*first);
 							 }
 
+						 node		*getHead(void) {
+							 return _head;
+						 }
+
+						 node		*getDummy(void) {
+							 return _dummy;
+						 }
+
 						 void		erase(iterator position) {
 							 if (_size == 0)
 								 return ;
 							 _disconnectDummy();
 							 node		*deleted = _deleteInternal(position);
 							 _destroyNode(deleted);
+							 std::cout << "hello" << std::endl;
 							 _reconnectDummy();
 
 							 _size -= 1;
 						 }
 
 						 void		clear(void) {
+							 std::cout << "clear() called, head = " << _head << std::endl;
 							 _disconnectDummy();
+							 std::cout << "dummy disconnected successfully" << std::endl;
 							 _destroyNodeRecurse(_head);
+							 std::cout << "destroy node recurse successful" << std::endl;
 							 _reinitializeDummy();
+							 std::cout << "clear successful" << std::endl;
 						 }
 
 						 // Observers
@@ -695,10 +760,12 @@ namespace ft {
 
 							 _modifyDummy(position);
 
-							 if (replacementNode == NULL)
+							 if (replacementNode == NULL) {
 								 return _targetNodeIsLeaf(nodeToDelete, parent, bothNodesBlack);
-							 if (nodeToDelete->_left == NULL || nodeToDelete->_right == NULL)
+							 }
+							 if (nodeToDelete->_left == NULL || nodeToDelete->_right == NULL) {
 								 return _targetNodeHasOneChild(nodeToDelete, replacementNode, parent, bothNodesBlack);
+							 }
 
 							 // nodeToDelete has two children, take value with successor and recurse
 							 nodeToDelete->swap(replacementNode);
@@ -710,10 +777,14 @@ namespace ft {
 							 if (nodeToDelete == _head) {
 								 // if target node is root, assign value of replacementNode to
 								 // root, delete replacementNode instead.
+								 std::cout << "About to swap values of root with replacement node" << std::endl;
 								 nodeToDelete->swap(replacementNode);
-								 nodeToDelete->_right = NULL;
-								 nodeToDelete->_left = NULL;
-								 return replacementNode;
+								 std::cout << "replacementNode, which should now be head: " << std::endl;
+								 print_node(replacementNode);
+								 _head = replacementNode;
+								 replacementNode->_right = NULL;
+								 replacementNode->_left = NULL;
+								 return nodeToDelete;
 							 } else {
 								 if (nodeToDelete == parent->_left)
 									 parent->_left = replacementNode;
@@ -730,11 +801,13 @@ namespace ft {
 
 						 node			*_targetNodeIsLeaf(node *nodeToDelete, node *parent, bool bothNodesBlack) {
 							 if (nodeToDelete == _head) {
+								 std::cout << "Target node is head." << std::endl;
 								 _head = NULL;
 								 return nodeToDelete;
 							 }
-							 if (bothNodesBlack)
+							 if (bothNodesBlack) {
 								 _fixDoubleBlack(nodeToDelete);
+							 }
 							 else {
 								 // if nodeToDelete is red, make sibling red
 								 if (nodeToDelete->getSibling() != NULL)
@@ -756,20 +829,26 @@ namespace ft {
 								 _fixDoubleBlack(parent);
 							 else {
 								 if (sibling->_color == RED)
-									 _siblingIsRed(sibling, parent);
+									 _siblingIsRed(n, sibling, parent);
 								 else if (sibling->_color == BLACK)
 									 _siblingIsBlack(sibling, parent);
 							 }
 						 }
 
-						 void			_siblingIsRed(node *sibling, node *parent) {
+						 void			_siblingIsRed(node *n, node *sibling, node *parent) {
 							 parent->_color = RED;
 							 sibling->_color = BLACK;
-							 if (sibling == parent->_left)
+							 if (sibling == parent->_left) {
 								 parent->rotateRight();
-							 else
+								 if (parent == _head)
+									 _head = sibling;
+							 }
+							 else {
 								 parent->rotateLeft();
-							 _fixDoubleBlack(parent);
+								 if (parent == _head)
+									 _head = sibling;
+							 }
+							 _fixDoubleBlack(n);
 						 }
 
 						 void			_siblingIsBlack(node *sibling, node *parent) {
@@ -786,10 +865,16 @@ namespace ft {
 									 sibling->_left->_color = sibling->_color;
 									 sibling->_color = parent->_color;
 									 parent->rotateRight();
+									 if (parent == _head)
+										 _head = sibling;
 								 } else {
 									 sibling->_left->_color = parent->_color;
 									 sibling->rotateRight();
 									 parent->rotateLeft();
+									 if (parent == _head) {
+										 while (_head->_parent != NULL)
+											 _head = _head->_parent;
+									 }
 								 }
 							 } else {
 								 // right child is red
@@ -797,10 +882,16 @@ namespace ft {
 									 sibling->_right->_color = parent->_color;
 									 sibling->rotateLeft();
 									 parent->rotateRight();
+									 if (parent == _head) {
+										 while (_head->_parent != NULL)
+											 _head = _head->_parent;
+									 }
 								 } else {
 									 sibling->_right->_color = sibling->_color;
 									 sibling->_color = parent->_color;
 									 parent->rotateLeft();
+									 if (parent == _head)
+										 _head = sibling;
 								 }
 							 }
 							 parent->_color = BLACK;
@@ -868,6 +959,10 @@ namespace ft {
 						 void		_modifyDummy(iterator position) {
 							 node		*n = _getPtrFromIterator(position);
 
+							 if (_size == 1) { // Last node is about to be deleted
+								 _dummy->_right = _dummy;
+								 _dummy->_left = _dummy;
+							 }
 							 if (n == _dummy->_right) {
 								 iterator 	tmp = position;
 								 tmp++;
@@ -880,6 +975,8 @@ namespace ft {
 								 node		*nextNodeLeft = _getPtrFromIterator(tmp);
 								 _dummy->_left = nextNodeLeft;
 							 }
+							 std::cout << "Modified dummy: ";
+							 print_node(_dummy);
 						 }
 
 						 node		*_createDummyNode(void) {
@@ -905,14 +1002,22 @@ namespace ft {
 						 void		_disconnectDummy(void) {
 							 if (_dummy->_right == _dummy && _dummy->_left == _dummy)
 								 return ;
+							 std::cout << "dummy->_right = " << _dummy->_right << 
+								 ", dummy->_left = " << _dummy->_left << std::endl;
 							 _dummy->_right->_left = NULL;
 							 _dummy->_left->_right = NULL;
 						 }
 
 						 void		_reconnectDummy(void) {
 							 if (_size == 1) {
-								 _dummy->_left = _head;
-								 _dummy->_right = _head;
+								 if (_head == NULL) {
+									 _dummy->_left = _dummy;
+									 _dummy->_right = _dummy;
+								 } else {
+									 _dummy->_left = _head;
+									 _dummy->_right = _head;
+								 }
+								 return ;
 							 }
 							 if (_dummy->_right->_left != NULL) {
 								 _dummy->_right = _dummy->_right->_left; // Connect dummy to new leftmost

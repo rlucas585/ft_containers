@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/21 15:01:14 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/28 23:22:10 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/03/03 14:45:45 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@
 #include "test_fixture_classes.hpp"
 #include "Example.hpp"
 #include "test.hpp"
+
+#include "../src/e_color.hpp" // TODO delete this
 
 template <typename Map>
 std::string	map_to_str(Map const& map) {
@@ -456,23 +458,90 @@ TYPED_TEST(map_tester, insert_range_test) {
 	testMaps(map2, realmap2);
 }
 
+// std::string		color_converter(ft::e_color color) {
+// 	switch (color) {
+// 		case ft::RED: 
+// 			return "RED";
+// 		case ft::BLACK:
+// 			return "BLACK";
+// 		case ft::DUMMY:
+// 			return "DUMMY";
+// 	}
+// 	return "RED";
+// }
+
+// template <typename Node>
+// void			print_node(Node *n) {
+// 	if (n->_color == ft::DUMMY) {
+// 		std::cout << "Dummy node: ";
+// 		if (n->getLeft() != n) {
+// 			std::cout << "Left: " << n->getLeft()->getKey() << ", ";
+// 		} else {
+// 			std::cout << "No Left node.";
+// 		}
+// 		if (n->getRight() != n)
+// 			std::cout << "Right: " << n->getRight()->getKey() << ", ";
+// 		else
+// 			std::cout << "No Right node.";
+// 		std::cout << std::endl;
+// 		return ;
+// 	}
+// 	if (n->_parent == NULL)
+// 		std::cout << "Head node: ";
+// 	else
+// 		std::cout << "node: ";
+// 	std::cout << "Key: " << n->getKey();
+// 	std::cout << ", Color: " << color_converter(n->_color);
+// 	std::cout << std::endl;
+// }
+//
+// template <typename Node>
+// void		print_map(Node *root, size_t depth) {
+// 	if (root->_color == ft::DUMMY)
+// 		return ;
+// 	for (size_t i = 0; i < depth; i++)
+// 		std::cout << "-";
+// 	print_node(root);
+// 	if (root->getLeft())
+// 		print_map(root->getLeft(), depth + 1);
+// 	if (root->getRight())
+// 		print_map(root->getRight(), depth + 1);
+// }
+
 TYPED_TEST(map_tester, erase_by_iterator_test) {
-	typedef typename ft::map<int, TypeParam>::iterator			mapIter1;
+	// typedef typename ft::map<int, TypeParam>::iterator			mapIter1;
 	ft::map<int, TypeParam>		map1;
 	std::map<int, TypeParam>	realmap1;
-	ft::map<TypeParam, int>		map2;
-	std::map<TypeParam, int>	realmap2;
+	// ft::map<TypeParam, int>		map2;
+	// std::map<TypeParam, int>	realmap2;
 
 	initialise_default_map(map1, realmap1);
-	initialise_default_map(map2, realmap2);
+	// initialise_default_map(map2, realmap2);
 
+	// print_map(map1.getHead(), 0);
 	map1.erase(map1.begin());
 	map1.erase(map1.begin());
-	realmap1.erase(realmap1.begin());
-	map2.erase(map2.begin());
-	realmap2.erase(realmap2.begin());
-	for (mapIter1 it = map1.begin(); it != map1.end(); it++)
-		std::cout << "(" << (*it).first << ", " << (*it).second << ")" << std::endl;
+	print_map(map1.getHead(), 0);
+	print_node(map1.getDummy());
+	map1.erase(map1.begin());
+	map1.erase(map1.begin());
+	print_map(map1.getHead(), 0);
+	print_node(map1.getDummy());
+	map1.erase(map1.begin());
+	print_map(map1.getHead(), 0);
+	print_node(map1.getDummy());
+	std::cout << "about to delete final element of map" << std::endl;
+	map1.erase(map1.begin());
+	std::cout << "erasure successful" << std::endl;
+	std::cout << "Size: " << map1.size() << std::endl;
+	// map1.erase(map1.begin());
+	// for (mapIter1 it = map1.begin(); it != map1.end(); it++)
+	// 	std::cout << "(" << (*it).first << ", " << (*it).second << ")" << std::endl;
+
+	// This stuff should be tested later, first, development
+	// realmap1.erase(realmap1.begin());
+	// map2.erase(map2.begin());
+	// realmap2.erase(realmap2.begin());
 	// testMaps(map1, realmap1);
 	// testMaps(map2, realmap2);
 }
