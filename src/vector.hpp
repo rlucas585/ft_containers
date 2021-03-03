@@ -6,35 +6,36 @@
 /*   By: rlucas <ryanl585codam@gmail.com>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/06 12:52:10 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/26 13:03:11 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/03/03 16:11:32 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef VECTOR_HPP
-# define VECTOR_HPP 
+#define VECTOR_HPP 
 
-# include <iterator>
-# include <memory> /* allocator */
-# include <stdexcept>
-# include <algorithm>
-# include <cmath>
-# include <sstream>
+#include <iterator>
+#include <memory> /* allocator */
+#include <stdexcept>
+#include <algorithm>
+#include <cmath>
+#include <sstream>
+#include <cstddef>
 
-# include "random_access_iterator.hpp"
-# include "reverse_iterator.hpp"
-# include "sfinae.hpp"
+#include "random_access_iterator.hpp"
+#include "reverse_iterator.hpp"
+#include "sfinae.hpp"
 
-# ifndef SYSTEM_BITS
-# ifdef __x86_64
-# define SYSTEM_BITS 64
-# else
-# ifdef _M_AMD64
-# define SYSTEM_BITS 64
-# else
-# define SYSTEM_BITS 32
-# endif
-# endif
-# endif
+#ifndef SYSTEM_BITS
+#ifdef __x86_64
+#define SYSTEM_BITS 64
+#else
+#ifdef _M_AMD64
+#define SYSTEM_BITS 64
+#else
+#define SYSTEM_BITS 32
+#endif
+#endif
+#endif
 
 namespace ft {
 	template <typename T, typename A = std::allocator<T> >
@@ -47,8 +48,8 @@ namespace ft {
 				typedef typename allocator_type::const_reference	const_reference;
 				typedef typename allocator_type::pointer			pointer;
 				typedef typename allocator_type::const_pointer		const_pointer;
-				typedef typename allocator_type::size_type			size_type;
-				typedef typename allocator_type::difference_type	difference_type;
+				typedef size_t										size_type;
+				typedef ptrdiff_t									difference_type;
 				typedef RandAccessIterator<T, difference_type,
 						pointer, reference>							iterator;
 				typedef RandAccessIterator<T, difference_type,

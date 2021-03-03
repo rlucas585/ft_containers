@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/21 15:01:14 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/03/03 15:55:56 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/03/03 17:06:37 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -528,6 +528,16 @@ TYPED_TEST(map_tester, erase_by_iterator_test) {
 		testMaps(map2, realmap2);
 	}
 
+	initialise_default_map(map1, realmap1);
+	initialise_default_map(map2, realmap2);
+	for (size_t i = 0; i < initial_size - 2; i++) {
+		map1.erase(incrementIterator(map1.begin(), 2));
+		realmap1.erase(incrementIterator(realmap1.begin(), 2));
+		map2.erase(incrementIterator(map2.begin(), 2));
+		realmap2.erase(incrementIterator(realmap2.begin(), 2));
+		testMaps(map1, realmap1);
+		testMaps(map2, realmap2);
+	}
 }
 
 TYPED_TEST(map_tester, max_size_test) {
@@ -555,6 +565,8 @@ TYPED_TEST(map_tester, default_key_compare_test) {
 	std::vector<int>			i_vec_real;
 	initialise_default_vector(i_vec, i_vec_real);
 
+	std::sort(i_vec.begin(), i_vec.end());
+	std::sort(i_vec_real.begin(), i_vec_real.end());
 	initialise_default_map(map1, realmap1);
 	initialise_default_map(map2, realmap2);
 
@@ -576,6 +588,8 @@ TYPED_TEST(map_tester, custom_key_compare_test) {
 	std::vector<int>			i_vec_real;
 	initialise_default_vector(i_vec, i_vec_real);
 
+	std::sort(i_vec.begin(), i_vec.end());
+	std::sort(i_vec_real.begin(), i_vec_real.end());
 	initialise_default_map(map1, realmap1);
 	initialise_default_map(map2, realmap2);
 

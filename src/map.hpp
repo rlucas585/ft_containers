@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/29 08:56:11 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/03/03 15:55:49 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/03/03 17:02:48 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 #include <functional>
 #include <cmath>
+#include <cstddef>
 
 #include "pair.hpp"
 #include "e_color.hpp"
@@ -74,6 +75,8 @@ void			print_node(Node *n) {
 
 template <typename Node>
 void		print_map(Node *root, size_t depth) {
+	if (root == NULL)
+		return ;
 	if (root->_color == ft::DUMMY)
 		return ;
 	for (size_t i = 0; i < depth; i++)
@@ -104,8 +107,8 @@ namespace ft {
 						 typedef typename allocator_type::const_reference	const_reference;
 						 typedef typename allocator_type::pointer			pointer;
 						 typedef typename allocator_type::const_pointer		const_pointer;
-						 typedef typename allocator_type::size_type			size_type;
-						 typedef typename allocator_type::difference_type	difference_type;
+						 typedef size_t										size_type;
+						 typedef ptrdiff_t									difference_type;
 						 typedef MapIterator<T, difference_type, pointer,
 								 reference, node>							iterator;
 						 typedef MapIterator<T, difference_type, const_pointer,
@@ -207,6 +210,14 @@ namespace ft {
 									 _parent = tmpParent;
 									 _left = tmpLeft;
 									 _right = tmpRight;
+								 }
+								 void		swapValues(node *other) {
+									 value_type		tmp = other->_val;
+
+									 const_cast<key_type &>(other->_val.first) = _val.first;
+									 other->_val.second = _val.second;
+									 const_cast<key_type &>(_val.first) = tmp.first;
+									 _val.second = tmp.second;
 								 }
 								 bool		hasRedChild(void) {
 									 if (_left != NULL && _left->_color == RED)
@@ -761,7 +772,7 @@ namespace ft {
 							 }
 
 							 // nodeToDelete has two children, take value with successor and recurse
-							 nodeToDelete->swap(replacementNode);
+							 nodeToDelete->swapValues(replacementNode);
 							 return _deleteInternal(iterator(replacementNode));
 						 }
 
@@ -770,11 +781,14 @@ namespace ft {
 							 if (nodeToDelete == _head) {
 								 // if target node is root, assign value of replacementNode to
 								 // root, delete replacementNode instead.
-								 nodeToDelete->swap(replacementNode);
-								 _head = replacementNode;
-								 replacementNode->_right = NULL;
-								 replacementNode->_left = NULL;
-								 return nodeToDelete;
+								 nodeToDelete->swapValues(replacementNode);
+								 // no longer deleting nodeToDelete, deleting replacementNode
+								 // instead after swapping values
+								 nodeToDelete->_right = NULL;
+								 nodeToDelete->_left = NULL;
+								 _dummy->_right = nodeToDelete;
+								 _dummy->_left = nodeToDelete;
+								 return replacementNode;
 							 } else {
 								 if (nodeToDelete == parent->_left)
 									 parent->_left = replacementNode;

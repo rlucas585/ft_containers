@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/13 17:58:24 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/21 10:26:11 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/03/03 17:07:06 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,24 @@
 #include "test.hpp"
 
 void	initialise_default_vector(ft::vector<int>& vec, std::vector<int>& realvec) {
-	for (unsigned int i = 5; i <= 30; i += 5) {
-		vec.push_back(i);
-		realvec.push_back(i);
-	}
+	int i = 5;
+	vec.push_back(i);
+	realvec.push_back(i);
+	i = 25;
+	vec.push_back(i);
+	realvec.push_back(i);
+	i = 20;
+	vec.push_back(i);
+	realvec.push_back(i);
+	i = 15;
+	vec.push_back(i);
+	realvec.push_back(i);
+	i = 30;
+	vec.push_back(i);
+	realvec.push_back(i);
+	i = 10;
+	vec.push_back(i);
+	realvec.push_back(i);
 }
 
 void	initialise_default_vector(ft::vector<std::string>& vec, std::vector<std::string>& realvec) {
