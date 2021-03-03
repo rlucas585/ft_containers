@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/24 11:00:47 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/28 11:14:24 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/03/03 15:55:31 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,8 +64,9 @@ namespace ft {
 				if (_p->_parent == 0) { // Root node or Dummy
 					// std::cout << "Case 1" << std::endl;
 					_p = _p->_right;
-					if (_p == 0 || _p->_color == DUMMY)
+					if (_p == 0 || _p->_color == DUMMY) {
 						return *this;
+					}
 					while (_p->_left != 0 && _p->_color != DUMMY)
 						_p = _p->_left;
 				} else if (_p->_right != 0) { // Right node exists - select leftmost of right

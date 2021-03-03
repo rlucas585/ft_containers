@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/21 15:01:14 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/03/03 14:45:45 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/03/03 15:55:56 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -509,41 +509,25 @@ TYPED_TEST(map_tester, insert_range_test) {
 // }
 
 TYPED_TEST(map_tester, erase_by_iterator_test) {
-	// typedef typename ft::map<int, TypeParam>::iterator			mapIter1;
 	ft::map<int, TypeParam>		map1;
 	std::map<int, TypeParam>	realmap1;
-	// ft::map<TypeParam, int>		map2;
-	// std::map<TypeParam, int>	realmap2;
+	ft::map<TypeParam, int>		map2;
+	std::map<TypeParam, int>	realmap2;
+	size_t						initial_size;
 
 	initialise_default_map(map1, realmap1);
-	// initialise_default_map(map2, realmap2);
+	initialise_default_map(map2, realmap2);
 
-	// print_map(map1.getHead(), 0);
-	map1.erase(map1.begin());
-	map1.erase(map1.begin());
-	print_map(map1.getHead(), 0);
-	print_node(map1.getDummy());
-	map1.erase(map1.begin());
-	map1.erase(map1.begin());
-	print_map(map1.getHead(), 0);
-	print_node(map1.getDummy());
-	map1.erase(map1.begin());
-	print_map(map1.getHead(), 0);
-	print_node(map1.getDummy());
-	std::cout << "about to delete final element of map" << std::endl;
-	map1.erase(map1.begin());
-	std::cout << "erasure successful" << std::endl;
-	std::cout << "Size: " << map1.size() << std::endl;
-	// map1.erase(map1.begin());
-	// for (mapIter1 it = map1.begin(); it != map1.end(); it++)
-	// 	std::cout << "(" << (*it).first << ", " << (*it).second << ")" << std::endl;
+	initial_size = map1.size();
+	for (size_t i = 0; i < initial_size; i++) {
+		map1.erase(map1.begin());
+		realmap1.erase(realmap1.begin());
+		map2.erase(map2.begin());
+		realmap2.erase(realmap2.begin());
+		testMaps(map1, realmap1);
+		testMaps(map2, realmap2);
+	}
 
-	// This stuff should be tested later, first, development
-	// realmap1.erase(realmap1.begin());
-	// map2.erase(map2.begin());
-	// realmap2.erase(realmap2.begin());
-	// testMaps(map1, realmap1);
-	// testMaps(map2, realmap2);
 }
 
 TYPED_TEST(map_tester, max_size_test) {

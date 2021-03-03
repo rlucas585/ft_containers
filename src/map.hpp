@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/29 08:56:11 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/03/03 14:45:12 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/03/03 15:55:49 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -331,9 +331,7 @@ namespace ft {
 
 						 ~map(void) {
 							 this->clear();
-							 std::cout << "Clear successful" << std::endl;
 							 _destroyDummy(_dummy);
-							 std::cout << "dummy destruction successful" << std::endl;
 						 }
 
 						 // Iterators
@@ -495,20 +493,15 @@ namespace ft {
 							 _disconnectDummy();
 							 node		*deleted = _deleteInternal(position);
 							 _destroyNode(deleted);
-							 std::cout << "hello" << std::endl;
 							 _reconnectDummy();
 
 							 _size -= 1;
 						 }
 
 						 void		clear(void) {
-							 std::cout << "clear() called, head = " << _head << std::endl;
 							 _disconnectDummy();
-							 std::cout << "dummy disconnected successfully" << std::endl;
 							 _destroyNodeRecurse(_head);
-							 std::cout << "destroy node recurse successful" << std::endl;
 							 _reinitializeDummy();
-							 std::cout << "clear successful" << std::endl;
 						 }
 
 						 // Observers
@@ -777,10 +770,7 @@ namespace ft {
 							 if (nodeToDelete == _head) {
 								 // if target node is root, assign value of replacementNode to
 								 // root, delete replacementNode instead.
-								 std::cout << "About to swap values of root with replacement node" << std::endl;
 								 nodeToDelete->swap(replacementNode);
-								 std::cout << "replacementNode, which should now be head: " << std::endl;
-								 print_node(replacementNode);
 								 _head = replacementNode;
 								 replacementNode->_right = NULL;
 								 replacementNode->_left = NULL;
@@ -801,7 +791,6 @@ namespace ft {
 
 						 node			*_targetNodeIsLeaf(node *nodeToDelete, node *parent, bool bothNodesBlack) {
 							 if (nodeToDelete == _head) {
-								 std::cout << "Target node is head." << std::endl;
 								 _head = NULL;
 								 return nodeToDelete;
 							 }
@@ -975,8 +964,6 @@ namespace ft {
 								 node		*nextNodeLeft = _getPtrFromIterator(tmp);
 								 _dummy->_left = nextNodeLeft;
 							 }
-							 std::cout << "Modified dummy: ";
-							 print_node(_dummy);
 						 }
 
 						 node		*_createDummyNode(void) {
@@ -1002,8 +989,6 @@ namespace ft {
 						 void		_disconnectDummy(void) {
 							 if (_dummy->_right == _dummy && _dummy->_left == _dummy)
 								 return ;
-							 std::cout << "dummy->_right = " << _dummy->_right << 
-								 ", dummy->_left = " << _dummy->_left << std::endl;
 							 _dummy->_right->_left = NULL;
 							 _dummy->_left->_right = NULL;
 						 }
@@ -1017,7 +1002,6 @@ namespace ft {
 									 _dummy->_left = _head;
 									 _dummy->_right = _head;
 								 }
-								 return ;
 							 }
 							 if (_dummy->_right->_left != NULL) {
 								 _dummy->_right = _dummy->_right->_left; // Connect dummy to new leftmost
