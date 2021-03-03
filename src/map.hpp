@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/29 08:56:11 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/03/03 17:02:48 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/03/03 17:49:03 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,38 +178,6 @@ namespace ft {
 									 if (p == NULL)
 										 return NULL;
 									 return p->getSibling();
-								 }
-								 void		swap(node *other) {
-									 node		*tmpParent = other->_parent;
-									 node		*tmpLeft = other->_left;
-									 node		*tmpRight = other->_right;
-
-									 other->_left = _left;
-									 other->_right = _right;
-									 other->_parent = _parent;
-									 if (tmpParent) {
-										 if (other == tmpParent->_left)
-											 tmpParent->_left = this;
-										 else
-											 tmpParent->_right = this;
-									 }
-									 if (tmpLeft)
-										 tmpLeft->_parent = this;
-									 if (tmpRight)
-										 tmpRight->_parent = this;
-									 if (_parent) {
-										 if (this == _parent->_left)
-											 _parent->_left = other;
-										 else
-											 _parent->_right = other;
-									 }
-									 if (_right)
-										 _right->_parent = other;
-									 if (_left)
-										 _left->_parent = other;
-									 _parent = tmpParent;
-									 _left = tmpLeft;
-									 _right = tmpRight;
 								 }
 								 void		swapValues(node *other) {
 									 value_type		tmp = other->_val;
@@ -512,6 +480,8 @@ namespace ft {
 						 void		clear(void) {
 							 _disconnectDummy();
 							 _destroyNodeRecurse(_head);
+							 _head = NULL;
+							 _size = 0;
 							 _reinitializeDummy();
 						 }
 
@@ -771,7 +741,7 @@ namespace ft {
 								 return _targetNodeHasOneChild(nodeToDelete, replacementNode, parent, bothNodesBlack);
 							 }
 
-							 // nodeToDelete has two children, take value with successor and recurse
+							 // nodeToDelete has two children, swap value with successor and recurse
 							 nodeToDelete->swapValues(replacementNode);
 							 return _deleteInternal(iterator(replacementNode));
 						 }
@@ -782,8 +752,6 @@ namespace ft {
 								 // if target node is root, assign value of replacementNode to
 								 // root, delete replacementNode instead.
 								 nodeToDelete->swapValues(replacementNode);
-								 // no longer deleting nodeToDelete, deleting replacementNode
-								 // instead after swapping values
 								 nodeToDelete->_right = NULL;
 								 nodeToDelete->_left = NULL;
 								 _dummy->_right = nodeToDelete;
@@ -907,54 +875,6 @@ namespace ft {
 							 else
 								 parent->_color = BLACK;
 						 }
-
-						 // node		*_deleteTargetNode(node *n) {
-							//  if (n->_left == NULL && n->_right == NULL)
-							// 	 return _targetNodeIsLeaf(n);
-							//  else if (n->_left == NULL)
-							// 	 return _targetNodeHasRightChild(n);
-							//  else if (n->_right == NULL)
-							// 	 return _targetNodeHasLeftChild(n);
-							//  else
-							// 	 return _targetNodeHasTwoChildren(n);
-						 // }
-                         //
-						 // node		*_targetNodeIsLeaf(node *n) {
-							//  if (n->_parent == NULL)
-							// 	 return n;
-							//  if (n == n->_parent->_left)
-							// 	 n->_parent->_left = NULL;
-							//  else if (n == n->_parent->_right)
-							// 	 n->_parent->_right = NULL;
-							//  return n;
-						 // }
-                         //
-						 // node		*_targetNodeHasLeftChild(node *n) {
-							//  if (n->_parent != NULL) {
-							// 	 if (n->_parent->_right == n)
-							// 		 n->_parent->_right = n->_left;
-							// 	 else if (n->_parent->_left == n)
-							// 		 n->_parent->_left = n->_left;
-							//  }
-							//  return n;
-						 // }
-                         //
-						 // node		*_targetNodeHasRightChild(node *n) {
-							//  if (n->_parent != NULL) {
-							// 	 if (n->_parent->_right == n)
-							// 		 n->_parent->_right = n->_right;
-							// 	 else if (n->_parent->_left == n)
-							// 		 n->_parent->_left = n->_right;
-							//  }
-							//  return n;
-						 // }
-
-						 // node		*_targetNodeHasTwoChildren(node *n) {
-							//  node		*successor = n->_right->selectLeftMost();
-                         //
-							//  n->getVal() = successor->getVal();
-							//  return _deleteTargetNode(successor);
-						 // }
 
 						 // If the node to be deleted is leftmost or rightmost, we
 						 // have to modify the dummy so that it doesn't point at a

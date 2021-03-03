@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/21 15:01:14 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/03/03 17:06:37 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/03/03 17:49:47 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -458,57 +458,11 @@ TYPED_TEST(map_tester, insert_range_test) {
 	testMaps(map2, realmap2);
 }
 
-// std::string		color_converter(ft::e_color color) {
-// 	switch (color) {
-// 		case ft::RED: 
-// 			return "RED";
-// 		case ft::BLACK:
-// 			return "BLACK";
-// 		case ft::DUMMY:
-// 			return "DUMMY";
-// 	}
-// 	return "RED";
-// }
-
-// template <typename Node>
-// void			print_node(Node *n) {
-// 	if (n->_color == ft::DUMMY) {
-// 		std::cout << "Dummy node: ";
-// 		if (n->getLeft() != n) {
-// 			std::cout << "Left: " << n->getLeft()->getKey() << ", ";
-// 		} else {
-// 			std::cout << "No Left node.";
-// 		}
-// 		if (n->getRight() != n)
-// 			std::cout << "Right: " << n->getRight()->getKey() << ", ";
-// 		else
-// 			std::cout << "No Right node.";
-// 		std::cout << std::endl;
-// 		return ;
-// 	}
-// 	if (n->_parent == NULL)
-// 		std::cout << "Head node: ";
-// 	else
-// 		std::cout << "node: ";
-// 	std::cout << "Key: " << n->getKey();
-// 	std::cout << ", Color: " << color_converter(n->_color);
-// 	std::cout << std::endl;
-// }
-//
-// template <typename Node>
-// void		print_map(Node *root, size_t depth) {
-// 	if (root->_color == ft::DUMMY)
-// 		return ;
-// 	for (size_t i = 0; i < depth; i++)
-// 		std::cout << "-";
-// 	print_node(root);
-// 	if (root->getLeft())
-// 		print_map(root->getLeft(), depth + 1);
-// 	if (root->getRight())
-// 		print_map(root->getRight(), depth + 1);
-// }
-
 TYPED_TEST(map_tester, erase_by_iterator_test) {
+	// typedef typename ft::map<int, TypeParam>::iterator	mapIter1;
+	// typedef typename std::map<int, TypeParam>::iterator	realMapIter1;
+	// typedef typename ft::map<TypeParam, int>::iterator	mapIter2;
+	// typedef typename std::map<TypeParam, int>::iterator	realMapIter2;
 	ft::map<int, TypeParam>		map1;
 	std::map<int, TypeParam>	realmap1;
 	ft::map<TypeParam, int>		map2;
@@ -530,11 +484,28 @@ TYPED_TEST(map_tester, erase_by_iterator_test) {
 
 	initialise_default_map(map1, realmap1);
 	initialise_default_map(map2, realmap2);
+	initial_size = realmap1.size();
 	for (size_t i = 0; i < initial_size - 2; i++) {
 		map1.erase(incrementIterator(map1.begin(), 2));
 		realmap1.erase(incrementIterator(realmap1.begin(), 2));
 		map2.erase(incrementIterator(map2.begin(), 2));
 		realmap2.erase(incrementIterator(realmap2.begin(), 2));
+		testMaps(map1, realmap1);
+		testMaps(map2, realmap2);
+	}
+	map1.clear();
+	realmap1.clear();
+	map2.clear();
+	realmap2.clear();
+
+	initialise_default_map(map1, realmap1);
+	initialise_default_map(map2, realmap2);
+	initial_size = realmap1.size();
+	for (size_t i = 0; i < initial_size - 4; i++) {
+		map1.erase(incrementIterator(map1.begin(), map1.size() - 1));
+		realmap1.erase(incrementIterator(realmap1.begin(), realmap1.size() - 1));
+		map2.erase(incrementIterator(map2.begin(), map2.size() - 1));
+		realmap2.erase(incrementIterator(realmap2.begin(), realmap2.size() - 1));
 		testMaps(map1, realmap1);
 		testMaps(map2, realmap2);
 	}
