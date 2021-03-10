@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/20 12:45:33 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/20 13:19:08 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/03/10 17:31:22 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,8 @@ class Example {
 		bool				operator<=(Example const& other) const;
 		bool				operator>(Example const& other) const;
 		bool				operator>=(Example const& other) const;
+
+		void				operator+=(Example const& other);
 
 	private:
 		std::string	_name;

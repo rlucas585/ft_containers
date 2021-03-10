@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/24 11:00:47 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/03/03 15:55:31 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/03/10 17:35:47 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,6 @@
 
 #include <iterator>
 #include "e_color.hpp"
-
-#include <iostream>
 
 namespace ft {
 	template <typename T, typename Diff, typename Point, typename Ref,

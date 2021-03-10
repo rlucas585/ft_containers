@@ -6,14 +6,14 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/29 08:56:11 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/03/10 16:18:21 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/03/10 17:35:21 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MAP_HPP
 #define MAP_HPP 
 
-#include <functional>
+// #include <functional>
 #include <cmath>
 #include <cstddef>
 
@@ -21,8 +21,6 @@
 #include "e_color.hpp"
 #include "map_iterator.hpp"
 #include "reverse_bi_iterator.hpp"
-
-#include <iostream>		// TODO remove this
 
 #ifndef SYSTEM_BITS
 #ifdef __x86_64
@@ -35,59 +33,6 @@
 #endif
 #endif
 #endif
-
-// TODO remove after testing
-std::string		color_converter(ft::e_color color) {
-	switch (color) {
-		case ft::RED: 
-			return "RED";
-		case ft::BLACK:
-			return "BLACK";
-		case ft::DUMMY:
-			return "DUMMY";
-	}
-	return "RED";
-}
-
-template <typename Node>
-void			print_node(Node *n) {
-	if (n->_color == ft::DUMMY) {
-		std::cout << "Dummy node: ";
-		if (n->getLeft() != n) {
-			std::cout << "Left: " << n->getLeft()->getKey() << ", ";
-		} else {
-			std::cout << "No Left node.";
-		}
-		if (n->getRight() != n)
-			std::cout << "Right: " << n->getRight()->getKey() << ", ";
-		else
-			std::cout << "No Right node.";
-		std::cout << std::endl;
-		return ;
-	}
-	if (n->_parent == NULL)
-		std::cout << "Head node: ";
-	else
-		std::cout << "node: ";
-	std::cout << "Key: " << n->getKey(); std::cout << ", Value: " << n->getData();
-	std::cout << ", Color: " << color_converter(n->_color);
-	std::cout << std::endl;
-}
-
-template <typename Node>
-void		print_map(Node *root, size_t depth) {
-	if (root == NULL)
-		return ;
-	if (root->_color == ft::DUMMY)
-		return ;
-	for (size_t i = 0; i < depth; i++)
-		std::cout << "-";
-	print_node(root);
-	if (root->getLeft())
-		print_map(root->getLeft(), depth + 1);
-	if (root->getRight())
-		print_map(root->getRight(), depth + 1);
-}
 
 namespace ft {
 	template <typename Key,
@@ -462,14 +407,6 @@ namespace ft {
 									 this->insert(*first);
 							 }
 
-						 node		*getHead(void) {
-							 return _head;
-						 }
-
-						 node		*getDummy(void) {
-							 return _dummy;
-						 }
-
 						 void		erase(iterator position) {
 							 if (_size == 0)
 								 return ;
@@ -525,6 +462,19 @@ namespace ft {
 							 }
 						 }
 
+						 void		swap(map& x) {
+							 node			*tmphead = x._head;
+							 size_type		tmpsize = x._size;
+							 node			*tmpdummy = x._dummy;
+
+							 x._head = _head;
+							 x._size = _size;
+							 x._dummy = _dummy;
+							 _head = tmphead;
+							 _size = tmpsize;
+							 _dummy = tmpdummy;
+						 }
+
 						 void		clear(void) {
 							 _disconnectDummy();
 							 _destroyNodeRecurse(_head);
@@ -547,6 +497,81 @@ namespace ft {
 							 iterator		ret = _findRecurse(_head, k);
 							 _reconnectDummy();
 							 return ret;
+						 }
+
+						 const_iterator	find(const key_type& k) const {
+							 _disconnectDummy();
+							 const_iterator		ret = _findRecurse(_head, k);
+							 _reconnectDummy();
+							 return ret;
+						 }
+
+						 size_type		count(const key_type& k) {
+							 if (this->find(k) == this->end())
+								 return 0;
+							 return 1;
+						 }
+
+						 iterator		lower_bound(const key_type& k) {
+							 iterator		first = this->begin();
+
+							 while (first != this->end()) {
+								 if ((*first).first >= k)
+									 break ;
+								 first++;
+							 }
+							 return first;
+						 }
+
+						 const_iterator	lower_bound(const key_type& k) const {
+							 const_iterator		first = this->begin();
+
+							 while (first != this->end()) {
+								 if ((*first).first >= k)
+									 break ;
+								 first++;
+							 }
+							 return first;
+						 }
+
+						 iterator		upper_bound(const key_type& k) {
+							 iterator		first = this->begin();
+
+							 while (first != this->end()) {
+								 if ((*first).first >= k) {
+									 first++;
+									 break ;
+								 }
+								 first++;
+							 }
+							 return first;
+						 }
+
+						 const_iterator	upper_bound(const key_type& k) const {
+							 const_iterator		first = this->begin();
+
+							 while (first != this->end()) {
+								 if ((*first).first >= k) {
+									 first++;
+									 break ;
+								 }
+								 first++;
+							 }
+							 return first;
+						 }
+
+						 ft::pair<iterator, iterator>	equal_range(const key_type& k) {
+							 iterator		lower = this->lower_bound(k);
+							 iterator		upper = this->upper_bound(k);
+
+							 return ft::make_pair(lower, upper);
+						 }
+
+						 ft::pair<const_iterator, const_iterator>	equal_range(const key_type& k) const {
+							 const_iterator		lower = this->lower_bound(k);
+							 const_iterator		upper = this->upper_bound(k);
+
+							 return ft::make_pair(lower, upper);
 						 }
 
 					 private:
@@ -667,6 +692,28 @@ namespace ft {
 						 }
 
 						 iterator		_findRecurse(node *root, const key_type& k) {
+							 if (root != NULL) {
+								 if (k == root->getKey())
+									 return iterator(root);
+								 else if (_comp(k, root->getKey())) {
+									 if (root->_left != NULL) {
+										 return this->_findRecurse(root->_left, k);
+									 } else {
+										 return this->end();
+									 }
+								 } else {
+									 if (root->_right != NULL) {
+										 return this->_findRecurse(root->_right, k);
+									 } else {
+										 return this->end();
+									 }
+								 }
+							 }
+
+							 return this->end();
+						 }
+
+						 const_iterator		_findRecurse(node *root, const key_type& k) const {
 							 if (root != NULL) {
 								 if (k == root->getKey())
 									 return iterator(root);
@@ -1025,6 +1072,43 @@ namespace ft {
 							 _dummy->_left->_right = _dummy;
 						 }
 				 };
+
+	template <class K, class T, class Compare, class Alloc>
+		void	swap(map<K, T, Compare, Alloc>& x, map<K, T, Compare, Alloc>& y) {
+			x.swap(y);
+		}
+
+	template <class K, class T, class Compare, class Alloc>
+		bool operator== (const map<K, T, Compare, Alloc>& lhs, const map<K, T, Compare, Alloc>& rhs) {
+			if (lhs.size() != rhs.size())
+				return false;
+			return std::equal(lhs.begin(), lhs.end(), rhs.begin());
+		}
+
+	template <class K, class T, class Compare, class Alloc>
+		bool operator!= (const map<K, T, Compare, Alloc>& lhs, const map<K, T, Compare, Alloc>& rhs) {
+			return !(lhs == rhs);
+		}
+
+	template <class K, class T, class Compare, class Alloc>
+		bool operator< (const map<K, T, Compare, Alloc>& lhs, const map<K, T, Compare, Alloc>& rhs) {
+			return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
+		}
+
+	template <class K, class T, class Compare, class Alloc>
+		bool operator<= (const map<K, T, Compare, Alloc>& lhs, const map<K, T, Compare, Alloc>& rhs) {
+			return !(rhs < lhs);
+		}
+
+	template <class K, class T, class Compare, class Alloc>
+		bool operator> (const map<K, T, Compare, Alloc>& lhs, const map<K, T, Compare, Alloc>& rhs) {
+			return rhs < lhs;
+		}
+
+	template <class K, class T, class Compare, class Alloc>
+		bool operator>= (const map<K, T, Compare, Alloc>& lhs, const map<K, T, Compare, Alloc>& rhs) {
+			return !(lhs < rhs);
+		}
 }
 
 #endif

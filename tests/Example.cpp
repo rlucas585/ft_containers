@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/20 11:41:05 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/20 13:19:14 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/03/10 17:31:24 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,10 @@ bool				Example::operator>(Example const& other) const {
 
 bool				Example::operator>=(Example const& other) const {
 	return !(*this < other);
+}
+
+void				Example::operator+=(Example const& other) {
+	this->_val += other._val;
 }
 
 std::ostream	&operator<<(std::ostream &o, Example const &i) {

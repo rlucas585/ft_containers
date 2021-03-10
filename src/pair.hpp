@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/21 17:02:02 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/27 16:19:21 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/03/10 17:32:33 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,6 @@ namespace ft {
 					return *this;
 				}
 
-				bool	operator==(pair const& other) {
-					return first == other.first && second == other.second;
-				}
-
 			public:
 				T1		first;
 				T2		second;
@@ -38,7 +34,29 @@ namespace ft {
 
 	template <typename T1, typename T2>
 	bool		operator==(pair<T1, T2> const& p1, pair<T1, T2> const& p2) {
-		return p1 == p2;
+		return p1.first == p2.first && p1.second == p2.second;
+	}
+	template <typename T1, typename T2>
+	bool		operator!=(pair<T1, T2> const& p1, pair<T1, T2> const& p2) {
+		return !(p1 == p2);
+	}
+	template <typename T1, typename T2>
+	bool		operator<(pair<T1, T2> const& p1, pair<T1, T2> const& p2) {
+		if (!(p1.first == p2.first))
+			return false;
+		return p1.second < p2.second;
+	}
+	template <typename T1, typename T2>
+	bool		operator<=(pair<T1, T2> const& p1, pair<T1, T2> const& p2) {
+		return !(p2 < p1);
+	}
+	template <typename T1, typename T2>
+	bool		operator>(pair<T1, T2> const& p1, pair<T1, T2> const& p2) {
+		return p2 < p1;
+	}
+	template <typename T1, typename T2>
+	bool		operator>=(pair<T1, T2> const& p1, pair<T1, T2> const& p2) {
+		return !(p1 < p2);
 	}
 
 	template <typename T1, typename T2>
