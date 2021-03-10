@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/21 15:01:14 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/03/03 17:49:47 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/03/10 16:18:49 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -308,25 +308,6 @@ TYPED_TEST(map_tester, insert_single_element_test) {
 	testMaps(map2, realmap2);
 }
 
-// TYPED_TEST(map_tester, single_element_iteration_test) {
-// 	typedef typename ft::map<int, TypeParam>::iterator	mapIter1;
-// 	// typedef typename std::map<int, TypeParam>::iterator	realMapIter1;
-// 	ft::map<int, TypeParam>		map1;
-// 	std::map<int, TypeParam>	realmap1;
-// 	ft::vector<int>				i_vec;
-// 	std::vector<int>			i_vec_real;
-// 	ft::vector<TypeParam>		type_vec;
-// 	std::vector<TypeParam>		type_vec_real;
-// 	initialise_default_vector(i_vec, i_vec_real);
-// 	initialise_default_vector(type_vec, type_vec_real);
-// 	ft::pair<int,TypeParam>			pair1(i_vec[0], type_vec[0]);
-// 	std::pair<int,TypeParam>		realpair1(i_vec[0], type_vec[0]);
-//
-// 	map1.insert(pair1);
-// 	realmap1.insert(realpair1);
-// 	mapIter1	it1 = map1.begin();
-// }
-//
 TYPED_TEST(map_tester, insert_correct_hint_test) {
 	typedef typename ft::map<int, TypeParam>::iterator	mapIter1;
 	typedef typename std::map<int, TypeParam>::iterator	realMapIter1;
@@ -459,10 +440,6 @@ TYPED_TEST(map_tester, insert_range_test) {
 }
 
 TYPED_TEST(map_tester, erase_by_iterator_test) {
-	// typedef typename ft::map<int, TypeParam>::iterator	mapIter1;
-	// typedef typename std::map<int, TypeParam>::iterator	realMapIter1;
-	// typedef typename ft::map<TypeParam, int>::iterator	mapIter2;
-	// typedef typename std::map<TypeParam, int>::iterator	realMapIter2;
 	ft::map<int, TypeParam>		map1;
 	std::map<int, TypeParam>	realmap1;
 	ft::map<TypeParam, int>		map2;
@@ -508,6 +485,180 @@ TYPED_TEST(map_tester, erase_by_iterator_test) {
 		realmap2.erase(incrementIterator(realmap2.begin(), realmap2.size() - 1));
 		testMaps(map1, realmap1);
 		testMaps(map2, realmap2);
+	}
+}
+
+TYPED_TEST(map_tester, erase_by_key_test) {
+	ft::map<int, TypeParam>		map1;
+	std::map<int, TypeParam>	realmap1;
+	ft::map<TypeParam, int>		map2;
+	std::map<TypeParam, int>	realmap2;
+	ft::vector<int>				i_vec;
+	std::vector<int>			i_vec_real;
+	ft::vector<TypeParam>		type_vec;
+	std::vector<TypeParam>		type_vec_real;
+	initialise_default_vector(i_vec, i_vec_real);
+	initialise_default_vector(type_vec, type_vec_real);
+
+	initialise_default_map(map1, realmap1);
+	initialise_default_map(map2, realmap2);
+
+	for (size_t i = 0; i < i_vec.size(); i += 2) {
+		ASSERT_EQ(map1.erase(i_vec[i]), realmap1.erase(i_vec_real[i]));
+		testMaps(map1, realmap1);
+	}
+	for (size_t i = 0; i < type_vec.size(); i += 2) {
+		ASSERT_EQ(map2.erase(type_vec[i]), realmap2.erase(type_vec_real[i]));
+		testMaps(map2, realmap2);
+	}
+}
+
+TYPED_TEST(map_tester, erase_range_test) {
+	typedef typename ft::map<int, TypeParam>::iterator			mapIter1;
+	typedef typename std::map<int, TypeParam>::iterator			realMapIter1;
+	typedef typename ft::map<TypeParam, int>::iterator	mapIter2;
+	typedef typename std::map<TypeParam, int>::iterator	realMapIter2;
+	ft::map<int, TypeParam>		map1;
+	std::map<int, TypeParam>	realmap1;
+	ft::map<TypeParam, int>		map2;
+	std::map<TypeParam, int>	realmap2;
+
+	initialise_default_map(map1, realmap1);
+	initialise_default_map(map2, realmap2);
+
+	mapIter1		tmp1 = map1.begin();
+	realMapIter1	realtmp1 = realmap1.begin();
+	mapIter2		tmp2 = map2.begin();
+	realMapIter2	realtmp2 = realmap2.begin();
+	mapIter1		tmp3 = tmp1;
+	realMapIter1	realtmp3 = realtmp1;
+	mapIter2		tmp4 = tmp2;
+	realMapIter2	realtmp4 = realtmp2;
+
+	// Prepare iterators
+	for (size_t i = 0; i <= map1.size() / 4; i++) {
+		tmp1++;
+		realtmp1++;
+	}
+	tmp3 = tmp1;
+	realtmp3 = realtmp1;
+	for (size_t i = map1.size() / 4; i <= map1.size() * 3 / 4; i++) {
+		tmp3++;
+		realtmp3++;
+	}
+	for (size_t i = 0; i <= map2.size() / 4; i++) {
+		tmp2++;
+		realtmp2++;
+	}
+	tmp4 = tmp2;
+	realtmp4 = realtmp2;
+	for (size_t i = map2.size() / 4; i <= map2.size() * 3 / 4; i++) {
+		tmp4++;
+		realtmp4++;
+	}
+
+	map1.erase(tmp1, tmp3);
+	realmap1.erase(realtmp1, realtmp3);
+	map2.erase(tmp2, tmp4);
+	realmap2.erase(realtmp2, realtmp4);
+	testMaps(map1, realmap1);
+	testMaps(map2, realmap2);
+
+	map1.erase(map1.begin(), map1.end());
+	realmap1.erase(realmap1.begin(), realmap1.end());
+	map2.erase(map2.begin(), map2.end());
+	realmap2.erase(realmap2.begin(), realmap2.end());
+	testMaps(map1, realmap1);
+	testMaps(map2, realmap2);
+
+	initialise_default_map(map1, realmap1);
+	initialise_default_map(map2, realmap2);
+
+	tmp1 = map1.begin();
+	realtmp1 = realmap1.begin();
+	tmp2 = map2.begin();
+	realtmp2 = realmap2.begin();
+	tmp3 = tmp1;
+	realtmp3 = realtmp1;
+	tmp4 = tmp2;
+	realtmp4 = realtmp2;
+	// Prepare iterators
+	for (size_t i = 0; i <= map1.size() / 6; i++) {
+		tmp1++;
+		realtmp1++;
+	}
+	tmp3 = tmp1;
+	realtmp3 = realtmp1;
+	for (size_t i = map1.size() / 6; i <= map1.size() / 2; i++) {
+		tmp3++;
+		realtmp3++;
+	}
+	for (size_t i = 0; i <= map2.size() / 6; i++) {
+		tmp2++;
+		realtmp2++;
+	}
+	tmp4 = tmp2;
+	realtmp4 = realtmp2;
+	for (size_t i = map2.size() / 6; i <= map2.size() / 2; i++) {
+		tmp4++;
+		realtmp4++;
+	}
+
+	map1.erase(tmp1, tmp3);
+	realmap1.erase(realtmp1, realtmp3);
+	map2.erase(tmp2, tmp4);
+	realmap2.erase(realtmp2, realtmp4);
+	testMaps(map1, realmap1);
+	testMaps(map2, realmap2);
+
+	map1.erase(map1.begin(), map1.end());
+	realmap1.erase(realmap1.begin(), realmap1.end());
+	map2.erase(map2.begin(), map2.end());
+	realmap2.erase(realmap2.begin(), realmap2.end());
+	testMaps(map1, realmap1);
+	testMaps(map2, realmap2);
+}
+
+TYPED_TEST(map_tester, find_test) {
+	typedef typename ft::map<int, TypeParam>::iterator	mapIter1;
+	typedef typename std::map<int, TypeParam>::iterator	realMapIter1;
+	typedef typename ft::map<TypeParam, int>::iterator	mapIter2;
+	typedef typename std::map<TypeParam, int>::iterator	realMapIter2;
+	ft::map<int, TypeParam>		map1;
+	std::map<int, TypeParam>	realmap1;
+	ft::map<TypeParam, int>		map2;
+	std::map<TypeParam, int>	realmap2;
+	ft::vector<int>				i_vec;
+	std::vector<int>			i_vec_real;
+	ft::vector<TypeParam>		type_vec;
+	std::vector<TypeParam>		type_vec_real;
+	initialise_default_vector(i_vec, i_vec_real);
+	initialise_default_vector(type_vec, type_vec_real);
+
+	initialise_default_map(map1, realmap1);
+	initialise_default_map(map2, realmap2);
+
+	for (size_t i = 0; i < i_vec.size(); i += 2) {
+		mapIter1 it1 = map1.find(i_vec[i]);
+		realMapIter1 real_it1 = realmap1.find(i_vec_real[i]);
+		if (it1 == map1.end()) {
+			ASSERT_TRUE(real_it1 == realmap1.end());
+			continue ;
+		} else {
+			ASSERT_EQ((*map1.find(i_vec[i])).first, (*realmap1.find(i_vec_real[i])).first);
+			ASSERT_EQ((*map1.find(i_vec[i])).second, (*realmap1.find(i_vec_real[i])).second);
+		}
+	}
+	for (size_t i = 0; i < type_vec.size(); i += 2) {
+		mapIter2 it2 = map2.find(type_vec[i]);
+		realMapIter2 real_it2 = realmap2.find(type_vec_real[i]);
+		if (it2 == map2.end()) {
+			ASSERT_TRUE(real_it2 == realmap2.end());
+			continue ;
+		} else {
+			ASSERT_EQ((*map2.find(type_vec[i])).first, (*realmap2.find(type_vec_real[i])).first);
+			ASSERT_EQ((*map2.find(type_vec[i])).second, (*realmap2.find(type_vec_real[i])).second);
+		}
 	}
 }
 
@@ -721,6 +872,7 @@ TYPED_TEST(map_tester, decremental_iteration_test) {
 	realMapIter1	realtmp1;
 	mapIter2		tmp2;
 	realMapIter2	realtmp2;
+	// Iterate to end of map, then decrement by one
 	while (it1 != map1.end()) {
 		tmp1 = it1;
 		realtmp1 = realit1;

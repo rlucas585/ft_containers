@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/29 08:56:11 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/03/03 17:49:03 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/03/10 16:18:21 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@
 #endif
 #endif
 
+// TODO remove after testing
 std::string		color_converter(ft::e_color color) {
 	switch (color) {
 		case ft::RED: 
@@ -298,6 +299,8 @@ namespace ft {
 							 _a(other._a), _node_alloc(other._node_alloc), _dummy(_createDummyNode()) {
 							 *this = other;
 						 }
+
+						 // Copy operator
 						 map	&operator=(const map& rhs) {
 							 if (this == &rhs) { return *this; }
 							 const_iterator	start = rhs.begin();
@@ -308,6 +311,7 @@ namespace ft {
 							 return *this;
 						 }
 
+						 // Destructor
 						 ~map(void) {
 							 this->clear();
 							 _destroyDummy(_dummy);
@@ -477,6 +481,50 @@ namespace ft {
 							 _size -= 1;
 						 }
 
+						 size_type	erase(const key_type& k) {
+							 iterator		target = this->find(k);
+
+							 if (target == this->end())
+								 return 0;
+							 this->erase(target);
+							 return 1;
+						 }
+
+						 void		erase(iterator first, iterator last) {
+							 iterator		tmp;
+							 bool			lastIsNotEnd = false;
+							 bool			firstIsHead = false;
+							 key_type		endKey;
+
+							 if (last != this->end())
+								 lastIsNotEnd = true;
+							 if (lastIsNotEnd)
+								 endKey = (*last).first;
+
+							 while (first != last) {
+								 if (first == this->end())
+									 break ;
+								 if (_getPtrFromIterator(first) == _head)
+									 firstIsHead = true;
+								 if (lastIsNotEnd) {
+									 if ((*first).first == endKey)
+										 return ;
+								 }
+								 tmp = first;
+								 tmp++;
+								 if (firstIsHead && _getPtrFromIterator(tmp) != _head)
+									 tmp++;
+								 this->erase(first);
+								 first = tmp;
+								 if (firstIsHead && _size != 0) {
+									 first--;
+									 firstIsHead = false;
+								 }
+								 if (_size == 0)
+									 break ;
+							 }
+						 }
+
 						 void		clear(void) {
 							 _disconnectDummy();
 							 _destroyNodeRecurse(_head);
@@ -491,6 +539,14 @@ namespace ft {
 						 }
 						 value_compare	value_comp(void) const {
 							 return value_compare(_comp);
+						 }
+
+						 // Operations
+						 iterator		find(const key_type& k) {
+							 _disconnectDummy();
+							 iterator		ret = _findRecurse(_head, k);
+							 _reconnectDummy();
+							 return ret;
 						 }
 
 					 private:
@@ -608,6 +664,28 @@ namespace ft {
 							 _size += 1;
 							 _head = newNode;
 							 return newNode->getData();
+						 }
+
+						 iterator		_findRecurse(node *root, const key_type& k) {
+							 if (root != NULL) {
+								 if (k == root->getKey())
+									 return iterator(root);
+								 else if (_comp(k, root->getKey())) {
+									 if (root->_left != NULL) {
+										 return this->_findRecurse(root->_left, k);
+									 } else {
+										 return this->end();
+									 }
+								 } else {
+									 if (root->_right != NULL) {
+										 return this->_findRecurse(root->_right, k);
+									 } else {
+										 return this->end();
+									 }
+								 }
+							 }
+
+							 return this->end();
 						 }
 
 						 mapped_type&	_insertNewDefaultNodeLeft(node *root, const key_type& k) {
