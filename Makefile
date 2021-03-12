@@ -6,7 +6,7 @@
 #    By: rlucas <marvin@codam.nl>                     +#+                      #
 #                                                    +#+                       #
 #    Created: 2020/07/27 14:22:41 by rlucas        #+#    #+#                  #
-#    Updated: 2021/02/24 13:04:51 by rlucas        ########   odam.nl          #
+#    Updated: 2021/03/12 17:11:59 by rlucas        ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,7 +34,8 @@ TESTSRCLST = main \
 			 Example \
 			 test \
 			 list \
-			 map
+			 map \
+			 stack
 
 TESTOBJDIR = testobj/
 TESTDIR = tests/
@@ -55,7 +56,7 @@ all: $(NAME)
 
 test: $(TEST)
 
-$(TEST): $(NAME) $(TESTOBJ)
+$(TEST): $(OBJ) $(TESTOBJ)
 	@echo "Compiling test executable..."
 	@$(CC) $(FLAGS) $(TESTOBJ) -o $(TEST) $(INCLUDES) $(TESTLIBS)
 

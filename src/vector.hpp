@@ -6,7 +6,7 @@
 /*   By: rlucas <ryanl585codam@gmail.com>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/06 12:52:10 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/03/03 16:11:32 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/03/12 19:40:59 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,10 +108,10 @@ namespace ft {
 							_capacity = rhs._capacity;
 						}
 					} else {
-						_data = _a.allocate(rhs._size);
+						_data = _a.allocate(rhs._capacity);
 						for (size_type i = 0; i < rhs._size; i++)
 								_a.construct(_data + i, *(rhs._data + i));
-						_capacity = rhs._size;
+						_capacity = rhs._capacity;
 					}
 					_size = rhs._size;
 					return (*this);

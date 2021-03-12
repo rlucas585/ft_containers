@@ -6,14 +6,13 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/29 08:56:11 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/03/10 17:35:21 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/03/10 17:43:21 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MAP_HPP
 #define MAP_HPP 
 
-// #include <functional>
 #include <cmath>
 #include <cstddef>
 

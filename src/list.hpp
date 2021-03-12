@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/20 11:02:05 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/03/03 16:11:12 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/03/10 17:43:41 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@
 #endif
 
 namespace ft {
-
 	template <typename T, typename A = std::allocator<T> >
 		class list {
 			private:
@@ -642,7 +641,6 @@ namespace ft {
 					target->setPrev(tmp);
 				}
 
-				// Use with caution
 				node		*_getPtrFromIterator(iterator& position) {
 					char	*valptr = reinterpret_cast<char *>(&(*position));
 

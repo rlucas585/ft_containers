@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/21 15:01:14 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/03/10 17:36:44 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/03/12 16:59:42 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ void	addition_to_map(ft::map<T,U,Comp>& map, std::map<T,U,Comp>& realmap,
 }
 
 template <typename Map>
-void	print_map_info(Map const& map, const char *name) {
+static void	print_map_info(Map const& map, const char *name) {
 	std::string		mapStr = map_to_str(map);
 	if (mapStr.size() >= 60)
 		mapStr.erase(mapStr.begin() + 60, mapStr.end());
@@ -108,7 +108,7 @@ void	print_map_info(Map const& map, const char *name) {
 }
 
 template <typename T, typename U, typename Comp>
-void	print_table(ft::map<T,U,Comp> const& map, std::map<T,U,Comp> const& realmap) {
+static void	print_table(ft::map<T,U,Comp> const& map, std::map<T,U,Comp> const& realmap) {
 	for (size_t i = 0; i < 10 + 10 + 60 + 3; i++)
 		std::cout << "-";
 	std::cout << std::endl;
@@ -133,7 +133,7 @@ void	print_table(ft::map<T,U,Comp> const& map, std::map<T,U,Comp> const& realmap
 }
 
 template <typename T, typename U, typename Comp>
-void	initialise_default_map(ft::map<T, U, Comp>& map, std::map<T, U, Comp>& realmap) {
+static void	initialise_default_map(ft::map<T, U, Comp>& map, std::map<T, U, Comp>& realmap) {
 	ft::vector<T>		t_vec1;
 	std::vector<T>		t_vec2;
 	ft::vector<U>		u_vec1;
@@ -150,7 +150,7 @@ void	initialise_default_map(ft::map<T, U, Comp>& map, std::map<T, U, Comp>& real
 }
 
 template <typename T, typename U, typename Comp>
-void	testMaps(ft::map<T,U,Comp>const& map, std::map<T,U,Comp>const& realmap) {
+static void	testMaps(ft::map<T,U,Comp>const& map, std::map<T,U,Comp>const& realmap) {
 	typedef typename ft::map<T, U,Comp>::const_iterator	mapIter;
 	typedef typename std::map<T, U,Comp>::const_iterator	realMapIter;
 	if (PRINTED_OUTPUT)
