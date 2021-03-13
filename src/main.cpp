@@ -6,7 +6,7 @@
 /*   By: rlucas <ryanl585codam@gmail.com>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/01/06 12:49:55 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/02/20 13:36:00 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/03/13 15:56:39 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,17 +20,13 @@
 #include "utils.hpp"
 #include "test.hpp"
 
-/*
- * @param1 = Boolean to run integer tests
- * @param2 = Boolean to run std::string tests
- * @param3 = Boolean to run Example class tests
-*/
+// These tests are deprecated, and don't work if the final parameter is set to
+// true. Use the Google Tests framework by running 'make test' instead.
 
 int		main(void)
 {
 	// vector_tests(true, false, false);
 	// list_tests(true, false, false);
-	// map_tests(true, false, false);
 
 	return (0);
 }
