@@ -6,7 +6,7 @@
 #    By: rlucas <marvin@codam.nl>                     +#+                      #
 #                                                    +#+                       #
 #    Created: 2020/07/27 14:22:41 by rlucas        #+#    #+#                  #
-#    Updated: 2021/03/12 17:11:59 by rlucas        ########   odam.nl          #
+#    Updated: 2021/03/13 15:30:56 by rlucas        ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,7 +35,8 @@ TESTSRCLST = main \
 			 test \
 			 list \
 			 map \
-			 stack
+			 stack \
+			 queue
 
 TESTOBJDIR = testobj/
 TESTDIR = tests/

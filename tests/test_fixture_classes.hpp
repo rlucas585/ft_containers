@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/13 18:54:50 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/03/12 16:29:09 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/03/13 15:28:43 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,10 @@ class map_tester : public ::testing::Test {
 
 template <typename T>
 class stack_tester : public ::testing::Test {
+};
+
+template <typename T>
+class queue_tester : public ::testing::Test {
 };
 
 typedef testing::Types<int, std::string, Example> Implementations;

@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/03/12 12:23:08 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/03/12 21:38:57 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/03/13 15:42:58 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,8 +78,8 @@ static void	print_table(ft::stack<T> const& stack, std::stack<T> const& realstac
 	std::cout << "|";
 	std::cout << std::endl;
 	std::cout << "----------------------------------------------------------------" << std::endl;
-	print_stack_info(stack, "vec");
-	print_stack_info(realstack, "realvec");
+	print_stack_info(stack, "stack");
+	print_stack_info(realstack, "realstack");
 	std::cout << "----------------------------------------------------------------" << std::endl;
 }
 
@@ -169,6 +169,8 @@ TYPED_TEST(stack_tester, pop_test) {
 		real_s.pop();
 		testStacks(s, real_s);
 	}
+	ASSERT_TRUE(s.empty());
+	ASSERT_TRUE(real_s.empty());
 }
 
 TYPED_TEST(stack_tester, relational_operators_test) {
