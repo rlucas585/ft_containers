@@ -6,7 +6,7 @@
 /*   By: rlucas <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/02/13 17:58:24 by rlucas        #+#    #+#                 */
-/*   Updated: 2021/03/03 17:07:06 by rlucas        ########   odam.nl         */
+/*   Updated: 2021/03/14 14:24:33 by rlucas        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,7 +185,7 @@ void	testSizeAndContent(ft::vector<T>const& vec, std::vector<T>const& realvec) {
 		ASSERT_EQ(vec[i], realvec[i]);
 }
 
-TYPED_TEST_CASE(vector_tester, Implementations);
+TYPED_TEST_SUITE(vector_tester, Implementations);
 
 TYPED_TEST(vector_tester, empty_test) {
 	ft::vector<TypeParam>	vec;
@@ -251,9 +251,15 @@ TYPED_TEST(vector_tester, resize_test) {
 	realvec.resize(realvec.size() + 3);
 
 	testSizeAndContent(vec, realvec);
-
+	
+	// std::cout << scrapVec[3] << std::endl;
+    //
 	vec.resize(vec.size() + 3, scrapVec[3]);
 	realvec.resize(realvec.size() + 3, scrapVec[3]);
+
+	// for (typename ft::vector<TypeParam>::const_iterator it = vec.begin(); it != vec.end(); it++)
+	// 	std::cout << *it << ", ";
+	// std::cout << std::endl;
 
 	testSizeAndContent(vec, realvec);
 }

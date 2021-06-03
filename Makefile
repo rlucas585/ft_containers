@@ -24,10 +24,7 @@ OBJDIR = obj/
 INCLUDES = -Isrc/
 EXT = .cpp
 
-SRCLST = main \
-	  utils \
-	  vector_tests \
-	  list_tests
+SRCLST = main
 
 TESTSRCLST = main \
 			 vector \

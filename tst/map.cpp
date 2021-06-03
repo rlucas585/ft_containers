@@ -164,7 +164,7 @@ static void	testMaps(ft::map<T,U,Comp>const& map, std::map<T,U,Comp>const& realm
 	}
 }
 
-TYPED_TEST_CASE(map_tester, Implementations);
+TYPED_TEST_SUITE(map_tester, Implementations);
 
 TYPED_TEST(map_tester, empty_test) {
 	ft::map<int, TypeParam>		map1;

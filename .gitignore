@@ -1,1 +1,64 @@
+# Ignore any variant of the world "build" in directory names
+[Bb][Uu][Ii][Ll][Dd]/
+
+# Ignore external dependencies
+external
+
+### STANDARD .gitignore files
+
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+# Open Vim files and Vim configuration
 *.swp
+*.vimrc
+*.vim
+
+# Open nVim files
+*.save
+
+# CMake files
+CMakeLists.txt.user
+CMakeCache.txt
+CMakeFiles
+CMakeScripts
+Testing
+Makefile
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+_deps
+
+# LSP files
+compile_flags.txt

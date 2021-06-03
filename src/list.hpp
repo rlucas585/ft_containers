@@ -23,18 +23,6 @@
 #include "reverse_bi_iterator.hpp"
 #include "sfinae.hpp"
 
-#ifndef SYSTEM_BITS
-#ifdef __x86_64
-#define SYSTEM_BITS 64
-#else
-#ifdef _M_AMD64
-#define SYSTEM_BITS 64
-#else
-#define SYSTEM_BITS 32
-#endif
-#endif
-#endif
-
 namespace ft {
 	template <typename T, typename A = std::allocator<T> >
 		class list {
@@ -192,9 +180,7 @@ namespace ft {
 					return _size == 1;
 				}
 				size_type		max_size(void) const {
-					size_type	ans = std::floor(std::pow(2, SYSTEM_BITS) / sizeof(node));
-
-					return (ans - 1);
+                    return _node_alloc.max_size();
 				}
 
 				// Element access

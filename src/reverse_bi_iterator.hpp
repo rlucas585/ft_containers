@@ -43,6 +43,11 @@ namespace ft {
 					_it--;
 				}
 				ReverseBiIterator(const ReverseBiIterator &src) : _it(src._it) {}
+                ReverseBiIterator& operator=(const ReverseBiIterator &rhs) {
+                    if (this == &rhs) { return *this; }
+                    _it = rhs._it;
+                    return *this;
+                }
 				iterator_type	base(void) const {
 					iterator_type	tmp(_it);
 
