@@ -18,13 +18,17 @@
 
 #include "test.hpp"
 
+#include "vector.hpp"
+#include "list.hpp"
 #include "map.hpp"
+#include "stack.hpp"
+#include "queue.hpp"
 
 void introduce(void);
 
 int		main(void)
 {
-    introduce();
+    // introduce();
 
     ft::map<int, std::string> my_map;
 
