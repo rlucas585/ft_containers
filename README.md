@@ -57,9 +57,11 @@ using CMake (version 3.10.2). To install CMake (or update if required):
 
 1. Visit https://cmake.org/download/ and download the latest binaries.
 2. Run `tar xzvf cmake-<version>.tar.gz` with your CMake version.
-3. Following the instructions in CMake's README, run
+3. `cd cmake-<version>` to change directory to the CMake source
+   directory.
+4. Following the instructions in CMake's README, run
 `./bootstrap && make && sudo make install` to install CMake from source.
-4. Check `cmake --version` to confirm successful installation.
+5. Check `cmake --version` to confirm successful installation.
 
 ### Installation
 
