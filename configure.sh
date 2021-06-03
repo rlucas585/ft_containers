@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Add submodule if required
-git submodule --quiet add -f https://github.com/google/googletest.git external/googletest
+git submodule --quiet init
 if [ $? -eq 1 ]; then
     echo "Unable to initialize git submodule for googletest"
     exit 1
