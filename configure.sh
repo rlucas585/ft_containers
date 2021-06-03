@@ -1,15 +1,12 @@
 #!/bin/sh
 
-# Check to see if submodules are initialised, and initialise if required.
-cat .gitmodules | grep "external/googletest" > /dev/null
+# Add submodule if required
+git submodule --quiet add -f https://github.com/google/googletest.git external/googletest
 if [ $? -eq 1 ]; then
-    git submodule add https://github.com/google/googletest.git external/googletest
-    if [ $? -eq 1 ]; then
-        echo "Unable to initialize git submodule for googletest"
-        exit 1
-    fi
+    echo "Unable to initialize git submodule for googletest"
+    exit 1
 else
-    echo "Submodules are already initialised"
+    echo "Submodules initialised"
 fi
 
 if [ $# -gt 0 ]; then

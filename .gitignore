@@ -1,9 +1,6 @@
 # Ignore any variant of the world "build" in directory names
 [Bb][Uu][Ii][Ll][Dd]/
 
-# Ignore external dependencies
-external
-
 ### STANDARD .gitignore files
 
 # Prerequisites
